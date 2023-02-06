@@ -9,13 +9,13 @@ import (
 
 var (
 	cli    *clientv3.Client
-	ctx    context.Context
 	cancel context.CancelFunc
 )
 
-type Callback func(clientv3.WatchChan)
+type Callback func(context.Context, clientv3.WatchChan)
 
 func main() {
+	exit := make(chan bool)
 	var err error
 	if err = InitEtcd(); err != nil {
 		fmt.Println(err)
@@ -23,7 +23,13 @@ func main() {
 	}
 	defer cli.Close()
 	//ctxTimeout, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	Watch(context.TODO(), WatchKey1, "key1")
+	Watch(context.Background(), WatchKey1, "key1")
+	for {
+		select {
+		case <-exit:
+			break
+		}
+	}
 }
 
 // InitEtcd 初始化
@@ -59,20 +65,23 @@ func Get(ctx context.Context, key string, opts ...clientv3.OpOption) (results []
 	return results, err
 }
 
-func Watch(ctx context.Context, callback Callback, key string, opts ...clientv3.OpOption) {
+func Watch(ctx context.Context, callback Callback, key string, opts ...clientv3.OpOption) context.CancelFunc {
 	watchChnl := cli.Watch(ctx, key, opts...)
-	callback(watchChnl)
+	ctxChild, cancel := context.WithCancel(ctx)
+	go callback(ctxChild, watchChnl)
+	return cancel
 }
 
-func WatchKey1(chnl clientv3.WatchChan) {
+func WatchKey1(ctx context.Context, chnl clientv3.WatchChan) {
 	for {
 		select {
 		case events := <-chnl:
-			//fmt.Println(events)
-			//return
 			for _, e := range events.Events {
 				fmt.Println("watch key:", string(e.Kv.Key), ",value:", string(e.Kv.Value))
 			}
+		case <-ctx.Done():
+			fmt.Println("WatchKey1 exit")
+			return
 		}
 	}
 }
