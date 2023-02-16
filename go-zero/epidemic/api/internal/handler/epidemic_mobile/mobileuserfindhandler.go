@@ -1,0 +1,21 @@
+package epidemic_mobile
+
+import (
+	"net/http"
+
+	"github.com/Baal19905/playground/go-zero/epidemic/api/internal/logic/epidemic_mobile"
+	"github.com/Baal19905/playground/go-zero/epidemic/api/internal/svc"
+	"github.com/zeromicro/go-zero/rest/httpx"
+)
+
+func MobileUserFindHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		l := epidemic_mobile.NewMobileUserFindLogic(r.Context(), svcCtx)
+		resp, err := l.MobileUserFind()
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
+	}
+}

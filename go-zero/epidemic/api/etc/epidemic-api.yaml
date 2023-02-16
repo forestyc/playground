@@ -1,0 +1,11 @@
+Name: epidemic-api
+Host: 0.0.0.0
+Port: 8888
+
+UserRpc:
+  Etcd:
+    Hosts:
+      - baal1990.asia:23790
+    User: root
+    Pass: ETCD@1234567
+    Key: user.rpc

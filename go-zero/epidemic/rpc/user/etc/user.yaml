@@ -1,0 +1,39 @@
+Name: user.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+    - baal1990.asia:23790
+  User: root
+  Pass: ETCD@1234567
+  Key: user.rpc
+Mysql:
+  Dsn: baal:Baal@123@tcp(baal1990.asia:1444)/epidemic_online?parseTime=true
+  MaxOpen: 100
+  MaxIdle: 10
+  MaxIdleTime: 120
+  OperationTimeout: 30
+Redis:
+    Host: baal1990.asia:1443
+    Pass: Keydb@1234567
+CodeGenerator:
+  # 冻结时间 单位秒
+  FreezeTime: 86400
+  # 短信发送次数 单位次数 当超限后,就冻结
+  DurationCount: 10
+  # 最大发送时间窗口 比如半小时超过20次在开始冻结冻结时间发送函数  单位秒
+  DurationWindow: 86400
+  # 验证码有效时间 单位秒
+  ValidTime: 60
+  # 验证码错误次数 单位次数
+  WrongTime: 3
+Sms:
+    # huawei
+    AppKey: Zh4AZfNW85wmY75Estb5Km8HGcnn
+    AppSecret: 6nu843Bwc1tlGQraX04W25h6i5aW
+    Host: https://api.rtc.huaweicloud.com:10443/sms/batchSendSms/v1
+    TemplateId: 55ab415b225b40fd87362611d86b1acb
+    Sign: csms18083014
+Token:
+  SignKey: 67ceeaba-f3ce-4d96-a3c8-843c3e2f5ea2
+  AccessExpires: 7200
+  RefreshExpire: 604800

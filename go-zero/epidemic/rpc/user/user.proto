@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package user;
+option go_package = "./user";
+
+message LoginReq {
+  string mobile = 1;
+  string device = 2;
+  string code = 3;
+}
+
+message LoginResp {
+  string message = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+}
+
+message MsgCodeReq {
+  string mobile = 1;
+}
+
+message MsgCodeResp {
+  string message = 1;
+}
+
+service User {
+  rpc Login(LoginReq) returns(LoginResp);
+  rpc MsgCode(MsgCodeReq) returns(MsgCodeResp);
+}

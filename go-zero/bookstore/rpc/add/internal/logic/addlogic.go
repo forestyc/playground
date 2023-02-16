@@ -2,10 +2,9 @@ package logic
 
 import (
 	"context"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/model"
-
 	"github.com/Baal19905/playground/go-zero/bookstore/rpc/add/add"
 	"github.com/Baal19905/playground/go-zero/bookstore/rpc/add/internal/svc"
+	"github.com/Baal19905/playground/go-zero/bookstore/rpc/model"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

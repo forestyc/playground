@@ -1,0 +1,12 @@
+syntax = "v1"
+
+info(
+	title: "epidemic"
+	desc: "micro"
+	author: "Baal19905"
+	email: "echooflife123@163.com"
+	version: "v1.0.0"
+)
+
+import "common.api"
+import "user.api"

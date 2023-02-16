@@ -42,7 +42,7 @@ func (c *adderClient) Add(ctx context.Context, in *AddReq, opts ...grpc.CallOpti
 	return out, nil
 }
 
-// AdderServer is the server API for Adder service.
+// AdderServer is the user API for Adder service.
 // All implementations must embed UnimplementedAdderServer
 // for forward compatibility
 type AdderServer interface {

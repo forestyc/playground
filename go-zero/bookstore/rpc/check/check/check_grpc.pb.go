@@ -42,7 +42,7 @@ func (c *checkerClient) Check(ctx context.Context, in *CheckReq, opts ...grpc.Ca
 	return out, nil
 }
 
-// CheckerServer is the server API for Checker service.
+// CheckerServer is the user API for Checker service.
 // All implementations must embed UnimplementedCheckerServer
 // for forward compatibility
 type CheckerServer interface {

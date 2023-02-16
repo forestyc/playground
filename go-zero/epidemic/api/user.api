@@ -1,0 +1,67 @@
+syntax = "v1"
+
+info(
+    title: "user"
+    desc: "micro"
+    author: "Baal19905"
+    email: "echooflife123@163.com"
+    version: "v1.0.0"
+)
+
+type (
+    // 手机号获取用户信息
+    mobileUserFindResp {
+        ID int `json:"id"`
+        Name string `json:"name"`
+        Sex string `json:"sex"`
+        Mobile string `json:"mobile"`
+        BirthDate string `json:"birthDate"`
+        Company string `json:"company"`
+        Department string `json:"department"`
+        Organization string `json:"organization"`
+        Location string `json:"location"`
+        ResidentialAddressCode string `json:"residentialAddressCode"`
+        ResidentialAddressName string `json:"residentialAddressName"`
+        ResidentialAddressDetail string `json:"residentialAddressDetail"`
+        VaccinationRecord string `json:"vaccinationRecord"`
+        VaccinationTime string `json:"vaccinationTime"`
+        ReasonForNonVaccination string `json:"reasonForNonVaccination"`
+        Role string `json:"role"`
+        Status string `json:"status"`
+        ApprovedBy string `json:"approvedBy"`
+        ApprovalComments string `json:"approvalComments"`
+        ApprovalDate string `json:"approvalDate"`
+        Label string `json:"label"`
+    }
+)
+
+@server(
+    middleware: Auth // 权限校验
+    group: epidemic_mobile
+)
+service epidemic-api {
+    // 手机号获取用户信息
+    @handler MobileUserFind
+    get /epidemic_mobile/user/find () returns (mobileUserFindResp)
+    // 新建/编辑
+    //@handler MobileUserEdit
+    //post /epidemic_mobile/user/edit () returns ()
+    //// 涉疫登记信息查询
+    //@handler MobileRelatedStaffFind
+    //get /epidemic_mobile/related_staff/find () returns ()
+    //// 涉疫登记
+    //@handler MobileRelatedStaffEdit
+    //post /epidemic_mobile/related_staff/edit () returns ()
+    //// 健康登记
+    //@handler MobileRelatedStaffTemperature
+    //post /epidemic_mobile/related_staff/temperature () returns ()
+    //// 用户侧-排查表列表
+    //@handler MobileIvestigationList
+    //get /epidemic_mobile/investigation/list () returns ()
+    //// 用户侧-排查表填报
+    //@handler MobileIvestigationCheckin
+    //post /epidemic_mobile/investigation/checkin () returns ()
+    //// 更新个人信息
+    //@handler MobileUserUpdate
+    //post /epidemic_mobile/user/update () returns ()
+}
