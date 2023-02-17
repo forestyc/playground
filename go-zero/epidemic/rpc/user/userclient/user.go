@@ -13,14 +13,17 @@ import (
 )
 
 type (
-	LoginReq    = user.LoginReq
-	LoginResp   = user.LoginResp
-	MsgCodeReq  = user.MsgCodeReq
-	MsgCodeResp = user.MsgCodeResp
+	LoginReq           = user.LoginReq
+	LoginResp          = user.LoginResp
+	MobileFindUserReq  = user.MobileFindUserReq
+	MobileFindUserResp = user.MobileFindUserResp
+	MsgCodeReq         = user.MsgCodeReq
+	MsgCodeResp        = user.MsgCodeResp
 
 	User interface {
 		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 		MsgCode(ctx context.Context, in *MsgCodeReq, opts ...grpc.CallOption) (*MsgCodeResp, error)
+		MobileFindUser(ctx context.Context, in *MobileFindUserReq, opts ...grpc.CallOption) (*MobileFindUserResp, error)
 	}
 
 	defaultUser struct {
@@ -42,4 +45,9 @@ func (m *defaultUser) Login(ctx context.Context, in *LoginReq, opts ...grpc.Call
 func (m *defaultUser) MsgCode(ctx context.Context, in *MsgCodeReq, opts ...grpc.CallOption) (*MsgCodeResp, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.MsgCode(ctx, in, opts...)
+}
+
+func (m *defaultUser) MobileFindUser(ctx context.Context, in *MobileFindUserReq, opts ...grpc.CallOption) (*MobileFindUserResp, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.MobileFindUser(ctx, in, opts...)
 }

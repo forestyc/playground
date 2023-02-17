@@ -1,8 +1,12 @@
 package middleware
 
-import "net/http"
+import (
+	"github.com/Baal19905/playground/go-zero/epidemic/pkg/token"
+	"net/http"
+)
 
 type AuthMiddleware struct {
+	token.Token
 }
 
 func NewAuthMiddleware() *AuthMiddleware {
@@ -11,7 +15,8 @@ func NewAuthMiddleware() *AuthMiddleware {
 
 func (m *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// TODO generate middleware implement function, delete after code implementation
+		//xToken := r.Header.Get("X-TOKEN")
+		//m.ValidateAccessToken()
 
 		// Passthrough to next handler if need
 		next(w, r)

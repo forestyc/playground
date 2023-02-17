@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	MsgCode(ctx context.Context, in *MsgCodeReq, opts ...grpc.CallOption) (*MsgCodeResp, error)
+	MobileFindUser(ctx context.Context, in *MobileFindUserReq, opts ...grpc.CallOption) (*MobileFindUserResp, error)
 }
 
 type userClient struct {
@@ -52,12 +53,22 @@ func (c *userClient) MsgCode(ctx context.Context, in *MsgCodeReq, opts ...grpc.C
 	return out, nil
 }
 
+func (c *userClient) MobileFindUser(ctx context.Context, in *MobileFindUserReq, opts ...grpc.CallOption) (*MobileFindUserResp, error) {
+	out := new(MobileFindUserResp)
+	err := c.cc.Invoke(ctx, "/user.User/MobileFindUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
 type UserServer interface {
 	Login(context.Context, *LoginReq) (*LoginResp, error)
 	MsgCode(context.Context, *MsgCodeReq) (*MsgCodeResp, error)
+	MobileFindUser(context.Context, *MobileFindUserReq) (*MobileFindUserResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedUserServer) Login(context.Context, *LoginReq) (*LoginResp, er
 }
 func (UnimplementedUserServer) MsgCode(context.Context, *MsgCodeReq) (*MsgCodeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MsgCode not implemented")
+}
+func (UnimplementedUserServer) MobileFindUser(context.Context, *MobileFindUserReq) (*MobileFindUserResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MobileFindUser not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -120,6 +134,24 @@ func _User_MsgCode_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_MobileFindUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MobileFindUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).MobileFindUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.User/MobileFindUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).MobileFindUser(ctx, req.(*MobileFindUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MsgCode",
 			Handler:    _User_MsgCode_Handler,
+		},
+		{
+			MethodName: "MobileFindUser",
+			Handler:    _User_MobileFindUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

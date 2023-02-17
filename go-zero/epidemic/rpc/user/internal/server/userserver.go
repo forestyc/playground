@@ -31,3 +31,8 @@ func (s *UserServer) MsgCode(ctx context.Context, in *user.MsgCodeReq) (*user.Ms
 	l := logic.NewMsgCodeLogic(ctx, s.svcCtx)
 	return l.MsgCode(in)
 }
+
+func (s *UserServer) MobileFindUser(ctx context.Context, in *user.MobileFindUserReq) (*user.MobileFindUserResp, error) {
+	l := logic.NewMobileFindUserLogic(ctx, s.svcCtx)
+	return l.MobileFindUser(in)
+}

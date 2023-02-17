@@ -32,7 +32,7 @@ func main() {
 	})
 
 	defer s.Stop()
-	//defer ctx.Mysql.Close()
+	defer ctx.Mysql.Close()
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
 }

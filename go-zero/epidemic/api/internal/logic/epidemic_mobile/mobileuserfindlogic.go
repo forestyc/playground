@@ -25,6 +25,5 @@ func NewMobileUserFindLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Mo
 
 func (l *MobileUserFindLogic) MobileUserFind() (resp *types.MobileUserFindResp, err error) {
 	// todo: add your logic here and delete this line
-
 	return
 }
