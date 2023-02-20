@@ -11,7 +11,8 @@ import (
 func MobileUserFindHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		l := epidemic_mobile.NewMobileUserFindLogic(r.Context(), svcCtx)
-		resp, err := l.MobileUserFind()
+		token := r.Header.Get("X-TOKEN")
+		resp, err := l.MobileUserFind(token)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

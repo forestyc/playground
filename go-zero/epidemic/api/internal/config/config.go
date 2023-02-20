@@ -8,4 +8,9 @@ import (
 type Config struct {
 	rest.RestConf
 	UserRpc zrpc.RpcClientConf // user rpc
+	Token   Token
+}
+
+type Token struct {
+	SignKey string
 }

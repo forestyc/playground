@@ -2,6 +2,7 @@ package svc
 
 import (
 	"github.com/Baal19905/playground/go-zero/epidemic/pkg/gorm"
+	"github.com/Baal19905/playground/go-zero/epidemic/pkg/model"
 	"github.com/Baal19905/playground/go-zero/epidemic/pkg/msgcode"
 	"github.com/Baal19905/playground/go-zero/epidemic/pkg/sms"
 	"github.com/Baal19905/playground/go-zero/epidemic/pkg/token"
@@ -18,6 +19,7 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+	model.SetConfig(c.Crypto.SymmetricKey)
 	return &ServiceContext{
 		Config: c,
 		MsgCode: msgcode.NewRedisMsgCode(c.CodeGenerator, redis.New(c.Redis.Host, func(r *redis.Redis) {

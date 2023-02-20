@@ -9,3 +9,6 @@ UserRpc:
     User: root
     Pass: ETCD@1234567
     Key: user.rpc
+
+Token:
+  SignKey: 67ceeaba-f3ce-4d96-a3c8-843c3e2f5ea2

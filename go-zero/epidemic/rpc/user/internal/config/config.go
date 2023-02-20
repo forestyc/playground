@@ -14,4 +14,9 @@ type Config struct {
 	Sms           sms.Params
 	Mysql         gorm.MysqlConf
 	Token         token.Token
+	Crypto        Crypto
+}
+
+type Crypto struct {
+	SymmetricKey string // 对称加密秘钥
 }

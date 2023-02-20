@@ -37,3 +37,6 @@ Token:
   SignKey: 67ceeaba-f3ce-4d96-a3c8-843c3e2f5ea2
   AccessExpires: 7200
   RefreshExpire: 604800
+
+Crypto:
+  SymmetricKey: U2FsdGVkX19VtEQvCwGDwNBYqZjKv7tb

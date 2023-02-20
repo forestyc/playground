@@ -24,7 +24,7 @@ message MsgCodeResp {
 }
 
 message MobileFindUserReq {
-  int32 id = 1;
+  string token = 1;
 }
 
 message MobileFindUserResp {
