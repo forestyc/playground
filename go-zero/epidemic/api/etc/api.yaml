@@ -12,3 +12,12 @@ UserRpc:
 
 Token:
   SignKey: 67ceeaba-f3ce-4d96-a3c8-843c3e2f5ea2
+
+Prometheus:
+  Host: baal1990.asia
+  Port: 9091
+  Path: /metrics
+
+Log:
+  ServiceName: epidemic-api
+  Mode: file

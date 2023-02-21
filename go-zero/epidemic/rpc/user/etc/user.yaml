@@ -40,3 +40,12 @@ Token:
 
 Crypto:
   SymmetricKey: U2FsdGVkX19VtEQvCwGDwNBYqZjKv7tb
+
+Prometheus:
+  Host: baal1990.asia
+  Port: 9092
+  Path: /metrics
+
+Log:
+  ServiceName: epidemic-rpc-user
+  Mode: file
