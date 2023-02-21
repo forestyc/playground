@@ -39,7 +39,7 @@ type (
     middleware: Auth // 权限校验
     group: epidemic_mobile
 )
-service epidemic-api {
+service api {
     // 手机号获取用户信息
     @handler MobileUserFind
     get /epidemic_mobile/user/find () returns (mobileUserFindResp)

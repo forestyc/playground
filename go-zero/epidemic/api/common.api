@@ -35,7 +35,7 @@ type (
     }
 )
 
-service epidemic-api {
+service api {
     // 短信验证码
     @handler MsgCode
     get /epidemic/msg-code (commonMsgCodeReq) returns (commonMsgCodeResp)
