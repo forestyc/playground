@@ -120,23 +120,21 @@ func Download() {
 	err = chromedp.Run(ctx,
 		chromedp.Navigate("https://www.sgx.com/research-education/derivatives"),
 		chromedp.WaitVisible(`body`, chromedp.ByQuery),
+		chromedp.Sleep(30*time.Second), // 防止下拉列表值未初始化
 		// 展开type of data下拉框
 		chromedp.Click(`#page-container > template-base > div > div > section.col-xxs-12.col-md-9.template-widgets-section > div > sgx-widgets-wrapper > widget-research-and-reports-download:nth-child(6) > widget-reports-derivatives-settlement > div > sgx-input-select:nth-child(1) > label > span.sgx-input-select-filter-wrapper > input`,
 			chromedp.ByQuery, chromedp.NodeReady),
-		chromedp.WaitVisible(`#sgx-select-dialog > div.sgx-dialog-box.tether-element.tether-enabled.tether-element-attached-top.tether-element-attached-left.tether-target-attached-bottom.tether-target-attached-left > sgx-select-picker > sgx-list`,
-			chromedp.ByQuery),
 		// 选择futures
-		chromedp.Click(`#sgx-select-dialog > div.sgx-dialog-box.tether-element.tether-enabled.tether-element-attached-top.tether-element-attached-left.tether-target-attached-bottom.tether-target-attached-left > sgx-select-picker > sgx-list > div > div > sgx-select-picker-option:nth-child(2)`,
+		chromedp.Click(`#sgx-select-dialog > div.sgx-dialog-box.tether-element.tether-enabled.tether-element-attached-top.tether-element-attached-left.tether-target-attached-bottom.tether-target-attached-left > sgx-select-picker > sgx-list > div > div > sgx-select-picker-option:nth-child(1)`,
 			chromedp.ByQuery),
+		//chromedp.Click(`#sgx-select-dialog > div.sgx-dialog-box.tether-element.tether-enabled.tether-element-attached-top.tether-element-attached-left.tether-target-attached-bottom.tether-target-attached-left > sgx-select-picker > sgx-list > div > div > sgx-select-picker-option:nth-child(2)`,
+		//	chromedp.ByQuery),	// options
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			c := chromedp.FromContext(ctx)
 			return browser.SetDownloadBehavior(browser.SetDownloadBehaviorBehaviorAllowAndName).
 				WithDownloadPath(wd).
 				WithEventsEnabled(true).Do(cdp.WithExecutor(ctx, c.Browser))
 		}),
-		//browser.SetDownloadBehavior(browser.SetDownloadBehaviorBehaviorAllowAndName).
-		//	WithDownloadPath(wd).
-		//	WithEventsEnabled(true),
 		chromedp.Click(`#page-container > template-base > div > div > section.col-xxs-12.col-md-9.template-widgets-section > div > sgx-widgets-wrapper > widget-research-and-reports-download:nth-child(6) > widget-reports-derivatives-settlement > div > button`,
 			chromedp.ByQuery, chromedp.NodeVisible),
 	)
@@ -149,16 +147,14 @@ func Download() {
 
 func DownloadListener(ctx context.Context) <-chan string {
 	done := make(chan string, 1)
-	chromedp.ListenTarget(ctx, func(v interface{}) {
-		//select {
-		//case <-ctx.Done():
-		//	done <- ""
-		//	close(done)
-		//default:
-		//}
-		/*if ev, ok := v.(*browser.EventDownloadWillBegin); ok {
-			ev.SuggestedFilename = "asdfa"
-		} else*/if ev, ok := v.(*browser.EventDownloadProgress); ok {
+	chromedp.ListenBrowser(ctx, func(v interface{}) {
+		select {
+		case <-ctx.Done():
+			done <- ""
+			close(done)
+		default:
+		}
+		if ev, ok := v.(*browser.EventDownloadProgress); ok {
 			completed := "(unknown)"
 			if ev.TotalBytes != 0 {
 				completed = fmt.Sprintf("%0.2f%%", ev.ReceivedBytes/ev.TotalBytes*100.0)
