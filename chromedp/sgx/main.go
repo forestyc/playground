@@ -119,7 +119,14 @@ func Download() {
 	}
 	err = chromedp.Run(ctx,
 		chromedp.Navigate("https://www.sgx.com/research-education/derivatives"),
-		chromedp.WaitVisible(`#page-container > template-base > div > div > section.col-xxs-12.col-md-9.template-widgets-section > div > sgx-widgets-wrapper > widget-research-and-reports-download:nth-child(6) > widget-reports-derivatives-settlement > div > button`,
+		chromedp.WaitVisible(`body`, chromedp.ByQuery),
+		// 展开type of data下拉框
+		chromedp.Click(`#page-container > template-base > div > div > section.col-xxs-12.col-md-9.template-widgets-section > div > sgx-widgets-wrapper > widget-research-and-reports-download:nth-child(6) > widget-reports-derivatives-settlement > div > sgx-input-select:nth-child(1) > label > span.sgx-input-select-filter-wrapper > input`,
+			chromedp.ByQuery, chromedp.NodeReady),
+		chromedp.WaitVisible(`#sgx-select-dialog > div.sgx-dialog-box.tether-element.tether-enabled.tether-element-attached-top.tether-element-attached-left.tether-target-attached-bottom.tether-target-attached-left > sgx-select-picker > sgx-list`,
+			chromedp.ByQuery),
+		// 选择futures
+		chromedp.Click(`#sgx-select-dialog > div.sgx-dialog-box.tether-element.tether-enabled.tether-element-attached-top.tether-element-attached-left.tether-target-attached-bottom.tether-target-attached-left > sgx-select-picker > sgx-list > div > div > sgx-select-picker-option:nth-child(2)`,
 			chromedp.ByQuery),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			c := chromedp.FromContext(ctx)
@@ -131,7 +138,7 @@ func Download() {
 		//	WithDownloadPath(wd).
 		//	WithEventsEnabled(true),
 		chromedp.Click(`#page-container > template-base > div > div > section.col-xxs-12.col-md-9.template-widgets-section > div > sgx-widgets-wrapper > widget-research-and-reports-download:nth-child(6) > widget-reports-derivatives-settlement > div > button`,
-			chromedp.ByQuery),
+			chromedp.ByQuery, chromedp.NodeVisible),
 	)
 	if err != nil {
 		log.Fatal(err)
