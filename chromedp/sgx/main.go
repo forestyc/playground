@@ -3,16 +3,21 @@
 package main
 
 import (
+	"archive/zip"
 	"context"
+	"encoding/csv"
 	"fmt"
 	"github.com/chromedp/cdproto/browser"
 	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/cdproto/target"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/chromedp/chromedp"
@@ -100,10 +105,7 @@ func addNewTabListener(ctx context.Context) <-chan target.ID {
 func Download() {
 	ctx, cancel := chromedp.NewContext(
 		context.Background(),
-		chromedp.WithDebugf(log.Printf),
-		//chromedp.WithBrowserOption(
-		//	chromedp.WithDialTimeout(30*time.Second),
-		//),
+		chromedp.WithErrorf(log.Printf),
 	)
 	defer cancel()
 
@@ -139,10 +141,12 @@ func Download() {
 			chromedp.ByQuery, chromedp.NodeVisible),
 	)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("wrote %s")
 	}
 	guid := <-done
-	log.Printf("wrote %s", filepath.Join(wd, guid))
+	if err = HandleJob(filepath.Join(wd, guid)); err != nil {
+		log.Printf("wrote %s")
+	}
 }
 
 func DownloadListener(ctx context.Context) <-chan string {
@@ -167,4 +171,118 @@ func DownloadListener(ctx context.Context) <-chan string {
 		}
 	})
 	return done
+}
+
+func Unzip(path string) (string, error) {
+	archive, err := zip.OpenReader(path)
+	if err != nil {
+		panic(err)
+	}
+	dstFileName := ""
+	for _, f := range archive.File {
+		dstFileName = f.Name
+		dstFile, err := os.OpenFile(dstFileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if err != nil {
+			return dstFileName, err
+		}
+
+		fileInArchive, err := f.Open()
+		if err != nil {
+			return dstFileName, err
+		}
+
+		if _, err := io.Copy(dstFile, fileInArchive); err != nil {
+			return dstFileName, err
+		}
+
+		dstFile.Close()
+		fileInArchive.Close()
+	}
+	archive.Close()
+	return dstFileName, nil
+}
+
+type DayQuotsSgx struct {
+	SpeciesId      string
+	Exchange       string
+	QuotSource     string
+	ContractId     string
+	SettlePrice    string
+	PreSettlePrice string
+	HighPrice      string
+	LowPrice       string
+	Volumns        string
+	Interest       string
+	Date           string
+}
+
+type SgxFuture map[string]DayQuotsSgx
+
+var (
+	nameMap = map[string]string{
+		"FEF":  "SGX铁矿石62%(汇总)",
+		"M65F": "SGX铁矿石65%(汇总)",
+		"LPF":  "SGX铁矿石块矿(汇总)",
+	}
+)
+
+func ReadCsv(path string) (SgxFuture, error) {
+	result := make(SgxFuture)
+
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	reader.FieldsPerRecord = -1
+
+	for {
+		csvdata, err := reader.Read() // 按行读取数据,可控制读取部分
+		if err == io.EOF {
+			break
+		}
+
+		com := strings.TrimSpace(csvdata[1])
+		if com == "FEF" || com == "M65F" || com == "LPF" {
+			year := csvdata[3][2:]
+			month, _ := strconv.Atoi(csvdata[2])
+			quot := DayQuotsSgx{
+				SpeciesId:      nameMap[com],
+				Exchange:       "SGX",
+				QuotSource:     "SGX",
+				ContractId:     year + fmt.Sprintf("%02d", month),
+				SettlePrice:    csvdata[8],
+				PreSettlePrice: "",
+				HighPrice:      csvdata[5],
+				LowPrice:       csvdata[6],
+				Volumns:        csvdata[9],
+				Interest:       csvdata[10],
+				//Date:           "",
+			}
+			key := quot.SpeciesId + quot.ContractId
+			result[key] = quot
+		}
+	}
+	return result, nil
+}
+
+func HandleJob(path string) error {
+	defer os.Remove(path)
+	archive, err := Unzip(path)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	defer os.Remove(archive)
+	result, err := ReadCsv(archive)
+	if err != nil {
+		return err
+	}
+	// todo
+	for k, v := range result {
+		log.Println("key", k, "value", v)
+	}
+	return nil
 }
