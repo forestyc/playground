@@ -1,4 +1,4 @@
-package news
+package announcement
 
 import (
 	"github.com/Baal19905/playground/colly/cmd/crawler/app/context"
@@ -41,13 +41,13 @@ func NewNews(ctx context.GlobalContext, url string) *Article {
 
 func (a *Article) Run() {
 	if err := a.crawler.Run(); err != nil {
-		a.ctx.Logger.Error("[本所要闻]爬取文章失败", zap.Error(err), zap.Any("url", a.url))
+		a.ctx.Logger.Error("[通知公告]爬取文章失败", zap.Error(err), zap.Any("url", a.url))
 		return
 	}
 	if len(a.Title) == 0 || len(a.PublishDate) == 0 || len(a.Body) == 0 {
 		a.ctx.Logger.Error("非法的文章", zap.Any("article", a), zap.Any("url", a.url))
 	}
-	a.ctx.Logger.Info("[本所要闻]爬取文章成功", zap.Any("url", a.url))
+	a.ctx.Logger.Info("[通知公告]爬取文章成功", zap.Any("url", a.url))
 }
 
 // 获取发布日期
@@ -102,7 +102,7 @@ func (a *Article) setConst() crawler.Callback {
 func (a *Article) err() crawler.Callback {
 	return func() {
 		a.crawler.Crawler.OnError(func(r *colly.Response, e error) {
-			a.ctx.Logger.Error("[本所要闻]爬取文章失败", zap.Error(e), zap.Any("rsp", r))
+			a.ctx.Logger.Error("[通知公告]爬取文章失败", zap.Error(e), zap.Any("rsp", r))
 		})
 	}
 }

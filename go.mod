@@ -6,6 +6,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20230329100754-6125fc8d7142
 	github.com/chromedp/chromedp v0.9.1
 	github.com/fsnotify/fsnotify v1.6.0
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
@@ -45,7 +46,6 @@ require (
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/swag v0.19.14 // indirect
-	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect

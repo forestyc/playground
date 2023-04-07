@@ -11,11 +11,18 @@ import (
 	"strings"
 )
 
+type CrawlerConfig struct {
+	Table      string `mapstructure:"table"`
+	Mark       string `mapstructure:"mark"`
+	MarkEnable bool   `mapstructure:"mark-enable"`
+}
+
 // Config 配置信息
 type Config struct {
-	Database gorm.Config  `yaml:"database"`
-	Log      zap.Config   `yaml:"log"`
-	Redis    redis.Config `yaml:"redis"`
+	Database gorm.Config   `mapstructure:"database"`
+	Log      zap.Config    `mapstructure:"log"`
+	Redis    redis.Config  `mapstructure:"redis"`
+	Crawler  CrawlerConfig `mapstructure:"crawler"`
 }
 
 // Load 加载配置

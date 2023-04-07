@@ -1,6 +1,6 @@
 # 配置数据库连接
 database:
-  dsn: root:CXT@dlfc#2021%@fipdev.dfitc.com.cn:8913/infoservice?charset=utf8
+  dsn: root:CXT@dlfc#2021%@tcp(fipdev.dfitc.com.cn:8913)/infoservice?charset=utf8
   driver: mysql
   max-open: 10
   idle-conns: 5
@@ -20,10 +20,15 @@ redis:
 log:
   level: info
   format: console
-  #prefix: crawler               # 定制
-  director: ../log
-  #link-name: ../log/latest_log  # 定制
+  director: ./log
   show-line: true
   encode-level: LowercaseColorLevelEncoder
   stacktrace-key: stacktrace
   log-in-console: true
+
+# 爬虫
+crawler:
+  table: articles
+  mark: crawler-records
+  mark-enable: true
+

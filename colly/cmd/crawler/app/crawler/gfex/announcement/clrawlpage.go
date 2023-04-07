@@ -1,4 +1,4 @@
-package news
+package announcement
 
 import (
 	"fmt"
@@ -33,7 +33,7 @@ func NewListPage(ctx context.GlobalContext) *ListPage {
 	}
 	firstPage := &PageInfo{ctx: ctx}
 	firstPage.crawler = crawler.NewColly(
-		_const.NewsPageUrlFirst,
+		_const.AnnouncementPageUrlFirst,
 		firstPage.getTotalPage(&l.totalPage),
 		firstPage.getArticleHref(),
 	)
@@ -45,22 +45,22 @@ func (l *ListPage) Run() {
 	var err error
 	// 首页
 	if err = l.page[0].crawler.Run(); err != nil {
-		l.ctx.Logger.Error("[本所要闻]爬取列表页失败", zap.Error(err), zap.String("url", l.page[0].crawler.Url))
+		l.ctx.Logger.Error("[通知公告]爬取列表页失败", zap.Error(err), zap.String("url", l.page[0].crawler.Url))
 		return
 	}
-	l.ctx.Logger.Info("[本所要闻]爬取列表页成功", zap.String("url", l.page[0].crawler.Url))
+	l.ctx.Logger.Info("[通知公告]爬取列表页成功", zap.String("url", l.page[0].crawler.Url))
 	for i := 1; i <= l.totalPage; i++ {
 		page := &PageInfo{ctx: l.ctx}
-		url := fmt.Sprintf(_const.NewsPageUrlFormat, i)
+		url := fmt.Sprintf(_const.AnnouncementPageUrlFormat, i)
 		page.crawler = crawler.NewColly(
 			url,
 			page.getArticleHref(),
 		)
 		if err = page.crawler.Run(); err != nil {
-			l.ctx.Logger.Error("[本所要闻]爬取列表页失败", zap.Error(err), zap.String("url", page.crawler.Url))
+			l.ctx.Logger.Error("[通知公告]爬取列表页失败", zap.Error(err), zap.String("url", page.crawler.Url))
 			continue
 		}
-		l.ctx.Logger.Info("[本所要闻]爬取列表页成功", zap.String("url", page.crawler.Url))
+		l.ctx.Logger.Info("[通知公告]爬取列表页成功", zap.String("url", page.crawler.Url))
 		l.page = append(l.page, page)
 	}
 }
@@ -80,8 +80,8 @@ func (p *PageInfo) getTotalPage(totalPage *int) crawler.Callback {
 		p.crawler.Crawler.OnHTML(selector, func(e *colly.HTMLElement) {
 			if !strings.HasPrefix(e.Text, _const.PageTotalPrefix) ||
 				!strings.Contains(e.Text, _const.PageTotalSuffix) {
-				errMsg := `[本所要闻]总页码文本格式错误，应为"` + _const.PageTotalPrefix + `x` + _const.PageTotalSuffix + `", 实际为"` + e.Text + `"`
-				p.ctx.Logger.Error("[本所要闻]爬取列表页失败", zap.String("url", errMsg))
+				errMsg := `[通知公告]总页码文本格式错误，应为"` + _const.PageTotalPrefix + `x` + _const.PageTotalSuffix + `", 实际为"` + e.Text + `"`
+				p.ctx.Logger.Error("[通知公告]爬取列表页失败", zap.String("url", errMsg))
 				return
 			}
 			total := strings.TrimPrefix(e.Text, _const.PageTotalPrefix)
@@ -113,7 +113,7 @@ func (p *PageInfo) getArticleHref() crawler.Callback {
 func (p *PageInfo) err() crawler.Callback {
 	return func() {
 		p.crawler.Crawler.OnError(func(r *colly.Response, e error) {
-			p.ctx.Logger.Error("[本所要闻]爬取列表页失败", zap.Error(e), zap.Any("rsp", r))
+			p.ctx.Logger.Error("[通知公告]爬取列表页失败", zap.Error(e), zap.Any("rsp", r))
 		})
 	}
 }

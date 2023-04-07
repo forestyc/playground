@@ -1,8 +1,11 @@
 package crawler
 
-import "github.com/Baal19905/playground/colly/cmd/crawler/app/context"
+import (
+	"github.com/Baal19905/playground/colly/cmd/crawler/app/context"
+	"github.com/Baal19905/playground/colly/pkg/log/zap"
+)
 
 type Crawler interface {
-	Init(ctx context.GlobalContext)
+	Init(ctx context.GlobalContext, config zap.Config)
 	Run()
 }
