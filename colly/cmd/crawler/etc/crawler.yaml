@@ -1,0 +1,29 @@
+# 配置数据库连接
+database:
+  dsn: root:CXT@dlfc#2021%@fipdev.dfitc.com.cn:8913/infoservice?charset=utf8
+  driver: mysql
+  max-open: 10
+  idle-conns: 5
+  idle-timeout: 300 #5分钟
+  operation-timeout: 10 # 10秒
+
+# Redis
+redis:
+  address: 82.156.37.89:1443
+  password: Redis@1234567
+  max-open: 10
+  idle-timeout: 300
+  idle-conns: 5
+  operation-timeout: 10 # 10秒
+
+# 日志
+log:
+  level: info
+  format: console
+  #prefix: crawler               # 定制
+  director: ../log
+  #link-name: ../log/latest_log  # 定制
+  show-line: true
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  log-in-console: true

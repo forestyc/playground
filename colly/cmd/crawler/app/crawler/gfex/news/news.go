@@ -1,0 +1,64 @@
+package news
+
+import "C"
+import (
+	"github.com/Baal19905/playground/colly/cmd/crawler/app/context"
+	"github.com/Baal19905/playground/colly/pkg/log/zap"
+)
+
+type GfexNews struct {
+	ctx context.GlobalContext
+}
+
+// Init 初始化
+func (gn *GfexNews) Init(ctx context.GlobalContext) {
+	gn.ctx = ctx
+	// 初始化日志
+	ctx.Logger = zap.NewZap(ctx.C.Log)
+}
+
+// Run 广期所-本所要闻
+func (gn *GfexNews) Run() {
+	// 爬取列表页
+	href := gn.CrawlPage()
+	// 爬取文章
+	var articles []*Article
+	for _, e := range href {
+		a := gn.CrawlArticle(e)
+		articles = append(articles, a)
+	}
+	// 写入数据库
+	gn.SaveArticle(articles)
+}
+
+// CrawlPage 获取所有文章
+func (gn *GfexNews) CrawlPage() []string {
+	gn.ctx.Logger.Info("[本所要闻]列表页爬取开始")
+	defer gn.ctx.Logger.Info("[本所要闻]列表页爬取结束")
+	listPage := NewListPage(gn.ctx)
+	listPage.Run()
+	return listPage.GetArticleHref()
+}
+
+// CrawlArticle 爬取文章
+func (gn *GfexNews) CrawlArticle(url string) *Article {
+	gn.ctx.Logger.Info("[本所要闻]文章爬取开始")
+	defer gn.ctx.Logger.Info("[本所要闻]文章爬取结束")
+	news := NewNews(gn.ctx, url)
+	news.Run()
+	return news
+}
+
+// SaveArticle 保存文章
+func (gn *GfexNews) SaveArticle(articles []*Article) {
+	gn.ctx.Logger.Info("[本所要闻]文章页保存开始")
+	defer gn.ctx.Logger.Info("[本所要闻]文章保存结束")
+	session := gn.ctx.Db.Session()
+	session = session.Begin()
+	session = session.Table("articles").Save(articles)
+	if int(session.RowsAffected) != len(articles) {
+		gn.ctx.Logger.Error("[本所要闻]文章页保存开始")
+		return
+	}
+	session.Commit()
+}

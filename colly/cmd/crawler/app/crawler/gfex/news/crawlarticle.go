@@ -1,16 +1,32 @@
-package gfex
+package news
 
 import (
-	"fmt"
+	"github.com/Baal19905/playground/colly/cmd/crawler/app/context"
+	"github.com/Baal19905/playground/colly/cmd/crawler/app/crawler/gfex/common"
 	"github.com/Baal19905/playground/colly/pkg/crawler"
 	"github.com/Baal19905/playground/colly/pkg/util"
 	"github.com/gocolly/colly/v2"
+	"go.uber.org/zap"
 	"strings"
 	"time"
 )
 
-func NewNews(url string) *Article {
-	a := &Article{}
+// Article 文章
+type Article struct {
+	PublishDate string                `gorm:"publish_date"`
+	SortDate    string                `gorm:"sort_date"`
+	Title       string                `gorm:"title"`
+	Origin      string                `gorm:"origin"`
+	Body        string                `gorm:"body"`
+	ColumnLevel string                `gorm:"column_level"`
+	crawler     crawler.Colly         `gorm:"-"`
+	ctx         context.GlobalContext `gorm:"-"`
+}
+
+func NewNews(ctx context.GlobalContext, url string) *Article {
+	a := &Article{
+		ctx: ctx,
+	}
 	a.crawler = crawler.NewColly(
 		url,
 		a.getPublishDate(),
@@ -23,10 +39,11 @@ func NewNews(url string) *Article {
 
 func (a *Article) Run() {
 	if err := a.crawler.Run(); err != nil {
-		fmt.Println(err)
+		a.ctx.Logger.Error("[本所要闻]爬取文章失败", zap.Error(err), zap.Any("article", a))
+		return
 	}
 	if len(a.Title) == 0 || len(a.PublishDate) == 0 || len(a.Body) == 0 {
-		fmt.Println("nil article")
+		a.ctx.Logger.Error("非法的文章", zap.Any("article", a))
 	}
 }
 
@@ -71,9 +88,17 @@ func (a *Article) setConst() crawler.Callback {
 			a.SortDate = time.Now().Format("2006-01-02 15:04:05") // sort_date必填
 		}
 		// 来源
-		a.Origin = origin
+		a.Origin = common.Origin
 		// 初始栏目
-		a.ColumnLevel = column
-		a.RefColumns = column
+		a.ColumnLevel = common.Column
+	}
+}
+
+// 错误
+func (a *Article) err() crawler.Callback {
+	return func() {
+		a.crawler.Crawler.OnError(func(r *colly.Response, e error) {
+			a.ctx.Logger.Error("[本所要闻]爬取文章失败", zap.Error(e), zap.Any("rsp", r))
+		})
 	}
 }
