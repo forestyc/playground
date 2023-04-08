@@ -1,6 +1,5 @@
 package news
 
-import "C"
 import (
 	"github.com/Baal19905/playground/colly/cmd/crawler/app/context"
 	"github.com/Baal19905/playground/colly/cmd/crawler/app/crawler/common"

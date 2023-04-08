@@ -1,4 +1,4 @@
-package announcement
+package focus
 
 import (
 	"github.com/Baal19905/playground/colly/cmd/crawler/app/context"
@@ -7,12 +7,12 @@ import (
 	rawZap "go.uber.org/zap"
 )
 
-type GfexAnnouncement struct {
+type GfexFocus struct {
 	ctx context.GlobalContext
 }
 
 // Init 初始化
-func (gn *GfexAnnouncement) Init(ctx context.GlobalContext, config zap.Config) {
+func (gn *GfexFocus) Init(ctx context.GlobalContext, config zap.Config) {
 	gn.ctx = ctx
 	gn.ctx.C.Log = config
 	// 初始化日志
@@ -20,7 +20,7 @@ func (gn *GfexAnnouncement) Init(ctx context.GlobalContext, config zap.Config) {
 }
 
 // Run 广期所-通知公告
-func (gn *GfexAnnouncement) Run() {
+func (gn *GfexFocus) Run() {
 	// 爬取列表页
 	href := gn.CrawlPage()
 	// 爬取文章
@@ -40,35 +40,35 @@ func (gn *GfexAnnouncement) Run() {
 }
 
 // CrawlPage 获取所有文章
-func (gn *GfexAnnouncement) CrawlPage() []string {
-	gn.ctx.Logger.Info("[通知公告]列表页爬取开始")
-	defer gn.ctx.Logger.Info("[通知公告]列表页爬取结束")
+func (gn *GfexFocus) CrawlPage() []string {
+	gn.ctx.Logger.Info("[媒体聚焦]列表页爬取开始")
+	defer gn.ctx.Logger.Info("[媒体聚焦]列表页爬取结束")
 	listPage := NewListPage(gn.ctx)
 	listPage.Run()
 	return listPage.GetArticleHref()
 }
 
 // CrawlArticle 爬取文章
-func (gn *GfexAnnouncement) CrawlArticle(url string) *Article {
-	gn.ctx.Logger.Info("[通知公告]文章爬取开始")
-	defer gn.ctx.Logger.Info("[通知公告]文章爬取结束")
+func (gn *GfexFocus) CrawlArticle(url string) *Article {
+	gn.ctx.Logger.Info("[媒体聚焦]文章爬取开始")
+	defer gn.ctx.Logger.Info("[媒体聚焦]文章爬取结束")
 	news := NewNews(gn.ctx, url)
 	news.Run()
 	return news
 }
 
 // SaveArticle 保存文章
-func (gn *GfexAnnouncement) SaveArticle(articles []*Article) {
+func (gn *GfexFocus) SaveArticle(articles []*Article) {
 	if articles == nil || len(articles) == 0 {
 		return
 	}
-	gn.ctx.Logger.Info("[通知公告]文章页保存开始")
+	gn.ctx.Logger.Info("[媒体聚焦]文章页保存开始")
 	session := gn.ctx.Db.Session()
 	session = session.Begin()
 	session = session.Table(gn.ctx.C.Crawler.Table).Save(articles)
 	if int(session.RowsAffected) != len(articles) {
-		gn.ctx.Logger.Warn("[通知公告]文章页保存失败")
+		gn.ctx.Logger.Warn("[媒体聚焦]文章页保存失败")
 	}
 	session.Commit()
-	gn.ctx.Logger.Info("[通知公告]文章保存结束", rawZap.Int64("RowsAffected", session.RowsAffected))
+	gn.ctx.Logger.Info("[媒体聚焦]文章保存结束", rawZap.Int64("RowsAffected", session.RowsAffected))
 }
