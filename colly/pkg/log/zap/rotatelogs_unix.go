@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func GetWriteSyncer(z *Config) (zapcore.WriteSyncer, error) {
+func GetWriteSyncer(z Config) (zapcore.WriteSyncer, error) {
 	fileWriter, err := zaprotatelogs.New(
 		path.Join(z.Director, "%Y-%m-%d.log"),
 		zaprotatelogs.WithLinkName(z.LinkName),
