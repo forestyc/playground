@@ -37,13 +37,13 @@ func NewMysql(config MysqlConf) Mysql {
 	}
 }
 
-func (mysql Mysql) Session() *gorm.DB {
-	ctx, _ := context.WithTimeout(context.Background(), time.Duration(mysql.config.OperationTimeout)*time.Second)
+func (mysql Mysql) Session() (*gorm.DB, context.CancelFunc) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(mysql.config.OperationTimeout)*time.Second)
 	return mysql.db.Session(&gorm.Session{
 		PrepareStmt: true,
 		NewDB:       true,
 		Context:     ctx,
-	})
+	}), cancel
 }
 
 func (mysql Mysql) Close() {
