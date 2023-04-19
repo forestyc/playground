@@ -33,9 +33,10 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginResp, error) {
 	//	logx.Error("登录失败，mobile=", in.Mobile, err)
 	//	return resp, err
 	//}
-	user := model.EpidemicUser{}
-	session := l.svcCtx.Mysql.Session()
-	result := session.Table(user.TableName()).Where("mobile=?", in.Mobile).Find(&user)
+	epidemicUser := model.EpidemicUser{}
+	session, cancel := l.svcCtx.Mysql.Session()
+	defer cancel()
+	result := session.Table(epidemicUser.TableName()).Where("mobile=?", in.Mobile).Find(&epidemicUser)
 	if err = result.Error; err != nil {
 		logx.Error("登录失败，mobile=", in.Mobile, err)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -47,7 +48,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginResp, error) {
 	}
 
 	// 生成token并返回
-	resp.AccessToken, resp.RefreshToken, err = l.svcCtx.Token.GenToken(strconv.Itoa(int(user.ID)))
+	resp.AccessToken, resp.RefreshToken, err = l.svcCtx.Token.GenToken(strconv.Itoa(int(epidemicUser.ID)))
 	if err != nil {
 		logx.Error("登录失败，mobile=", in.Mobile, err)
 		resp.Message = "登录失败"

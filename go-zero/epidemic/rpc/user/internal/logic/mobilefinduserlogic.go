@@ -29,9 +29,9 @@ func (l *MobileFindUserLogic) MobileFindUser(in *user.MobileFindUserReq) (*user.
 		logx.Error("MobileFindUser invalid token", err)
 		return nil, err
 	}
-	session := l.svcCtx.Mysql.Session()
-	session.
-		userInfo := model.EpidemicUser{}
+	session, cancel := l.svcCtx.Mysql.Session()
+	defer cancel()
+	userInfo := model.EpidemicUser{}
 	result := session.Table(userInfo.TableName()).Where("id = ?", payload.ID).Find(&userInfo)
 	if result.Error != nil {
 		return nil, result.Error

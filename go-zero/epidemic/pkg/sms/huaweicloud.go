@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -96,7 +96,7 @@ func (h *HuaweiCloud) genXWSSE() string {
 
 // genNonce 生成nonce
 func (h *HuaweiCloud) genNonce() string {
-	return uuid.NewV4().String()
+	return uuid.NewString()
 }
 
 // formatTo 格式化多个手机号
