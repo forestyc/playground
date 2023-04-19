@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 const (
@@ -33,7 +33,7 @@ func newWithAccessClaims(userId string, exp time.Duration) *AccessClaims {
 	expiresAt := time.Now().Add(exp)
 	claim.ExpiresAt = jwt.NewNumericDate(expiresAt)
 	claim.Tag = accessTag
-	claim.Random = uuid.NewV4().String()
+	claim.Random = uuid.NewString()
 	return &claim
 }
 
@@ -43,7 +43,7 @@ func newWithRefreshClaims(userId string, exp time.Duration) *RefreshClaims {
 	expiresAt := time.Now().Add(exp)
 	claim.ExpiresAt = jwt.NewNumericDate(expiresAt)
 	claim.Tag = refreshTag
-	claim.Random = uuid.NewV4().String()
+	claim.Random = uuid.NewString()
 	return &claim
 }
 
