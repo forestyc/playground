@@ -11,7 +11,7 @@ import (
 
 func main() {
 	client, err := api.NewClient(api.Config{
-		Address: "http://82.156.37.89:9090",
+		Address: "https://baal1990.asia/prometheus/",
 	})
 	if err != nil {
 		fmt.Printf("Error creating client: %v\n", err)
