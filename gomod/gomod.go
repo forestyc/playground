@@ -21,7 +21,7 @@ type Mod struct {
 func main() {
 	var file string
 	var mods []Mod
-	flag.StringVar(&file, "file", "", "input json")
+	flag.StringVar(&file, "file", "all.json", "input json")
 	flag.Parse()
 	content, err := os.ReadFile(file)
 	if err != nil {
