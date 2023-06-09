@@ -9,10 +9,8 @@ import (
 var c crawler.Colly
 
 func main() {
-	var body string
-	c = crawler.NewColly("http://www.gfex.com.cn/u/interfacesWebTtQueryTradPara/loadDayList", test(&body))
-	c.Run()
-	fmt.Println(body)
+	c = crawler.NewColly("http://www.gfex.com.cn/gfex/bsyw/list_yw.shtml") //, test(&body))
+	fmt.Println(c.Run())
 }
 
 func test(body *string) crawler.Callback {

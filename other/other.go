@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 var aa = ""
 
@@ -11,8 +14,6 @@ func hehe() {
 }
 
 func main() {
-	p := hehe
-	aa = "aa"
-	p()
-
+	str := "\n\n\n\naaaa"
+	fmt.Println(strings.TrimPrefix(str, "\n"))
 }
