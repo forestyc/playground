@@ -1,15 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	r := gin.Default()
-	r.GET("/ping/:id/:type", func(c *gin.Context) {
-		fmt.Println(c.Param("id"))
-		fmt.Println(c.Param("type"))
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.StaticFile("/.well-known/pki-validation/3DC8B7244EF16DBD8645BD97DEBB3555.txt", "3DC8B7244EF16DBD8645BD97DEBB3555.txt")
+	r.Run(":80") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
