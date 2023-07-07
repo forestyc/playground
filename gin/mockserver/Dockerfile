@@ -1,26 +1,28 @@
-# syntax=docker/dockerfile:1
-FROM golang:latest
+# 打包
+FROM golang:latest as builder
 
-# Set destination for COPY
-WORKDIR app
+# 启用go module
+ENV GO111MODULE=on \
+    GOPROXY=https://goproxy.cn,direct
 
-# Download Go modules
-COPY ../../go.mod ../../go.sum ./
-RUN go mod download
+WORKDIR /app
 
-# Copy the source code. Note the slash at the end, as explained in
-# https://docs.docker.com/engine/reference/builder/#copy
 COPY *.go ./
 
 # Build
+RUN go mod init mockserver
+RUN go mod tidy
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/mockserver
 
-# Optional:
-# To bind to a TCP port, runtime parameters must be supplied to the docker command.
-# But we can document in the Dockerfile what ports
-# the application is going to listen on by default.
-# https://docs.docker.com/engine/reference/builder/#expose
+# 运行阶段指定scratch作为基础镜像
+FROM scratch
+
+WORKDIR /app
+
+# 拷贝程序
+COPY --from=builder /app/mockserver .
+
 EXPOSE 8080
 
 # Run
-CMD ["/app/mockserver"]
+CMD ["./mockserver"]
