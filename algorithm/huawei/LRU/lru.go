@@ -5,31 +5,43 @@ import (
 )
 
 func main() {
-	lRUCache := Constructor(2)
-	lRUCache.Put(1, 1) // 缓存是 {1=1}
-	lRUCache.Put(2, 2) // 缓存是 {1=1, 2=2}
-	lRUCache.Get(1)    // 返回 1
-	lRUCache.Put(3, 3) // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}
-	lRUCache.Get(2)    // 返回 -1 (未找到)
-	lRUCache.Put(4, 4) // 该操作会使得关键字 1 作废，缓存是 {4=4, 3=3}
-	lRUCache.Get(1)    // 返回 -1 (未找到)
-	lRUCache.Get(3)    // 返回 3
-	lRUCache.Get(4)    // 返回 4
+	lRUCache := Constructor(3)
+	lRUCache.Put(1, 1)
+	lRUCache.Put(2, 2)
+	lRUCache.Put(3, 3)
+	lRUCache.Put(4, 4)
+	lRUCache.Get(4)
+	lRUCache.Get(3)
+	lRUCache.Get(2)
+	lRUCache.Get(1)
+	lRUCache.Put(5, 5)
+	lRUCache.Get(1)
+	lRUCache.Get(2)
+	lRUCache.Get(3)
+	lRUCache.Get(4)
+	lRUCache.Get(5)
+}
+
+type Node struct {
+	Key   int
+	Value int
+	Pre   *Node
+	Next  *Node
 }
 
 type LRUCache struct {
-	cap     int
-	cache   map[int]int
-	usedKey []int
-	lock    *sync.Mutex
+	cap      int
+	cache    map[int]*Node
+	listHead *Node
+	listTail *Node
+	lock     *sync.Mutex
 }
 
 func Constructor(capacity int) LRUCache {
 	lru := LRUCache{
-		cap:     capacity,
-		cache:   make(map[int]int),
-		usedKey: make([]int, 0),
-		lock:    &sync.Mutex{},
+		cap:   capacity,
+		cache: make(map[int]*Node),
+		lock:  &sync.Mutex{},
 	}
 	return lru
 }
@@ -37,50 +49,68 @@ func Constructor(capacity int) LRUCache {
 func (this *LRUCache) Get(key int) int {
 	this.lock.Lock()
 	defer this.lock.Unlock()
-	return this.get(key)
-}
-
-func (this *LRUCache) Put(key int, value int) {
-	this.lock.Lock()
-	defer this.lock.Unlock()
-	if valueCached := this.get(key); valueCached == -1 {
-		lenth := len(this.cache)
-		if lenth >= this.cap {
-			removeKey := this.usedKey[0]
-			delete(this.cache, removeKey)
-			tmp := make([]int, 0)
-			tmp = append(tmp, this.usedKey[1:]...)
-			this.usedKey = tmp
-		}
-	}
-	this.recordKey(key)
-	this.cache[key] = value
-}
-
-func (this *LRUCache) get(key int) int {
-	value, ok := this.cache[key]
+	node, ok := this.cache[key]
 	if ok {
-		this.recordKey(key)
-		return value
+		this.moveToTial(node)
+		return node.Value
 	} else {
 		return -1
 	}
 }
 
-func (this *LRUCache) recordKey(key int) {
-	idx := -1
-	for k, e := range this.usedKey {
-		if e == key {
-			idx = k
-			break
+func (this *LRUCache) Put(key int, value int) {
+	this.lock.Lock()
+	defer this.lock.Unlock()
+	node, ok := this.cache[key]
+	if !ok {
+		if len(this.cache) >= this.cap {
+			this.removeUnused()
 		}
+		node = &Node{}
+		this.addNode(node)
+	} else {
+		this.moveToTial(node)
 	}
-	if idx != -1 {
-		tmp := make([]int, 0)
-		tmp = append(tmp, this.usedKey[:idx]...)
-		tmp = append(tmp, this.usedKey[idx+1:]...)
-		this.usedKey = tmp
-	}
-	this.usedKey = append(this.usedKey, key)
+	node.Key = key
+	node.Value = value
+	this.cache[key] = node
+}
 
+func (this *LRUCache) addNode(node *Node) {
+	if this.listHead == nil {
+		this.listHead = node
+		this.listTail = node
+	} else {
+		if this.listHead.Next == nil {
+			this.listHead.Next = node
+		}
+		node.Pre = this.listTail
+		node.Next = nil
+		this.listTail.Next = node
+		this.listTail = node
+	}
+}
+
+func (this *LRUCache) moveToTial(node *Node) {
+	if len(this.cache) <= 1 {
+		return
+	}
+	if node == this.listHead {
+		this.listHead = node.Next
+		this.listHead.Pre = nil
+	} else if node != this.listTail {
+		node.Pre.Next = node.Next
+		node.Next.Pre = node.Pre
+	} else {
+		return
+	}
+	node.Pre = this.listTail
+	node.Next = nil
+	this.listTail.Next = node
+	this.listTail = node
+}
+
+func (this *LRUCache) removeUnused() {
+	delete(this.cache, this.listHead.Key)
+	this.listHead = this.listHead.Next
 }
