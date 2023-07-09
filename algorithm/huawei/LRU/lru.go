@@ -84,9 +84,11 @@ func (this *LRUCache) addNode(node *Node) {
 		if this.listHead.Next == nil {
 			this.listHead.Next = node
 		}
+		// node变为尾结点
 		node.Pre = this.listTail
 		node.Next = nil
 		this.listTail.Next = node
+		// 记录尾结点
 		this.listTail = node
 	}
 }
@@ -95,18 +97,20 @@ func (this *LRUCache) moveToTial(node *Node) {
 	if len(this.cache) <= 1 {
 		return
 	}
-	if node == this.listHead {
+	if node == this.listHead { // 目标为头结点，头结点后移
 		this.listHead = node.Next
 		this.listHead.Pre = nil
-	} else if node != this.listTail {
+	} else if node != this.listTail { // 目标为中间节点，摘除目标节点
 		node.Pre.Next = node.Next
 		node.Next.Pre = node.Pre
-	} else {
+	} else { // 目标为尾结点，return
 		return
 	}
+	// node变为尾结点
 	node.Pre = this.listTail
 	node.Next = nil
 	this.listTail.Next = node
+	// 记录尾结点
 	this.listTail = node
 }
 
