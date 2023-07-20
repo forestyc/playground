@@ -16,6 +16,8 @@ FROM alpine AS runner
 
 WORKDIR /app/mockserver
 
+RUN mkdir -p /app/mockserver/log
+
 COPY --from=builder /app/mockserver/mockserver .
 
 EXPOSE 8080
