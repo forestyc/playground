@@ -35,3 +35,7 @@ func NewRedis(config Config) (Redis, error) {
 	}
 	return r, nil
 }
+
+func (r *Redis) Close() error {
+	return r.Client.Close()
+}

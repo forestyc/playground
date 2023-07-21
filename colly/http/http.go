@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Baal19905/playground/colly/pkg/http"
+	"github.com/Baal19905/playground/pkg/http"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package robots
 
 import (
-	"github.com/Baal19905/playground/colly/pkg/http"
+	"github.com/Baal19905/playground/pkg/http"
 	"net/url"
 	"strings"
 )

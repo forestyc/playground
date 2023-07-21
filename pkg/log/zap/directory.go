@@ -2,7 +2,7 @@ package zap
 
 import "os"
 
-//PathExists 判断文件目录是否存在
+// PathExists 判断文件目录是否存在
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {

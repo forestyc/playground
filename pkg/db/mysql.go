@@ -1,4 +1,4 @@
-package gorm
+package db
 
 import (
 	"context"
@@ -46,6 +46,6 @@ func (mysql Mysql) Session() (*gorm.DB, context.CancelFunc) {
 	}), cancel
 }
 
-func (mysql Mysql) Close() {
-	mysql.sqlDb.Close()
+func (mysql Mysql) Close() error {
+	return mysql.sqlDb.Close()
 }
