@@ -3,73 +3,51 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/Baal19905/playground/pkg/etcd"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"time"
 )
 
-var (
-	cli    *clientv3.Client
-	cancel context.CancelFunc
-)
-
-type Callback func(context.Context, clientv3.WatchChan)
-
 func main() {
-	exit := make(chan bool)
 	var err error
-	if err = InitEtcd(); err != nil {
+	var cli *etcd.Client
+	if cli, err = etcd.NewClient(clientv3.Config{
+		Endpoints: []string{
+			"81.70.188.168:12379",
+			"140.143.163.171:12379",
+			"101.42.23.168:12379"},
+		DialTimeout: 5 * time.Second,
+	}); err != nil {
 		fmt.Println(err)
 		return
 	}
-	defer cli.Close()
-	//ctxTimeout, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	Watch(context.Background(), WatchKey1, "key1")
-	for {
-		select {
-		case <-exit:
-			break
-		}
-	}
-}
-
-// InitEtcd 初始化
-func InitEtcd() (err error) {
-	cli, err = clientv3.New(clientv3.Config{
-		Endpoints:   []string{"baal1990.asia:23790"},
-		DialTimeout: 5 * time.Second,
-		Username:    "root",
-		Password:    "ETCD@1234567",
-	})
-	if err != nil {
+	defer func() {
+		fmt.Println(cli.Close())
+	}()
+	ctxTimeout, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	leaseId, _ := cli.NewLease(ctxTimeout, 2)
+	ctxLease, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	cli.KeepAlive(ctxLease, leaseId)
+	if err = cli.Put(ctxTimeout, "api", "http://localhost:8080", clientv3.WithLease(leaseId)); err != nil {
 		fmt.Println(err)
-		return err
+		return
 	}
-	return err
-}
-
-// Get 读
-func Get(ctx context.Context, key string, opts ...clientv3.OpOption) (results []string, err error) {
-	var resp *clientv3.GetResponse
-	resp, err = cli.Get(ctx, key, opts...)
-	if err != nil {
-		return results, err
-	}
-	resultLen := len(resp.Kvs)
-	if resultLen == 0 {
-		return results, nil
-	} else {
-		for _, kv := range resp.Kvs {
-			results = append(results, string(kv.Value))
-		}
-	}
-	return results, err
-}
-
-func Watch(ctx context.Context, callback Callback, key string, opts ...clientv3.OpOption) context.CancelFunc {
-	watchChnl := cli.Watch(ctx, key, opts...)
-	ctxChild, cancel := context.WithCancel(ctx)
-	go callback(ctxChild, watchChnl)
-	return cancel
+	time.Sleep(time.Minute)
+	//var result []string
+	//if result, err = cli.Get(ctxTimeout, "key1"); err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+	//fmt.Println(result)
+	//cli.Watch(context.Background(), WatchKey1, "key1")
+	//exit := make(chan bool)
+	//for {
+	//	select {
+	//	case <-exit:
+	//		break
+	//	}
+	//}
 }
 
 func WatchKey1(ctx context.Context, chnl clientv3.WatchChan) {
