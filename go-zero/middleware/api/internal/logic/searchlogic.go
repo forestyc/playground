@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"github.com/Baal19905/playground/go-zero/middleware/api/internal/svc"
-	"github.com/Baal19905/playground/go-zero/middleware/api/internal/types"
+	"github.com/forestyc/playground/go-zero/middleware/api/internal/svc"
+	"github.com/forestyc/playground/go-zero/middleware/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

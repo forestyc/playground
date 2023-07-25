@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/Baal19905/playground/go-zero/epidemic/rpc/user/internal/svc"
-	"github.com/Baal19905/playground/go-zero/epidemic/rpc/user/user"
+	"github.com/forestyc/playground/go-zero/epidemic/rpc/user/internal/svc"
+	"github.com/forestyc/playground/go-zero/epidemic/rpc/user/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

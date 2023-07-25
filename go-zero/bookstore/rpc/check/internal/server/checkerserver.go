@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/check/check"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/check/internal/logic"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/check/internal/svc"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/check/check"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/check/internal/logic"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/check/internal/svc"
 )
 
 type CheckerServer struct {

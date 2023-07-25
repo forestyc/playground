@@ -1,9 +1,9 @@
 package svc
 
 import (
-	"github.com/Baal19905/playground/go-zero/bookstore/api/internal/config"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/add/adder"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/check/checker"
+	"github.com/forestyc/playground/go-zero/bookstore/api/internal/config"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/add/adder"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/check/checker"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 

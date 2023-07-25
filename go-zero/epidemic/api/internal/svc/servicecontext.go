@@ -1,10 +1,10 @@
 package svc
 
 import (
-	"github.com/Baal19905/playground/go-zero/epidemic/api/internal/config"
-	"github.com/Baal19905/playground/go-zero/epidemic/api/internal/middleware"
-	"github.com/Baal19905/playground/go-zero/epidemic/rpc/user/user"
-	"github.com/Baal19905/playground/go-zero/epidemic/rpc/user/userclient"
+	"github.com/forestyc/playground/go-zero/epidemic/api/internal/config"
+	"github.com/forestyc/playground/go-zero/epidemic/api/internal/middleware"
+	"github.com/forestyc/playground/go-zero/epidemic/rpc/user/user"
+	"github.com/forestyc/playground/go-zero/epidemic/rpc/user/userclient"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )

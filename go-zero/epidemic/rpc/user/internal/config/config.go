@@ -1,10 +1,10 @@
 package config
 
 import (
-	"github.com/Baal19905/playground/go-zero/epidemic/pkg/gorm"
-	"github.com/Baal19905/playground/go-zero/epidemic/pkg/msgcode"
-	"github.com/Baal19905/playground/go-zero/epidemic/pkg/sms"
-	"github.com/Baal19905/playground/go-zero/epidemic/pkg/token"
+	"github.com/forestyc/playground/go-zero/epidemic/pkg/gorm"
+	"github.com/forestyc/playground/go-zero/epidemic/pkg/msgcode"
+	"github.com/forestyc/playground/go-zero/epidemic/pkg/sms"
+	"github.com/forestyc/playground/go-zero/epidemic/pkg/token"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 

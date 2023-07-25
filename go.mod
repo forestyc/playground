@@ -1,4 +1,4 @@
-module github.com/Baal19905/playground
+module github.com/forestyc/playground
 
 go 1.20
 
@@ -6,6 +6,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20230605001715-1e95ea08ffe6
 	github.com/chromedp/chromedp v0.9.1
 	github.com/gin-gonic/gin v1.9.1
+	github.com/go-playground/assert/v2 v2.2.0
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gocolly/colly/v2 v2.1.0

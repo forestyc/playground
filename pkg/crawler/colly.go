@@ -2,8 +2,8 @@ package crawler
 
 import (
 	"errors"
-	"github.com/Baal19905/playground/pkg/crawler/robots"
-	"github.com/Baal19905/playground/pkg/prometheus"
+	"github.com/forestyc/playground/pkg/crawler/robots"
+	"github.com/forestyc/playground/pkg/prometheus"
 	"github.com/gocolly/colly/v2"
 )
 

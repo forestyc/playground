@@ -1,8 +1,8 @@
 package svc
 
 import (
-	"github.com/Baal19905/playground/go-zero/middleware/api/internal/config"
-	"github.com/Baal19905/playground/go-zero/middleware/api/internal/middleware"
+	"github.com/forestyc/playground/go-zero/middleware/api/internal/config"
+	"github.com/forestyc/playground/go-zero/middleware/api/internal/middleware"
 	"github.com/zeromicro/go-zero/rest"
 )
 

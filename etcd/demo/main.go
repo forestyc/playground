@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Baal19905/playground/pkg/etcd"
+	"github.com/forestyc/playground/pkg/etcd"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"time"
 )

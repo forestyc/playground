@@ -1,7 +1,7 @@
 package test
 
 import (
-	"github.com/Baal19905/playground/go-zero/epidemic/pkg/msgcode"
+	"github.com/forestyc/playground/go-zero/epidemic/pkg/msgcode"
 	"github.com/stretchr/testify/assert"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"strings"

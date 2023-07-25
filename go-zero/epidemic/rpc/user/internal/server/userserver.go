@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
-	"github.com/Baal19905/playground/go-zero/epidemic/rpc/user/internal/logic"
-	"github.com/Baal19905/playground/go-zero/epidemic/rpc/user/internal/svc"
-	"github.com/Baal19905/playground/go-zero/epidemic/rpc/user/user"
+	"github.com/forestyc/playground/go-zero/epidemic/rpc/user/internal/logic"
+	"github.com/forestyc/playground/go-zero/epidemic/rpc/user/internal/svc"
+	"github.com/forestyc/playground/go-zero/epidemic/rpc/user/user"
 )
 
 type UserServer struct {

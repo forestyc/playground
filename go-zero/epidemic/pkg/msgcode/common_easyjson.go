@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjsonC803d3e7DecodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode(in *jlexer.Lexer, out *Freeze) {
+func easyjsonC803d3e7DecodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode(in *jlexer.Lexer, out *Freeze) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -56,7 +56,7 @@ func easyjsonC803d3e7DecodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode(
 		in.Consumed()
 	}
 }
-func easyjsonC803d3e7EncodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode(out *jwriter.Writer, in Freeze) {
+func easyjsonC803d3e7EncodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode(out *jwriter.Writer, in Freeze) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -81,27 +81,27 @@ func easyjsonC803d3e7EncodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode(
 // MarshalJSON supports json.Marshaler interface
 func (v Freeze) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonC803d3e7EncodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode(&w, v)
+	easyjsonC803d3e7EncodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Freeze) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonC803d3e7EncodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode(w, v)
+	easyjsonC803d3e7EncodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Freeze) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonC803d3e7DecodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode(&r, v)
+	easyjsonC803d3e7DecodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Freeze) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonC803d3e7DecodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode(l, v)
+	easyjsonC803d3e7DecodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode(l, v)
 }
-func easyjsonC803d3e7DecodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode1(in *jlexer.Lexer, out *Code) {
+func easyjsonC803d3e7DecodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode1(in *jlexer.Lexer, out *Code) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -138,7 +138,7 @@ func easyjsonC803d3e7DecodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode1
 		in.Consumed()
 	}
 }
-func easyjsonC803d3e7EncodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode1(out *jwriter.Writer, in Code) {
+func easyjsonC803d3e7EncodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode1(out *jwriter.Writer, in Code) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -163,23 +163,23 @@ func easyjsonC803d3e7EncodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode1
 // MarshalJSON supports json.Marshaler interface
 func (v Code) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonC803d3e7EncodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode1(&w, v)
+	easyjsonC803d3e7EncodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Code) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonC803d3e7EncodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode1(w, v)
+	easyjsonC803d3e7EncodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Code) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonC803d3e7DecodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode1(&r, v)
+	easyjsonC803d3e7DecodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Code) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonC803d3e7DecodeGithubComBaal19905PlaygroundGoZeroEpidemicPkgMsgcode1(l, v)
+	easyjsonC803d3e7DecodeGithubComforestycPlaygroundGoZeroEpidemicPkgMsgcode1(l, v)
 }

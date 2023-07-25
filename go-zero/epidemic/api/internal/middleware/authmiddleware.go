@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"errors"
-	"github.com/Baal19905/playground/go-zero/epidemic/api/internal/config"
-	"github.com/Baal19905/playground/go-zero/epidemic/pkg/token"
+	"github.com/forestyc/playground/go-zero/epidemic/api/internal/config"
+	"github.com/forestyc/playground/go-zero/epidemic/pkg/token"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"

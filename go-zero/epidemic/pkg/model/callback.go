@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/Baal19905/playground/go-zero/epidemic/pkg/crypto"
+	"github.com/forestyc/playground/go-zero/epidemic/pkg/crypto"
 	"gorm.io/gorm"
 )
 

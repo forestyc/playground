@@ -3,8 +3,8 @@ package epidemic_mobile
 import (
 	"net/http"
 
-	"github.com/Baal19905/playground/go-zero/epidemic/api/internal/logic/epidemic_mobile"
-	"github.com/Baal19905/playground/go-zero/epidemic/api/internal/svc"
+	"github.com/forestyc/playground/go-zero/epidemic/api/internal/logic/epidemic_mobile"
+	"github.com/forestyc/playground/go-zero/epidemic/api/internal/svc"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

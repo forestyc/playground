@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/add/add"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/add/internal/config"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/add/internal/server"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/add/internal/svc"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/add/add"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/add/internal/config"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/add/internal/server"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/add/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"

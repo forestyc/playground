@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Baal19905/playground/pkg/prometheus"
+	"github.com/forestyc/playground/pkg/prometheus"
 	"time"
 )
 

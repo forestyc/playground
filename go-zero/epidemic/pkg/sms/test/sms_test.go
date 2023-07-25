@@ -1,7 +1,7 @@
 package test
 
 import (
-	"github.com/Baal19905/playground/go-zero/epidemic/pkg/sms"
+	"github.com/forestyc/playground/go-zero/epidemic/pkg/sms"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

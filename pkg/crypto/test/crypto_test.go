@@ -1,8 +1,8 @@
 package test
 
 import (
-	"github.com/forestyc/playground/go-zero/epidemic/pkg/crypto"
-	"github.com/stretchr/testify/assert"
+	"github.com/forestyc/playground/pkg/crypto"
+	"github.com/go-playground/assert/v2"
 	"io/ioutil"
 	"os"
 	"testing"

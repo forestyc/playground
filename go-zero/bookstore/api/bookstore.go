@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/Baal19905/playground/go-zero/bookstore/api/internal/config"
-	"github.com/Baal19905/playground/go-zero/bookstore/api/internal/handler"
-	"github.com/Baal19905/playground/go-zero/bookstore/api/internal/svc"
+	"github.com/forestyc/playground/go-zero/bookstore/api/internal/config"
+	"github.com/forestyc/playground/go-zero/bookstore/api/internal/handler"
+	"github.com/forestyc/playground/go-zero/bookstore/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"

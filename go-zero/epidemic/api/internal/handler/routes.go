@@ -4,8 +4,8 @@ package handler
 import (
 	"net/http"
 
-	epidemic_mobile "github.com/Baal19905/playground/go-zero/epidemic/api/internal/handler/epidemic_mobile"
-	"github.com/Baal19905/playground/go-zero/epidemic/api/internal/svc"
+	epidemic_mobile "github.com/forestyc/playground/go-zero/epidemic/api/internal/handler/epidemic_mobile"
+	"github.com/forestyc/playground/go-zero/epidemic/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

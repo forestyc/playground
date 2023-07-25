@@ -1,8 +1,8 @@
 package svc
 
 import (
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/check/internal/config"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/model"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/check/internal/config"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/model"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 

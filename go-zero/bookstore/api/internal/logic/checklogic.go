@@ -2,10 +2,10 @@ package logic
 
 import (
 	"context"
-	"github.com/Baal19905/playground/go-zero/bookstore/rpc/check/checker"
+	"github.com/forestyc/playground/go-zero/bookstore/rpc/check/checker"
 
-	"github.com/Baal19905/playground/go-zero/bookstore/api/internal/svc"
-	"github.com/Baal19905/playground/go-zero/bookstore/api/internal/types"
+	"github.com/forestyc/playground/go-zero/bookstore/api/internal/svc"
+	"github.com/forestyc/playground/go-zero/bookstore/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
