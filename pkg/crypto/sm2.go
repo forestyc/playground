@@ -1,11 +1,13 @@
 package crypto
 
 import (
+	"bytes"
 	"crypto/rand"
 	"errors"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
-	"io/ioutil"
+	"math/big"
+	"os"
 )
 
 type SM2 struct {
@@ -20,7 +22,7 @@ func (s SM2) Encrypt(data []byte, key []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	crypto, err := pub.EncryptAsn1(data, rand.Reader)
+	crypto, err := sm2.Encrypt(pub, data, rand.Reader, sm2.C1C3C2)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +38,7 @@ func (s SM2) Decrypt(data []byte, key []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return private.DecryptAsn1(data)
+	return sm2.Decrypt(private, data, sm2.C1C3C2)
 }
 
 // EncryptWithBase64 加密(公钥)，使用base64
@@ -72,7 +74,11 @@ func (s SM2) Sign(data []byte, key []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return private.Sign(rand.Reader, data, nil)
+	R, S, err := sm2.Sm2Sign(private, data, nil, rand.Reader)
+	if err != nil {
+		return nil, err
+	}
+	return bytes.Join([][]byte{R.Bytes(), S.Bytes()}, nil), nil
 }
 
 // Verify 校验（公钥）
@@ -84,7 +90,11 @@ func (s SM2) Verify(data []byte, key []byte, sign []byte) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return pub.Verify(data, sign), nil
+	var R, S big.Int
+	pos := len(sign) / 2
+	R.SetBytes(sign[:pos])
+	S.SetBytes(sign[pos:])
+	return sm2.Sm2Verify(pub, data, nil, &R, &S), nil
 }
 
 // SignWithBase64 签名（私钥），使用base64
@@ -125,7 +135,7 @@ func (s SM2) GenerateKey(pubKeyPath, privKeyPath string) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(pubKeyPath, []byte(pubkeyHex), 0644)
+	err = os.WriteFile(pubKeyPath, []byte(pubkeyHex), 0644)
 	if err != nil {
 		return err
 	}
@@ -133,7 +143,7 @@ func (s SM2) GenerateKey(pubKeyPath, privKeyPath string) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(privKeyPath, []byte(privkeyHex), 0644)
+	err = os.WriteFile(privKeyPath, []byte(privkeyHex), 0644)
 	if err != nil {
 		return err
 	}

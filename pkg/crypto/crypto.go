@@ -1,24 +1,10 @@
 package crypto
 
-// InitCryptoAdapter 初始化密码适配器
-func InitCryptoAdapter() CryptoAdapter {
-	crypto := CryptoAdapter{
-		Symmetric:  make(map[string]SymmetricCrypto),
-		Asymmetric: make(map[string]AsymmetricCrypto),
-		Digest:     make(map[string]MessageDigest),
-	}
-	crypto.Symmetric[CryptoAES] = AES{}
-	crypto.Symmetric[CryptoSM4] = SM4{}
-	crypto.Asymmetric[CryptoSM2] = SM2{}
-	crypto.Digest[CryptoSM3] = SM3{}
-	return crypto
-}
-
-// CryptoAdapter 加密适配器
-type CryptoAdapter struct {
-	Symmetric  map[string]SymmetricCrypto  // 对称加密
-	Asymmetric map[string]AsymmetricCrypto // 非对称加密
-	Digest     map[string]MessageDigest    // 信息摘要
+// Crypto 加密工厂
+type Crypto struct {
+	Symmetric  SymmetricCrypto  // 对称加密
+	Asymmetric AsymmetricCrypto // 非对称加密
+	Digest     MessageDigest    // 信息摘要
 }
 
 // SymmetricCrypto 对称加密接口
