@@ -6,6 +6,13 @@ import (
 	"time"
 )
 
+var GroupCache [][]int
+
+type NameInfo struct {
+	Id   int    // 原组别
+	Name string // 名字
+}
+
 func main() {
 	GroupList := [][]string{
 		{"少华", "少平", "少军", "少安", "少康"},
@@ -16,43 +23,90 @@ func main() {
 		{"A", "B", "C", "D", "E"},
 		{"一", "二", "三", "四", "五"},
 	}
+	GroupCache = make([][]int, len(GroupList))
 	fmt.Println(Grouping(GroupList))
 }
 
-func Grouping(input [][]string) (result [][]string) {
-	oldGroup := input
-	var group []string
+// Grouping 分组
+// 对原组别groupList重新分组,并返回新组别result,新组别人员数[2,3]
+func Grouping(groupList [][]string) (result [][]string) {
+	oldGroup := groupList
+	var group []NameInfo
 	for {
 		oldGroup, group = Pick(oldGroup)
 		if len(group) == 0 {
 			break
 		} else if len(group) == 1 {
-			y := rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(result))
-			result[y] = append(result[y], group...)
+			newGroups := GroupCache[group[0].Id]
+			for i := 0; i < len(result); i++ {
+				eq := false
+				for _, e := range newGroups {
+					if i == e {
+						eq = true
+						break
+					}
+				}
+				if !eq {
+					result[i] = append(result[i], group[0].Name)
+				}
+			}
+		} else {
+			var names []string
+			for _, e := range group {
+				names = append(names, e.Name)
+				// 记录原组别与新组别对应关系
+				GroupCache[e.Id] = append(GroupCache[e.Id], len(result))
+			}
+			result = append(result, names)
 		}
-		result = append(result, group)
 	}
 	return result
 }
 
-func Pick(input [][]string) (oldGroup [][]string, names []string) {
-	var x, y int
+// Pick 选人
+// 从组中随机选出2个人，2个人来自不同组别
+func Pick(groupList [][]string) (oldGroup [][]string, names []NameInfo) {
+	var x, y, lastY int
 	for i := 0; i < 2; i++ {
-		y = rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(input))
-		x = rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(input[y]))
-		if y == 0 {
+		if len(groupList) == 0 {
 			break
 		}
-		names = append(names, input[y][x])
-		newNames := input[y][0:x]
-		newNames = append(newNames, input[y][x+1:]...)
+		y = RandInt(len(groupList))
+		if len(groupList) > 1 {
+			y = Offset(lastY, y, len(groupList)-1)
+		}
+		lastY = y
+		x = RandInt(len(groupList[y]))
+		names = append(names, NameInfo{Id: y, Name: groupList[y][x]})
+		newNames := groupList[y][0:x]
+		newNames = append(newNames, groupList[y][x+1:]...)
 		if len(newNames) == 0 {
-			head := input[0:y]
-			tail := input[y+1:]
-			input = append(head, tail...)
+			head := groupList[0:y]
+			tail := groupList[y+1:]
+			groupList = append(head, tail...)
 		} else {
-			input[y] = newNames
+			groupList[y] = newNames
 		}
 	}
-	return input, names
+	return groupList, names
+}
+
+// RandInt 根据范围n获取随机数
+func RandInt(n int) int {
+	return rand.New(rand.NewSource(time.Now().UnixNano())).Intn(n)
+}
+
+// Offset 偏移
+// 偏移y，使其与lastY不同
+func Offset(lastY, y, l int) int {
+	if y == lastY {
+		if y == 0 {
+			y++
+		} else if y == l {
+			y--
+		} else {
+			y++
+		}
+	}
+	return y
 }
