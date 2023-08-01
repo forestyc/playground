@@ -24,30 +24,30 @@ func main() {
 	defer func() {
 		fmt.Println(cli.Close())
 	}()
-	ctxTimeout, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	leaseId, _ := cli.NewLease(ctxTimeout, 2)
-	ctxLease, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	cli.KeepAlive(ctxLease, leaseId)
-	if err = cli.Put(ctxTimeout, "api", "http://localhost:8080", clientv3.WithLease(leaseId)); err != nil {
-		fmt.Println(err)
-		return
-	}
-	time.Sleep(time.Minute)
+	//ctxTimeout, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	//leaseId, _ := cli.NewLease(ctxTimeout, 2)
+	//ctxLease, cancel := context.WithCancel(context.Background())
+	//defer cancel()
+	//cli.KeepAlive(ctxLease, leaseId)
+	//if err = cli.Put(ctxTimeout, "api", "http://localhost:8080", clientv3.WithLease(leaseId)); err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+	//time.Sleep(time.Minute)
 	//var result []string
 	//if result, err = cli.Get(ctxTimeout, "key1"); err != nil {
 	//	fmt.Println(err)
 	//	return
 	//}
 	//fmt.Println(result)
-	//cli.Watch(context.Background(), WatchKey1, "key1")
-	//exit := make(chan bool)
-	//for {
-	//	select {
-	//	case <-exit:
-	//		break
-	//	}
-	//}
+	cli.Watch(context.Background(), WatchKey1, "key1", clientv3.WithPrefix())
+	exit := make(chan bool)
+	for {
+		select {
+		case <-exit:
+			break
+		}
+	}
 }
 
 func WatchKey1(ctx context.Context, chnl clientv3.WatchChan) {

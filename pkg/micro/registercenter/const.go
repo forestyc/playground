@@ -1,4 +1,4 @@
-package register
+package registercenter
 
 const (
 	Up = iota + 1
