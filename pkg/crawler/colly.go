@@ -15,6 +15,7 @@ const (
 
 type Callback func()
 type Pipeline func() error
+type Option func(c *Colly)
 
 type Colly struct {
 	Task     string
@@ -25,19 +26,32 @@ type Colly struct {
 	Crawler  *colly.Collector
 }
 
-func NewColly(task, url string, pip Pipeline, cb ...Callback) Colly {
+func NewColly(task, url string, options ...Option) Colly {
 	c := Colly{
-		Crawler:  colly.NewCollector(),
-		Url:      url,
-		Task:     task,
-		Callback: cb,
-		Pip:      pip,
+		Crawler: colly.NewCollector(),
+		Url:     url,
+		Task:    task,
 		Counter: prometheus.NewCounter(
 			"crawler_status",
 			"记录爬虫执行情况",
 			"task", "url", "status"),
 	}
+	for _, option := range options {
+		option(&c)
+	}
 	return c
+}
+
+func WithPipeline(pipeline Pipeline) Option {
+	return func(c *Colly) {
+		c.Pip = pipeline
+	}
+}
+
+func WithCrawlCallback(cb Callback) Option {
+	return func(c *Colly) {
+		c.Callback = append(c.Callback, cb)
+	}
 }
 
 func (c Colly) Run() error {
