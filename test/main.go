@@ -1,13 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/forestyc/playground/pkg/util"
+)
 
 func main() {
-	for i := 0; i < 3; i++ {
-		f(i)
-	}
-
-	//select {}
+	fmt.Println(util.StandardTime(2024))
 }
 
 func G1(ch chan bool) {
