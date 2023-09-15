@@ -2,7 +2,7 @@ package etcd
 
 import (
 	"context"
-	"github.com/forestyc/playground/pkg/micro/registercenter"
+	"github.com/forestyc/playground/pkg/distributed/registercenter"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"sync"

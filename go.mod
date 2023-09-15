@@ -28,6 +28,7 @@ require (
 )
 
 require (
+	github.com/DavidBelicza/TextRank/v2 v2.1.3 // indirect
 	github.com/PuerkitoBio/goquery v1.8.1 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/antchfx/htmlquery v1.3.0 // indirect

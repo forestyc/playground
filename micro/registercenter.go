@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/forestyc/playground/pkg/micro/registercenter"
-	"github.com/forestyc/playground/pkg/micro/registercenter/etcd"
+	"github.com/forestyc/playground/pkg/distributed/registercenter"
+	"github.com/forestyc/playground/pkg/distributed/registercenter/etcd"
 	"strconv"
 	"time"
 )
