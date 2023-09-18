@@ -12,8 +12,8 @@ type Lock struct {
 	cli redis.Redis
 }
 
-// 初始化
-func NewLock(cli redis.Redis, key string, ttl int) Lock {
+// NewLock 初始化
+func NewLock(cli redis.Redis, key string, ttl int) *Lock {
 	l := Lock{
 		key: key,
 		cli: cli,
@@ -22,23 +22,18 @@ func NewLock(cli redis.Redis, key string, ttl int) Lock {
 	if ttl == -1 {
 		l.ttl = -1
 	}
-	return l
+	return &l
 }
 
 // Lock 加锁
 func (l *Lock) Lock() error {
-	// todo: 权衡抢占、cpu负载
-	ticker := time.NewTicker(l.ttl / 2)
-	defer ticker.Stop()
-	select {
-	case <-ticker.C:
+	for {
 		if ok, err := l.lock(); err != nil {
 			return err
 		} else if ok {
 			return nil
 		}
 	}
-	return nil
 }
 
 // Unlock 解锁
