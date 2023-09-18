@@ -20,7 +20,7 @@ type Redis struct {
 	*redis.Client
 }
 
-func NewRedis(config Config) (Redis, error) {
+func NewRedis(config Config) (*Redis, error) {
 	r := Redis{}
 	r.Client = redis.NewClient(&redis.Options{
 		Addr:         config.Address,
@@ -31,9 +31,9 @@ func NewRedis(config Config) (Redis, error) {
 	})
 	_, err := r.Client.Ping(context.Background()).Result()
 	if err != nil {
-		return r, err
+		return &r, err
 	}
-	return r, nil
+	return &r, nil
 }
 
 func (r *Redis) Close() error {

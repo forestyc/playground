@@ -22,7 +22,7 @@ type Mysql struct {
 	sqlDb  *sql.DB
 }
 
-func NewMysql(config Config) Mysql {
+func NewMysql(config Config) *Mysql {
 	var err error
 	var conn Mysql
 	conn.config = config
@@ -33,11 +33,11 @@ func NewMysql(config Config) Mysql {
 		conn.sqlDb.SetMaxIdleConns(config.IdleConns)
 		conn.sqlDb.SetMaxOpenConns(config.MaxOpen)
 		conn.sqlDb.SetConnMaxIdleTime(time.Duration(config.MaxIdleTime) * time.Second)
-		return conn
+		return &conn
 	}
 }
 
-func (mysql Mysql) Session() (*gorm.DB, context.CancelFunc) {
+func (mysql *Mysql) Session() (*gorm.DB, context.CancelFunc) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(mysql.config.OperationTimeout)*time.Second)
 	return mysql.db.Session(&gorm.Session{
 		PrepareStmt: true,
@@ -46,6 +46,6 @@ func (mysql Mysql) Session() (*gorm.DB, context.CancelFunc) {
 	}), cancel
 }
 
-func (mysql Mysql) Close() error {
+func (mysql *Mysql) Close() error {
 	return mysql.sqlDb.Close()
 }
