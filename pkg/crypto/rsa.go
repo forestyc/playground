@@ -1,8 +1,10 @@
 package crypto
 
 import (
+	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
@@ -79,7 +81,7 @@ func (r RSA) Encrypt(data []byte, key []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return rsa.EncryptPKCS1v15(rand.Reader, pub, data)
+	return rsa.EncryptOAEP(sha256.New(), rand.Reader, pub, data, nil)
 }
 
 // Decrypt 解密(私钥)
@@ -91,38 +93,86 @@ func (r RSA) Decrypt(data []byte, key []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	rsa.DecryptPKCS1v15(rand.Reader, priv, nil)
-	return nil, nil
+	return rsa.DecryptOAEP(sha256.New(), rand.Reader, priv, data, nil)
 }
 
 // EncryptWithBase64 加密(公钥)，使用base64
 func (r RSA) EncryptWithBase64(data []byte, key []byte) (string, error) {
-	return "", nil
+	if len(data) == 0 || len(key) == 0 {
+		return "", errors.New("invalid params")
+	}
+	ciphertext, err := r.Encrypt(data, key)
+	if err != nil {
+		return "", err
+	}
+	return Base64Encode(ciphertext), nil
 }
 
 // DecryptWithBase64 解密(私钥)，使用base64
 func (r RSA) DecryptWithBase64(data string, key []byte) ([]byte, error) {
-	return nil, nil
+	if len(data) == 0 || len(key) == 0 {
+		return nil, errors.New("invalid params")
+	}
+	plaintext, err := Base64Decode(data)
+	if err != nil {
+		return nil, err
+	}
+	return r.Decrypt(plaintext, key)
 }
 
 // Sign 签名（私钥）
 func (r RSA) Sign(data []byte, key []byte) ([]byte, error) {
-	return nil, nil
+	if len(data) == 0 || len(key) == 0 {
+		return nil, errors.New("invalid params")
+	}
+	priv, err := r.parsePrivate(key)
+	if err != nil {
+		return nil, err
+	}
+	sh256 := sha256.New()
+	sh256.Write(data)
+	return rsa.SignPSS(rand.Reader, priv, crypto.SHA256, sh256.Sum(nil), nil)
 }
 
 // Verify 校验（公钥）
 func (r RSA) Verify(data []byte, key []byte, sign []byte) (bool, error) {
-	return false, nil
+	if len(data) == 0 || len(key) == 0 || len(sign) == 0 {
+		return false, errors.New("invalid params")
+	}
+	pub, err := r.parsePublic(key)
+	if err != nil {
+		return false, err
+	}
+	sh256 := sha256.New()
+	sh256.Write(data)
+	if err = rsa.VerifyPSS(pub, crypto.SHA256, sh256.Sum(nil), sign, nil); err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 // SignWithBase64 签名（私钥），使用base64
 func (r RSA) SignWithBase64(data []byte, key []byte) (string, error) {
-	return "", nil
+	if len(data) == 0 || len(key) == 0 {
+		return "", errors.New("invalid params")
+	}
+	sign, err := r.Sign(data, key)
+	if err != nil {
+		return "", err
+	}
+	return Base64Encode(sign), nil
 }
 
 // VerifyWithBase64 校验（公钥），使用base64
 func (r RSA) VerifyWithBase64(data []byte, key []byte, sign string) (bool, error) {
-	return false, nil
+	if len(data) == 0 || len(key) == 0 {
+		return false, errors.New("invalid params")
+	}
+	signRaw, err := Base64Decode(sign)
+	if err != nil {
+		return false, err
+	}
+	return r.Verify(data, key, signRaw)
 }
 
 // 解析私钥

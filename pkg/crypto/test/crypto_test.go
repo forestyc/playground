@@ -11,6 +11,71 @@ import (
 var (
 	private = `89369080dfc1617733a569a6edf3ea6cf547c0a62d9d5a82bc7d2c4a5a17f4c6`
 	public  = `040ff1101ae15e5b7e5b863a2785e0be00a677dbf08d28978c3c8656c40fc3f62c78e0f420f3f9eb3d5e5e9a1095de39ad6480910e7573c7fc3cf80ed33eb70790`
+	rsaPub  = `-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwY1VQlKntJOw+VhqJVW7
+ZkNb4DHzHAXYyof3UXZaW7zdNBjYXGrkNMHVX8uxJPVTq50IYC70W1QpPSam87ZO
+LpQgXJN2lncuynfOpNX/1lx9AWxnl+daCi5YLTvtfg7z2E5BMp6fEOKl0ugAQmo0
+WaZ3qURVA9UDBm93HeAkxo2lKiVjrkCopFhx8XIOysDumkfgnAd1yHlaG7km2bKn
+2qRb1JAdN47fdHSR4RkVJUUHlijbAgiVOU8zPUKVtGntURJ6F5Qd7Jg8UwSw9Zv2
+DXcpsUcbDjCSJ4P1VfEiKDfQWSaQ+jCHhxYxMo079F3xjPzrEH0ZsX0uPppCR4GV
+yv0XQ8k4h71S3ohVXEu/xrqS5MZ6RlRIf1y4l/FeZBYkj5HNTcdYc0xdB/o5/rh9
+jWt9dH8j26v5HGk0meUto+ZkZnoMcqZD+ruChCbz9hxUNSwf19aRFyikt3pOhskK
+ywiKq0ohq7vd9fIGYCk3Woqle2Bp6Og/G2diogr3sd50z7G+ijkzpAvzCCPqUBsY
+lAg6wi8z2EiD1SVZ9Qw0lIpDbni0YbIIJKjj1wMupyzzpR3wetTDHNaTqbTyicui
+mPnR5HWpvSvx6Fgm62ssoLZI2ZjzgEEBqjzn+u2aNJRezWcuQZBdPLX6lGW3ecmd
+/iDUteUsefC/nk/sO/uqNfkCAwEAAQ==
+-----END PUBLIC KEY-----`
+	rsaPriv = `-----BEGIN RSA PRIVATE KEY-----
+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
+-----END RSA PRIVATE KEY-----`
 )
 
 // [正常系]AES测试
@@ -350,4 +415,48 @@ Xi3xbfAwgwqRRbGups0lrzLaVxtHXCWdcXc9Q4G+qCF1bNE5jy2dBByQZQ==
 	fmt.Println(publicKey)
 	assert.Equal(t, err, nil)
 	assert.Equal(t, publicKey != "", true)
+}
+
+// [正常系]生成rsa加解密
+func TestRSA(t *testing.T) {
+	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	ciphertext, err := c.Asymmetric.Encrypt([]byte("abcd哈哈a123"), []byte(rsaPub))
+	assert.Equal(t, err, nil)
+	plaintext, err := c.Asymmetric.Decrypt(ciphertext, []byte(rsaPriv))
+	assert.Equal(t, err, nil)
+	assert.Equal(t, string(plaintext) == "abcd哈哈a123", true)
+}
+
+// [正常系]生成rsa加解密base64
+func TestRSABase64(t *testing.T) {
+	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	ciphertext, err := c.Asymmetric.EncryptWithBase64([]byte("abcd哈哈a123"), []byte(rsaPub))
+	assert.Equal(t, err, nil)
+	plaintext, err := c.Asymmetric.DecryptWithBase64(ciphertext, []byte(rsaPriv))
+	assert.Equal(t, err, nil)
+	assert.Equal(t, string(plaintext) == "abcd哈哈a123", true)
+}
+
+// [正常系]RSA签名测试
+func TestRSASign(t *testing.T) {
+	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	data := "abcd哈哈a123"
+	sign, want := c.Asymmetric.Sign([]byte(data), []byte(rsaPriv))
+	assert.Equal(t, want, nil)
+	assert.Equal(t, len(sign) > 0, true)
+	result, want := c.Asymmetric.Verify([]byte(data), []byte(rsaPub), sign)
+	assert.Equal(t, want, nil)
+	assert.Equal(t, result, true)
+}
+
+// [正常系]RSA签名测试base64
+func TestRSASignBase64(t *testing.T) {
+	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	data := "abcd哈哈a123"
+	sign, want := c.Asymmetric.SignWithBase64([]byte(data), []byte(rsaPriv))
+	assert.Equal(t, want, nil)
+	assert.Equal(t, len(sign) > 0, true)
+	result, want := c.Asymmetric.VerifyWithBase64([]byte(data), []byte(rsaPub), sign)
+	assert.Equal(t, want, nil)
+	assert.Equal(t, result, true)
 }
