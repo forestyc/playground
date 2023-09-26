@@ -7,9 +7,6 @@ import (
 	"context"
 	"encoding/csv"
 	"fmt"
-	"github.com/chromedp/cdproto/browser"
-	"github.com/chromedp/cdproto/cdp"
-	"github.com/chromedp/cdproto/target"
 	"io"
 	"log"
 	"net/http"
@@ -20,16 +17,20 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chromedp/cdproto/browser"
+	"github.com/chromedp/cdproto/cdp"
+	"github.com/chromedp/cdproto/target"
+
 	"github.com/chromedp/chromedp"
 )
 
 func main() {
 	// get list
-	//GetList()
+	GetList()
 	// click
 	// Click()
 	// Download
-	Download()
+	//Download()
 }
 
 func GetList() {
@@ -42,18 +43,16 @@ func GetList() {
 	// create a timeout
 	ctx, cancel = context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
-	var nodes []*cdp.Node
+	var res string
 	err := chromedp.Run(ctx,
-		chromedp.Navigate("https://www.cnblogs.com/"),
-		chromedp.WaitVisible(`body`, chromedp.ByQuery),
-		chromedp.Nodes(`.//a[@class="post-item-title"]`, &nodes),
+		chromedp.Navigate("http://www.czce.com.cn/cn/DFSStaticFiles/Future/2023/20230925/FutureDataDaily.htm"),
+		chromedp.WaitVisible(`tab1`, chromedp.ByID),
+		chromedp.Value("#tab1 > thead > tr > td:nth-child(1)", &res, chromedp.ByQuery),
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, e := range nodes {
-		log.Println(e.Children[0].NodeValue, ":", e.AttributeValue("href"))
-	}
+	fmt.Println(res)
 }
 
 func Click() {
@@ -141,11 +140,11 @@ func Download() {
 			chromedp.ByQuery, chromedp.NodeVisible),
 	)
 	if err != nil {
-		log.Printf("wrote %s")
+		log.Printf("wrote %s\n", err)
 	}
 	guid := <-done
 	if err = HandleJob(filepath.Join(wd, guid)); err != nil {
-		log.Printf("wrote %s")
+		log.Printf("wrote %s\n", err)
 	}
 }
 
