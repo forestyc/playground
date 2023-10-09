@@ -38,24 +38,28 @@
 
 在`cmd`目录自行创建应用目录，每个应用应有自己的`README.md`和`CHANGELOG.md`。
 
+| 文件夹    | 说明 | 描述 |
+| :-------- | :--- | :--- |
+| `crawler` | 爬虫 | 爬虫 |
+
+
 # 2、包
 
 ## 1、目录结构
 
-| 文件夹         |    说明    | 描述                     |
-| :------------- | :-------- | :----------------------- |
-| `pkg`          |            |                          |
-| `─crawler`     |    缓存    | go-redis                 |
-| `─crypto`      |    爬虫    | colly                    |
-| `─db`          |   数据库   | gorm                     |
-| `─distributed` |    log     | zap                      |
-| `─http`        | prometheus | prometheus metrics       |
-| `─log`         |  version   | 记录版本信息，由CICD传入 |
-| `─prometheus`  |  version   | 记录版本信息，由CICD传入 |
-| `─redis`       |  version   | 记录版本信息，由CICD传入 |
-| `─security`    |  version   | 记录版本信息，由CICD传入 |
-| `─util`        |  version   | 记录版本信息，由CICD传入 |
-| `─version`     |  version   | 记录版本信息，由CICD传入 |
+| 文件夹        | 说明        | 描述                     |
+| :------------ | :---------- | :----------------------- |
+| `crawler`     | crawler     | colly封装                |
+| `crypto`      | crypto      | 对称、非对称、摘要       |
+| `db`          | db          | gorm                     |
+| `distributed` | distributed | 注册中心、分布式锁       |
+| `http`        | http        | http封装                 |
+| `log`         | log         | zap封装                  |
+| `prometheus`  | prometheus  | exporter                 |
+| `redis`       | redis       | go-redis封装             |
+| `security`    | security    | security                 |
+| `util`        | util        | util                     |
+| `version`     | version     | 记录版本信息，由CICD传入 |
 
 
 
