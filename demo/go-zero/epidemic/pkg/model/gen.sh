@@ -1,1 +1,0 @@
-gentool -db mysql -fieldWithIndexTag -fieldWithTypeTag -outFile model.go -outPath . -dsn 'baal:Baal@123@tcp(baal1990.asia:1444)/epidemic_online' -onlyModel
