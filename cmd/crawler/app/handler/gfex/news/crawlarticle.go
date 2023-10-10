@@ -36,24 +36,24 @@ func NewNews(ctx context.Context, task, url string) *Article {
 	a.crawler = crawler.NewColly(
 		task,
 		url,
-		func() error {
-			return a.Pipeline()
-		},
-		a.getPublishDate(),
-		a.getTittle(),
-		a.getContent(),
-		a.setConst(),
+		crawler.WithPipeline(a.Pipeline()),
+		crawler.WithCrawlCallback(a.getPublishDate()),
+		crawler.WithCrawlCallback(a.getTittle()),
+		crawler.WithCrawlCallback(a.getContent()),
+		crawler.WithCrawlCallback(a.setConst()),
 	)
 	return a
 }
 
-func (a *Article) Pipeline() error {
-	a.ctx.Logger.Info("[通知公告]文章页保存开始")
-	if err := a.Create(a.ctx); err != nil {
-		a.ctx.Logger.Error("[通知公告]文章保存失败", zap.Error(err))
+func (a *Article) Pipeline() crawler.Pipeline {
+	return func() error {
+		a.ctx.Logger.Info("[通知公告]文章页保存开始")
+		if err := a.Create(a.ctx); err != nil {
+			a.ctx.Logger.Error("[通知公告]文章保存失败", zap.Error(err))
+		}
+		a.ctx.Logger.Info("[通知公告]文章保存结束")
+		return nil
 	}
-	a.ctx.Logger.Info("[通知公告]文章保存结束")
-	return nil
 }
 
 func (a *Article) Run() {

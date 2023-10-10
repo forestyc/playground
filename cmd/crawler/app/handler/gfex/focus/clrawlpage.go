@@ -40,8 +40,8 @@ func NewListPage(ctx context.Context, task string) *ListPage {
 		task,
 		_const.FocusPageUrlFirst,
 		nil,
-		firstPage.getTotalPage(&l.totalPage),
-		firstPage.getArticleHref(),
+		crawler.WithCrawlCallback(firstPage.getTotalPage(&l.totalPage)),
+		crawler.WithCrawlCallback(firstPage.getArticleHref()),
 	)
 	l.page = append(l.page, firstPage)
 	return l
@@ -62,7 +62,7 @@ func (l *ListPage) Run() {
 			l.task,
 			url,
 			nil,
-			page.getArticleHref(),
+			crawler.WithCrawlCallback(page.getArticleHref()),
 		)
 		if err = page.crawler.Run(); err != nil {
 			l.ctx.Logger.Error("[媒体聚焦]爬取列表页失败", zap.Error(err), zap.String("url", page.crawler.Url))

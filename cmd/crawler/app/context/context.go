@@ -13,8 +13,8 @@ import (
 // Context 全局context
 type Context struct {
 	C      config.Config
-	Db     db.Mysql
-	Cache  redis.Redis
+	Db     *db.Mysql
+	Cache  *redis.Redis
 	Logger zap.Zap
 	Wg     *sync.WaitGroup
 }
