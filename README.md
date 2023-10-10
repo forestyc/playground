@@ -60,6 +60,8 @@
 | `security`    | security    | security                 |
 | `util`        | util        | util                     |
 | `version`     | version     | 记录版本信息，由CICD传入 |
+| `jwt`         | jwt         | jwt token                |
+| `mail`        | mail        | mail                     |
 
 
 

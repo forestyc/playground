@@ -11,14 +11,14 @@ import (
 
 // GenAppKey 生成appKey
 func GenAppKey() string {
-	return genUuid()
+	return GenUuid()
 }
 
 // GenAppSecret 生成appSecret
 // sm3(appKey + name + timestamp + random)
 func GenAppSecret(appKey, name string) (string, error) {
 	nano := time.Now().UnixNano()
-	data := appKey + name + strconv.FormatInt(nano, 10) + genUuid()
+	data := appKey + name + strconv.FormatInt(nano, 10) + GenUuid()
 	sm3 := crypto.SM3{}
 	appSecret, err := sm3.Sum([]byte(data))
 	if err != nil {
@@ -27,7 +27,7 @@ func GenAppSecret(appKey, name string) (string, error) {
 	return appSecret, err
 }
 
-func genUuid() string {
+func GenUuid() string {
 	appKey := uuid.NewV4().String()
 	return strings.Replace(appKey, "-", "", -1)
 }

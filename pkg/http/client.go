@@ -16,9 +16,8 @@ type Client struct {
 	client http.Client
 }
 
-// NewClient 创建http client
-// keepAlive为true是创建长连接client, 可重复使用
-// keepAlive为false是创建短连接client
+// NewClient create http client
+// When keepAlive is true, the connection can be reused, vice versa.
 func NewClient(keepAlive bool) *Client {
 	if keepAlive {
 		if longConnection != nil {
@@ -37,11 +36,11 @@ func NewClient(keepAlive bool) *Client {
 	}
 }
 
-// Do 发起请求
+// Do
 func (c *Client) Do(method, url string, header map[string]string, body []byte) ([]byte, error) {
 	var result []byte
 	buffer := bytes.NewBuffer(body)
-	req, err := http.NewRequest(convertMethod(method), url, buffer)
+	req, err := http.NewRequest(strings.ToUpper(method), url, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +64,7 @@ func (c *Client) Do(method, url string, header map[string]string, body []byte) (
 	return result, nil
 }
 
-// Close 销毁Client
+// Close release http client
 func (c *Client) Close() {
 	c.client.CloseIdleConnections()
 }
@@ -75,31 +74,5 @@ func newRawClient(disableKeepAlive bool) http.Client {
 		Transport: &http.Transport{
 			DisableKeepAlives: disableKeepAlive,
 		},
-	}
-}
-
-func convertMethod(method string) string {
-	m := strings.ToUpper(method)
-	switch m {
-	case http.MethodGet:
-		return m
-	case http.MethodHead:
-		return m
-	case http.MethodPost:
-		return m
-	case http.MethodPut:
-		return m
-	case http.MethodPatch:
-		return m
-	case http.MethodDelete:
-		return m
-	case http.MethodConnect:
-		return m
-	case http.MethodOptions:
-		return m
-	case http.MethodTrace:
-		return m
-	default:
-		return ""
 	}
 }
