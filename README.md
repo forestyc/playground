@@ -63,5 +63,8 @@
 | `jwt`         | jwt         | jwt token                |
 | `mail`        | mail        | mail                     |
 
-
+## 2、安装
+```shell
+go get github.com/forestyc/playground
+```
 

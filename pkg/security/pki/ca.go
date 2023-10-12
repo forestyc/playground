@@ -1,17 +1,19 @@
 package pki
 
-import (
-	"crypto/rand"
-	"crypto/x509"
-)
-
 type Pki struct {
+	manage *CertificateManage
 }
 
-func NewPki() Pki {
-	return Pki{}
+// NewPki
+func NewPki(endpoints []string) (*Pki, error) {
+	var err error
+	pki := &Pki{}
+	if pki.manage, err = NewCertificateManage(endpoints); err != nil {
+		return nil, err
+	}
+	return pki, nil
 }
 
-func (pki Pki) CreateCertificate() {
-	x509.CreateCertificate(rand.Reader)
+func (pki Pki) NewRootCertificate(name string) {
+
 }
