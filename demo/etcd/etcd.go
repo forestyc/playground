@@ -2,26 +2,46 @@ package main
 
 import (
 	"fmt"
-	clientv3 "go.etcd.io/etcd/client/v3"
-	"go.etcd.io/etcd/client/v3/concurrency"
+
+	"github.com/forestyc/playground/pkg/security/pki"
 )
 
 func main() {
-	cli, err := clientv3.New(clientv3.Config{
-		Endpoints: []string{
-			"81.70.188.168:12379",
-			"140.143.163.171:12379",
-			"101.42.23.168:12379",
-		}})
+	storage, err := pki.NewStorage([]string{
+		"81.70.188.168:12379",
+		"140.143.163.171:12379",
+		"101.42.23.168:12379",
+	})
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
-	session, err := concurrency.NewSession(cli)
+	defer storage.Close()
+	//var rootCsr = x509.Certificate{
+	//	Version:      3,
+	//	SerialNumber: big.NewInt(time.Now().Unix()),
+	//	Subject: pkix.Name{
+	//		Country:            []string{"CN"},
+	//		Province:           []string{"Shanghai"},
+	//		Locality:           []string{"Shanghai"},
+	//		Organization:       []string{"JediLtd"},
+	//		OrganizationalUnit: []string{"JediProxy"},
+	//		CommonName:         "Jedi Root CA",
+	//	},
+	//	NotBefore:             time.Now(),
+	//	NotAfter:              time.Now().AddDate(10, 0, 0),
+	//	BasicConstraintsValid: true,
+	//	IsCA:                  true,
+	//	MaxPathLen:            1,
+	//	MaxPathLenZero:        false,
+	//	KeyUsage:              x509.KeyUsageCertSign | x509.KeyUsageCRLSign,
+	//}
+
+	//if err := storage.Put("root-test", rootCsr); err != nil {
+	//	panic(err)
+	//}
+	cert, err := storage.Get("root-test")
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
-	lock := concurrency.NewLocker(session, "lock")
-	lock.Lock()
+	fmt.Println(cert)
 }
