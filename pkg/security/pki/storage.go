@@ -7,7 +7,9 @@ import (
 )
 
 const (
-	PrefixRoot = "root/"
+	PrefixRoot     = "root/"
+	PrefixMiddle   = "middle/"
+	PrefixTerminal = "terminal/"
 )
 
 type Storage struct {

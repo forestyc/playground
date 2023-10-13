@@ -14,7 +14,7 @@ type Certificate struct {
 }
 
 // NewCertificate new certificate with CommonName.
-// To Add other infomation, use WithXXX().
+// To Add other informations, use WithXXX().
 func NewCertificate(cn string, option ...Option) Certificate {
 	c := Certificate{
 		Certificate: x509.Certificate{
@@ -67,5 +67,19 @@ func WithSubjectOrganization(organization []string) Option {
 func WithSubjectOrganizationalUnit(organizationalUnit []string) Option {
 	return func(c *Certificate) {
 		c.Subject.OrganizationalUnit = organizationalUnit
+	}
+}
+
+// WithMaxPathLen add max length for certificate link
+func WithMaxPathLen(len int) Option {
+	return func(c *Certificate) {
+		c.MaxPathLen = len
+	}
+}
+
+// WithIsCa set IsCa
+func WithIsCa(isCa bool) Option {
+	return func(c *Certificate) {
+		c.IsCA = isCa
 	}
 }

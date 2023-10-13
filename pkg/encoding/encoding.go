@@ -17,16 +17,16 @@ func Base64Decode(data string) ([]byte, error) {
 }
 
 // PemEncode pem编码
-func PemEncode(Type string, Bytes []byte) (string, error) {
+func PemEncode(Type string, Bytes []byte) ([]byte, error) {
 	var buf bytes.Buffer
 	if err := pem.Encode(&buf, &pem.Block{Type: Type, Bytes: Bytes}); err != nil {
-		return "", err
+		return nil, err
 	}
-	return buf.String(), nil
+	return buf.Bytes(), nil
 }
 
 // PemDecode pem解码
-func PemDecode(data string) []byte {
-	block, _ := pem.Decode([]byte(data))
+func PemDecode(data []byte) []byte {
+	block, _ := pem.Decode(data)
 	return block.Bytes
 }

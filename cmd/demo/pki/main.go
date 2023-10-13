@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/x509"
 	"os"
 
 	"github.com/forestyc/playground/pkg/security/pki"
@@ -15,7 +16,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	rootCert, rootPrive, err := ca.CreateRootCertificate(2048, "forestyc CA")
+
+	Root(ca)
+	//middleCert := Middle(ca, rootCert)
+	//Terminal(ca, middleCert)
+}
+
+func Root(ca *pki.CA) []byte {
+	cert, priv, err := ca.CreateRootCertificate(
+		2048,
+		"forestyc CA",
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -24,11 +35,60 @@ func main() {
 		panic(err)
 	}
 	defer f1.Close()
-	f1.Write([]byte(rootCert))
+	f1.Write([]byte(cert))
 	f2, err := os.Create("root.key")
 	if err != nil {
 		panic(err)
 	}
 	defer f2.Close()
-	f2.Write([]byte(rootPrive))
+	f2.Write([]byte(priv))
+	return cert
+}
+
+func Middle(ca *pki.CA, parent *x509.Certificate) []byte {
+	cert, priv, err := ca.CreateMiddleCertificate(
+		parent,
+		2048,
+		"forestyc CA",
+	)
+	if err != nil {
+		panic(err)
+	}
+	f1, err := os.Create("middle.pem")
+	if err != nil {
+		panic(err)
+	}
+	defer f1.Close()
+	f1.Write([]byte(cert))
+	f2, err := os.Create("middle.key")
+	if err != nil {
+		panic(err)
+	}
+	defer f2.Close()
+	f2.Write([]byte(priv))
+	return cert
+}
+
+func Terminal(ca *pki.CA, parent *x509.Certificate) []byte {
+	cert, priv, err := ca.CreateTerminalCertificate(
+		parent,
+		2048,
+		"forestyc application",
+	)
+	if err != nil {
+		panic(err)
+	}
+	f1, err := os.Create("terminal.pem")
+	if err != nil {
+		panic(err)
+	}
+	defer f1.Close()
+	f1.Write([]byte(cert))
+	f2, err := os.Create("terminal.key")
+	if err != nil {
+		panic(err)
+	}
+	defer f2.Close()
+	f2.Write([]byte(priv))
+	return cert
 }

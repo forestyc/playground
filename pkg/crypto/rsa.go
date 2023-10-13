@@ -34,7 +34,7 @@ func (r RSA) GenerateKey(pub, priv string) error {
 	}
 	defer file.Close()
 	buf, _ := encoding.PemEncode("RSA PRIVATE KEY", x509.MarshalPKCS1PrivateKey(privKey))
-	file.Write([]byte(buf))
+	file.Write(buf)
 	// public
 	file2, err := os.Create(pub)
 	if err != nil {
@@ -42,7 +42,7 @@ func (r RSA) GenerateKey(pub, priv string) error {
 	}
 	defer file2.Close()
 	buf, _ = encoding.PemEncode("PUBLIC KEY", pubStream)
-	file2.Write([]byte(buf))
+	file2.Write(buf)
 	return nil
 }
 
@@ -168,11 +168,11 @@ func (r RSA) VerifyWithBase64(data []byte, key []byte, sign string) (bool, error
 
 // 解析私钥
 func (r RSA) parsePrivate(key []byte) (*rsa.PrivateKey, error) {
-	return x509.ParsePKCS1PrivateKey(encoding.PemDecode(string(key)))
+	return x509.ParsePKCS1PrivateKey(encoding.PemDecode(key))
 }
 
 // 解析公钥
 func (r RSA) parsePublic(key []byte) (*rsa.PublicKey, error) {
-	pub, err := x509.ParsePKIXPublicKey(encoding.PemDecode(string(key)))
+	pub, err := x509.ParsePKIXPublicKey(encoding.PemDecode(key))
 	return pub.(*rsa.PublicKey), err
 }
