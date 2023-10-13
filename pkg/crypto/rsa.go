@@ -6,8 +6,8 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
-	"encoding/pem"
 	"errors"
+	"github.com/forestyc/playground/pkg/encoding"
 	"os"
 )
 
@@ -23,31 +23,26 @@ func (r RSA) GenerateKey(pub, priv string) error {
 	if err != nil {
 		return err
 	}
-	privStream := x509.MarshalPKCS1PrivateKey(privKey)
-	block := &pem.Block{
-		Type:  "RSA PRIVATE KEY",
-		Bytes: privStream,
+	pubStream, err := x509.MarshalPKIXPublicKey(&privKey.PublicKey)
+	if err != nil {
+		return err
 	}
+	// private
 	file, err := os.Create(priv)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	pem.Encode(file, block)
-	pubStream, err := x509.MarshalPKIXPublicKey(&privKey.PublicKey)
+	buf, _ := encoding.PemEncode("RSA PRIVATE KEY", x509.MarshalPKCS1PrivateKey(privKey))
+	file.Write([]byte(buf))
+	// public
+	file2, err := os.Create(pub)
 	if err != nil {
 		return err
 	}
-	block = &pem.Block{
-		Type:  "PUBLIC KEY",
-		Bytes: pubStream,
-	}
-	file, err = os.Create(pub)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	pem.Encode(file, block)
+	defer file2.Close()
+	buf, _ = encoding.PemEncode("PUBLIC KEY", pubStream)
+	file2.Write([]byte(buf))
 	return nil
 }
 
@@ -64,11 +59,7 @@ func (r RSA) GeneratePublicKey(priv []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	block := &pem.Block{
-		Type:  "PUBLIC KEY",
-		Bytes: pubStream,
-	}
-	pub := pem.EncodeToMemory(block)
+	pub, _ := encoding.PemEncode("PUBLIC KEY", pubStream)
 	return string(pub), err
 }
 
@@ -105,7 +96,7 @@ func (r RSA) EncryptWithBase64(data []byte, key []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return Base64Encode(ciphertext), nil
+	return encoding.Base64Encode(ciphertext), nil
 }
 
 // DecryptWithBase64 解密(私钥)，使用base64
@@ -113,7 +104,7 @@ func (r RSA) DecryptWithBase64(data string, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
 		return nil, errors.New("invalid params")
 	}
-	plaintext, err := Base64Decode(data)
+	plaintext, err := encoding.Base64Decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +151,7 @@ func (r RSA) SignWithBase64(data []byte, key []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return Base64Encode(sign), nil
+	return encoding.Base64Encode(sign), nil
 }
 
 // VerifyWithBase64 校验（公钥），使用base64
@@ -168,7 +159,7 @@ func (r RSA) VerifyWithBase64(data []byte, key []byte, sign string) (bool, error
 	if len(data) == 0 || len(key) == 0 {
 		return false, errors.New("invalid params")
 	}
-	signRaw, err := Base64Decode(sign)
+	signRaw, err := encoding.Base64Decode(sign)
 	if err != nil {
 		return false, err
 	}
@@ -177,13 +168,11 @@ func (r RSA) VerifyWithBase64(data []byte, key []byte, sign string) (bool, error
 
 // 解析私钥
 func (r RSA) parsePrivate(key []byte) (*rsa.PrivateKey, error) {
-	block, _ := pem.Decode(key)
-	return x509.ParsePKCS1PrivateKey(block.Bytes)
+	return x509.ParsePKCS1PrivateKey(encoding.PemDecode(string(key)))
 }
 
 // 解析公钥
 func (r RSA) parsePublic(key []byte) (*rsa.PublicKey, error) {
-	block, _ := pem.Decode(key)
-	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
+	pub, err := x509.ParsePKIXPublicKey(encoding.PemDecode(string(key)))
 	return pub.(*rsa.PublicKey), err
 }

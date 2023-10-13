@@ -24,11 +24,11 @@ func main() {
 		panic(err)
 	}
 	defer f1.Close()
-	f1.Write(rootCert)
+	f1.Write([]byte(rootCert))
 	f2, err := os.Create("root.key")
 	if err != nil {
 		panic(err)
 	}
 	defer f2.Close()
-	f2.Write(rootPrive)
+	f2.Write([]byte(rootPrive))
 }

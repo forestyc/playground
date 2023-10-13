@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"errors"
+	"github.com/forestyc/playground/pkg/encoding"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
 	"math/big"
@@ -50,7 +51,7 @@ func (s SM2) EncryptWithBase64(data []byte, key []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return Base64Encode(crypto), nil
+	return encoding.Base64Encode(crypto), nil
 }
 
 // DecryptWithBase64 解密(私钥)，使用base64
@@ -58,7 +59,7 @@ func (s SM2) DecryptWithBase64(data string, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
 		return nil, errors.New("invalid params")
 	}
-	raw, err := Base64Decode(data)
+	raw, err := encoding.Base64Decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +107,7 @@ func (s SM2) SignWithBase64(data []byte, key []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return Base64Encode(sign), nil
+	return encoding.Base64Encode(sign), nil
 }
 
 // VerifyWithBase64 校验（公钥），使用base64
@@ -114,7 +115,7 @@ func (s SM2) VerifyWithBase64(data []byte, key []byte, sign string) (bool, error
 	if len(data) == 0 || len(key) == 0 {
 		return false, errors.New("invalid params")
 	}
-	signRaw, err := Base64Decode(sign)
+	signRaw, err := encoding.Base64Decode(sign)
 	if err != nil {
 		return false, err
 	}

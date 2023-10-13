@@ -5,6 +5,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"errors"
+	"github.com/forestyc/playground/pkg/encoding"
 )
 
 //加密过程：
@@ -96,7 +97,7 @@ func (a AES) EncryptWithBase64(data []byte, key []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return Base64Encode(res), nil
+	return encoding.Base64Encode(res), nil
 }
 
 // DecryptWithBase64 base64解码后 Aes 解密
@@ -104,7 +105,7 @@ func (a AES) DecryptWithBase64(data string, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
 		return nil, errors.New("invalid params")
 	}
-	dataByte, err := Base64Decode(data)
+	dataByte, err := encoding.Base64Decode(data)
 	if err != nil {
 		return nil, err
 	}

@@ -2,6 +2,7 @@ package crypto
 
 import (
 	"errors"
+	"github.com/forestyc/playground/pkg/encoding"
 	"github.com/tjfoc/gmsm/sm4"
 )
 
@@ -33,7 +34,7 @@ func (s SM4) EncryptWithBase64(data []byte, key []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return Base64Encode(crypto), nil
+	return encoding.Base64Encode(crypto), nil
 }
 
 // DecryptWithBase64 解密，使用base64
@@ -41,7 +42,7 @@ func (s SM4) DecryptWithBase64(data string, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
 		return nil, errors.New("invalid params")
 	}
-	crypto, err := Base64Decode(data)
+	crypto, err := encoding.Base64Decode(data)
 	if err != nil {
 		return nil, err
 	}
