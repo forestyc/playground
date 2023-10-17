@@ -3,12 +3,11 @@ package crypto
 import (
 	"bytes"
 	"crypto/rand"
-	"errors"
 	"github.com/forestyc/playground/pkg/encoding"
+	"github.com/pkg/errors"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
 	"math/big"
-	"os"
 )
 
 type SM2 struct {
@@ -122,45 +121,20 @@ func (s SM2) VerifyWithBase64(data []byte, key []byte, sign string) (bool, error
 	return s.Verify(data, key, signRaw)
 }
 
-// GenerateKey 生成密钥对，返回公钥、私钥文件路径
-func (s SM2) GenerateKey(pubKeyPath, privKeyPath string) error {
-	if pubKeyPath == "" || privKeyPath == "" {
-		return errors.New("invalid params")
-	}
+// GenerateKey 生成密钥对，返回私钥、公钥、错误
+func (s SM2) GenerateKey() ([]byte, []byte, error) {
 	priv, err := sm2.GenerateKey(rand.Reader) // 生成密钥对
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	public := priv.Public().(*sm2.PublicKey)
 	pubkeyHex := x509.WritePublicKeyToHex(public)
 	if err != nil {
-		return err
-	}
-	err = os.WriteFile(pubKeyPath, []byte(pubkeyHex), 0644)
-	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	privkeyHex := x509.WritePrivateKeyToHex(priv)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
-	err = os.WriteFile(privKeyPath, []byte(privkeyHex), 0644)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// GeneratePublicKey 生成公钥(hex)
-func (s SM2) GeneratePublicKey(priv []byte) (string, error) {
-	private, err := x509.ReadPrivateKeyFromHex(string(priv))
-	if err != nil {
-		return "", err
-	}
-	public := private.Public().(*sm2.PublicKey)
-	hex := x509.WritePublicKeyToHex(public)
-	if err != nil {
-		return "", err
-	}
-	return hex, nil
+	return []byte(privkeyHex), []byte(pubkeyHex), nil
 }

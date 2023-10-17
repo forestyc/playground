@@ -1,4 +1,4 @@
-package pki
+package ca
 
 import (
 	"crypto/x509"
@@ -14,7 +14,7 @@ type Certificate struct {
 }
 
 // NewCertificate new certificate with CommonName.
-// To Add other informations, use WithXXX().
+// To Add other information, use WithXXX().
 func NewCertificate(cn string, option ...Option) Certificate {
 	c := Certificate{
 		Certificate: x509.Certificate{

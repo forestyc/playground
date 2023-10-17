@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/forestyc/playground/pkg/security/pki"
+	"github.com/forestyc/playground/pkg/security/pki/ca"
 )
 
 func main() {
-	storage, err := pki.NewStorage([]string{
+	storage, err := ca.NewStorage([]string{
 		"81.70.188.168:12379",
 		"140.143.163.171:12379",
 		"101.42.23.168:12379",

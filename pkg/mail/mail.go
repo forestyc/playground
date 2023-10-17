@@ -1,7 +1,7 @@
 package message
 
 import (
-	"errors"
+	"github.com/pkg/errors"
 
 	"gopkg.in/gomail.v2"
 )

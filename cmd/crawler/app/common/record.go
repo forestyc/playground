@@ -2,7 +2,7 @@ package common
 
 import (
 	goContext "context"
-	"errors"
+	"github.com/pkg/errors"
 
 	"github.com/forestyc/playground/cmd/crawler/app/context"
 	"github.com/go-redis/redis/v8"

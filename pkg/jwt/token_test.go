@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/forestyc/playground/pkg/util"
+	"github.com/forestyc/playground/pkg/utils"
 	"github.com/go-playground/assert/v2"
 )
 
-var secret string = util.GenUuid()
+var secret string = utils.GenUuid()
 
 func TestTokenWithIssuer(t *testing.T) {
 	id := "abcd"

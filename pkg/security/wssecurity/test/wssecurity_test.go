@@ -6,20 +6,20 @@ import (
 
 	"github.com/forestyc/playground/pkg/crypto"
 	"github.com/forestyc/playground/pkg/security/wssecurity"
-	"github.com/forestyc/playground/pkg/util"
+	"github.com/forestyc/playground/pkg/utils"
 	"github.com/go-playground/assert/v2"
 )
 
 // [正常系]生成appKey
 func TestGenAppKey(t *testing.T) {
-	appKey := util.GenAppKey()
+	appKey := utils.GenAppKey()
 	assert.Equal(t, len(appKey) > 0, true)
 	t.Logf("appKey=[%s]\n", appKey)
 }
 
 // [正常系]生成appSecret
 func TestGenAppSecret(t *testing.T) {
-	appSecret, err := util.GenAppSecret("28599f31d80a4cfab02dd6c33214f028", "test") //967acbb541daf9ce8319d3c23406e4ec7383c9da70398b6bcefe4bbb80405509
+	appSecret, err := utils.GenAppSecret("28599f31d80a4cfab02dd6c33214f028", "test") //967acbb541daf9ce8319d3c23406e4ec7383c9da70398b6bcefe4bbb80405509
 	assert.Equal(t, err, nil)
 	assert.Equal(t, len(appSecret) > 0, true)
 	t.Logf("appSecret=[%s]\n", appSecret)
@@ -34,7 +34,7 @@ func TestCheckNormal(t *testing.T) {
 	appSecret = "967acbb541daf9ce8319d3c23406e4ec7383c9da70398b6bcefe4bbb80405509"
 	xwsse := wssecurity.XWSSE{
 		AppKey:  "28599f31d80a4cfab02dd6c33214f028",
-		Nonce:   util.GenUuid(),
+		Nonce:   utils.GenUuid(),
 		Created: time.Now().Format("2006-01-02T15:04:05Z"),
 	}
 	digest, err = sm3.Sum([]byte(xwsse.Nonce + xwsse.Created + appSecret))

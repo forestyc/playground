@@ -1,14 +1,18 @@
 package wssecurity
 
 import (
-	"errors"
 	"fmt"
-	"github.com/forestyc/playground/pkg/util"
+	"github.com/forestyc/playground/pkg/utils"
+	"github.com/pkg/errors"
 	"strings"
 	"time"
 
 	"github.com/forestyc/playground/pkg/crypto"
 )
+
+type ApiCheck func(appKey string) (appSecret string, err error)
+
+const requestIn = 30 // RequestIn秒内的请求
 
 type XWSSE struct {
 	PasswordDigest string
@@ -48,7 +52,7 @@ func (x *XWSSE) Check(authorization, xwsse string, getAppSecret ApiCheck) (err e
 func (x *XWSSE) Marshal(appSecret string) (xwsse string, err error) {
 	format := `UsernameToken Username="` + x.AppKey + `", PasswordDigest="%s", Nonce="%s", Created="%s"`
 	if len(x.Nonce) == 0 {
-		x.Nonce = util.GenUuid()
+		x.Nonce = utils.GenUuid()
 	}
 	if len(x.Created) == 0 {
 		x.Created = time.Now().Format("2006-01-02T15:04:05Z")
@@ -97,7 +101,7 @@ func (x *XWSSE) CheckSum(appSecret string) (err error) {
 	}
 	now := time.Now()
 	// created比当前时间靠后或者是30秒之前的请求，直接拒绝
-	if createdTime.After(now) || now.Sub(createdTime) > time.Second*RequestIn {
+	if createdTime.After(now) || now.Sub(createdTime) > time.Second*requestIn {
 		return errors.New("invalid request")
 	}
 	var want string

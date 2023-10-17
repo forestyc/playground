@@ -1,10 +1,10 @@
 package crawler
 
 import (
-	"errors"
 	"github.com/forestyc/playground/pkg/crawler/robots"
 	"github.com/forestyc/playground/pkg/prometheus"
 	"github.com/gocolly/colly/v2"
+	"github.com/pkg/errors"
 )
 
 const (

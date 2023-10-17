@@ -1,11 +1,11 @@
 package jwt
 
 import (
-	"errors"
 	"fmt"
+	"github.com/pkg/errors"
 	"time"
 
-	"github.com/forestyc/playground/pkg/util"
+	"github.com/forestyc/playground/pkg/utils"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -22,7 +22,7 @@ func NewToken(id string, secret []byte, option ...Option) (string, error) {
 	c := &Claims{
 		jwt.RegisteredClaims{
 			Issuer:    "forestyc",
-			Subject:   util.GenUuid(),
+			Subject:   utils.GenUuid(),
 			NotBefore: &jwt.NumericDate{Time: time.Now()},
 			IssuedAt:  &jwt.NumericDate{Time: time.Now()},
 			ID:        id,

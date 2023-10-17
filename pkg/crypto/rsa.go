@@ -6,61 +6,28 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
-	"errors"
 	"github.com/forestyc/playground/pkg/encoding"
-	"os"
+	"github.com/pkg/errors"
 )
 
 type RSA struct {
 }
 
-// GenerateKey 生成密钥对，输入公钥、私钥文件路径
-func (r RSA) GenerateKey(pub, priv string) error {
-	if len(pub) == 0 || len(priv) == 0 {
-		return errors.New("invalid params")
-	}
+// GenerateKey 生成密钥对，返回私钥、公钥、错误
+func (r RSA) GenerateKey() ([]byte, []byte, error) {
 	privKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	pubStream, err := x509.MarshalPKIXPublicKey(&privKey.PublicKey)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	// private
-	file, err := os.Create(priv)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	buf, _ := encoding.PemEncode("RSA PRIVATE KEY", x509.MarshalPKCS1PrivateKey(privKey))
-	file.Write(buf)
+	privPem, _ := encoding.PemEncode("RSA PRIVATE KEY", x509.MarshalPKCS1PrivateKey(privKey))
 	// public
-	file2, err := os.Create(pub)
-	if err != nil {
-		return err
-	}
-	defer file2.Close()
-	buf, _ = encoding.PemEncode("PUBLIC KEY", pubStream)
-	file2.Write(buf)
-	return nil
-}
-
-// GeneratePublicKey 生成公钥
-func (r RSA) GeneratePublicKey(priv []byte) (string, error) {
-	if len(priv) == 0 {
-		return "", errors.New("invalid params")
-	}
-	privKey, err := r.parsePrivate(priv)
-	if err != nil {
-		return "", err
-	}
-	pubStream, err := x509.MarshalPKIXPublicKey(&privKey.PublicKey)
-	if err != nil {
-		return "", err
-	}
-	pub, _ := encoding.PemEncode("PUBLIC KEY", pubStream)
-	return string(pub), err
+	pubPem, _ := encoding.PemEncode("PUBLIC KEY", pubStream)
+	return privPem, pubPem, nil
 }
 
 // Encrypt 加密(公钥)

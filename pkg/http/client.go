@@ -2,7 +2,7 @@ package http
 
 import (
 	"bytes"
-	"errors"
+	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"strings"
