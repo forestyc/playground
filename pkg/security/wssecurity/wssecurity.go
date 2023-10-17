@@ -3,11 +3,11 @@ package wssecurity
 import (
 	"errors"
 	"fmt"
+	"github.com/forestyc/playground/pkg/util"
 	"strings"
 	"time"
 
 	"github.com/forestyc/playground/pkg/crypto"
-	uuid "github.com/satori/go.uuid"
 )
 
 type XWSSE struct {
@@ -48,7 +48,7 @@ func (x *XWSSE) Check(authorization, xwsse string, getAppSecret ApiCheck) (err e
 func (x *XWSSE) Marshal(appSecret string) (xwsse string, err error) {
 	format := `UsernameToken Username="` + x.AppKey + `", PasswordDigest="%s", Nonce="%s", Created="%s"`
 	if len(x.Nonce) == 0 {
-		x.Nonce = uuid.NewV4().String()
+		x.Nonce = util.GenUuid()
 	}
 	if len(x.Created) == 0 {
 		x.Created = time.Now().Format("2006-01-02T15:04:05Z")

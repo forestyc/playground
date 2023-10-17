@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/forestyc/playground/pkg/crypto"
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 // GenAppKey 生成appKey
@@ -28,6 +28,6 @@ func GenAppSecret(appKey, name string) (string, error) {
 }
 
 func GenUuid() string {
-	appKey := uuid.NewV4().String()
+	appKey := uuid.New().String()
 	return strings.Replace(appKey, "-", "", -1)
 }
