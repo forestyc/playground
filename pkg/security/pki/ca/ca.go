@@ -31,30 +31,18 @@ func NewCA(endpoints []string) (*CA, error) {
 	return pki, nil
 }
 
-// CreateRootCertificate create root certificate and private key.
+// CreateCaCertificate create middle certificate and private key.
 // Returns certPem, privatePem and error.
-func (ca *CA) CreateRootCertificate(bit int, cn string, option ...Option) ([]byte, []byte, error) {
-	// create certificate
-	option = append(option, WithIsCa(true))
-	cert, priv, err := ca.createCertificate(nil, nil, bit, cn, option...)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	// store to etcd
-	if err = ca.store(PrefixRoot+cn, cert, priv); err != nil {
-		return nil, nil, err
-	}
-	return cert, priv, err
-}
-
-// CreateMiddleCertificate create middle certificate and private key.
-// Returns certPem, privatePem and error.
-func (ca *CA) CreateMiddleCertificate(bit int, cn string, option ...Option) ([]byte, []byte, error) {
-	// get root certificate
-	certRoot, privRoot, err := ca.getRootCertAndKey()
-	if err != nil {
-		return nil, nil, err
+func (ca *CA) CreateCaCertificate(bit int, cn string, root bool, option ...Option) ([]byte, []byte, error) {
+	var certRoot *x509.Certificate
+	var privRoot *rsa.PrivateKey
+	var err error
+	if !root {
+		// get root certificate
+		certRoot, privRoot, err = ca.getCertAndKey(PrefixRoot)
+		if err != nil {
+			return nil, nil, err
+		}
 	}
 
 	// create certificate
@@ -71,11 +59,11 @@ func (ca *CA) CreateMiddleCertificate(bit int, cn string, option ...Option) ([]b
 	return cert, priv, err
 }
 
-// CreateTerminalCertificate create terminal certificate and private key.
+// CreateServerCertificate create terminal certificate and private key.
 // Returns certPem, privatePem and error.
-func (ca *CA) CreateTerminalCertificate(bit int, cn string, option ...Option) ([]byte, []byte, error) {
+func (ca *CA) CreateServerCertificate(bit int, cn string, option ...Option) ([]byte, []byte, error) {
 	// get parent certificate
-	certParent, privParent, err := ca.getRootCertAndKey()
+	certParent, privParent, err := ca.getCertAndKey(PrefixMiddle)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -143,31 +131,11 @@ func (ca *CA) store(name string, certPem, privPem []byte) error {
 	return nil
 }
 
-// getRootCertificate get and parse certificate and private key of root
-func (ca *CA) getRootCertAndKey() (*x509.Certificate, *rsa.PrivateKey, error) {
-	var err error
-	// get root certificate
-	kvs, err := ca.storage.Get(PrefixRoot, clientv3.WithPrefix())
-	if err != nil {
-		return nil, nil, err
-	} else if len(kvs) == 0 {
-		return nil, nil, errors.New("no root certificate!")
-	}
-
-	// json unmarshal
-	kv := KeyPair{}
-	if err = json.Unmarshal(kvs[0].Value, &kv); err != nil {
-		return nil, nil, err
-	}
-
-	return ca.parseCertAndKey(kv.Cert, kv.Key)
-}
-
 // getMiddleCertAndKey get and parse certificate and private key of intermediate
-func (ca *CA) getMiddleCertAndKey() (*x509.Certificate, *rsa.PrivateKey, error) {
+func (ca *CA) getCertAndKey(prefix string) (*x509.Certificate, *rsa.PrivateKey, error) {
 	var err error
-	// get middle certificate
-	kvs, err := ca.storage.Get(PrefixMiddle, clientv3.WithPrefix())
+	// get certificate
+	kvs, err := ca.storage.Get(prefix, clientv3.WithPrefix())
 	if err != nil {
 		return nil, nil, err
 	} else if len(kvs) == 0 {

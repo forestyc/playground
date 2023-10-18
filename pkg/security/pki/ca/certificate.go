@@ -27,6 +27,7 @@ func NewCertificate(cn string, option ...Option) Certificate {
 			BasicConstraintsValid: true,
 			KeyUsage:              x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment,
 			ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+			IssuingCertificateURL: nil,
 		},
 	}
 	for _, o := range option {
@@ -81,5 +82,12 @@ func WithMaxPathLen(len int) Option {
 func WithIsCa(isCa bool) Option {
 	return func(c *Certificate) {
 		c.IsCA = isCa
+	}
+}
+
+// WithNotAfter set NotAfter
+func WithNotAfter(t time.Time) Option {
+	return func(c *Certificate) {
+		c.NotAfter = t
 	}
 }
