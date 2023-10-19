@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/forestyc/playground/pkg/security/pki/ca"
+	"github.com/forestyc/playground/cmd/demo/pki/ca"
 )
 
 func main() {

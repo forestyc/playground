@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/forestyc/playground/pkg/security/pki/ca"
+	ca2 "github.com/forestyc/playground/cmd/demo/pki/ca"
 	"os"
 	"time"
 )
 
 func main() {
-	CA, err := ca.NewCA([]string{
+	CA, err := ca2.NewCA([]string{
 		"81.70.188.168:12379",
 		"140.143.163.171:12379",
 		"101.42.23.168:12379",
@@ -20,12 +20,12 @@ func main() {
 	Server(CA)
 }
 
-func Root(CA *ca.CA) []byte {
+func Root(CA *ca2.CA) []byte {
 	cert, priv, err := CA.CreateCaCertificate(
 		2048,
 		"forestyc root",
 		true,
-		ca.WithNotAfter(time.Now().AddDate(10, 0, 0)),
+		ca2.WithNotAfter(time.Now().AddDate(10, 0, 0)),
 	)
 	if err != nil {
 		panic(err)
@@ -45,12 +45,12 @@ func Root(CA *ca.CA) []byte {
 	return cert
 }
 
-func Middle(CA *ca.CA) []byte {
+func Middle(CA *ca2.CA) []byte {
 	cert, priv, err := CA.CreateCaCertificate(
 		2048,
 		"forestyc intermediate",
 		false,
-		ca.WithNotAfter(time.Now().AddDate(5, 0, 0)),
+		ca2.WithNotAfter(time.Now().AddDate(5, 0, 0)),
 	)
 	if err != nil {
 		panic(err)
@@ -70,7 +70,7 @@ func Middle(CA *ca.CA) []byte {
 	return cert
 }
 
-func Server(CA *ca.CA) []byte {
+func Server(CA *ca2.CA) []byte {
 	cert, priv, err := CA.CreateServerCertificate(
 		2048,
 		"forestyc server",
