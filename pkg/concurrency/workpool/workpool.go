@@ -55,7 +55,7 @@ func (wp *WorkPool) Start() {
 			select {
 			case job := <-wp.queue:
 				fmt.Println("get a job")
-				wp.worker(job)
+				go wp.worker(job)
 			case <-wp.ctx.Done():
 				return
 			}
