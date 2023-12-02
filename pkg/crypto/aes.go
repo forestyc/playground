@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"errors"
 	"github.com/forestyc/playground/pkg/encoding"
+	"github.com/pkg/errors"
 )
 
 //加密过程：

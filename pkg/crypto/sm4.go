@@ -1,8 +1,8 @@
 package crypto
 
 import (
-	"errors"
 	"github.com/forestyc/playground/pkg/encoding"
+	"github.com/pkg/errors"
 	"github.com/tjfoc/gmsm/sm4"
 )
 

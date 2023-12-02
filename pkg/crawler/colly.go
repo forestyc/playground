@@ -1,10 +1,10 @@
 package crawler
 
 import (
-	"errors"
 	"github.com/forestyc/playground/pkg/crawler/robots"
 	"github.com/forestyc/playground/pkg/prometheus"
 	"github.com/gocolly/colly/v2"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -21,13 +21,13 @@ type Colly struct {
 	Task     string
 	Url      string
 	Callback []Callback
-	Pip      Pipeline
+	Pip      []Pipeline
 	Counter  *prometheus.Counter
 	Crawler  *colly.Collector
 }
 
 func NewColly(task, url string, options ...Option) *Colly {
-	c := &Colly{
+	c := Colly{
 		Crawler: colly.NewCollector(),
 		Url:     url,
 		Task:    task,
@@ -37,24 +37,32 @@ func NewColly(task, url string, options ...Option) *Colly {
 			"task", "url", "status"),
 	}
 	for _, option := range options {
-		option(c)
+		option(&c)
 	}
-	return c
+	return &c
 }
 
 func WithPipeline(pipeline Pipeline) Option {
 	return func(c *Colly) {
-		c.Pip = pipeline
+		if pipeline != nil {
+			c.Pip = append(c.Pip, pipeline)
+		}
 	}
 }
 
 func WithCrawlCallback(cb Callback) Option {
 	return func(c *Colly) {
-		c.Callback = append(c.Callback, cb)
+		if cb != nil {
+			c.Callback = append(c.Callback, cb)
+		}
 	}
 }
 
-func (c *Colly) Run() error {
+func (c *Colly) Run(options ...Option) error {
+	// add option
+	for _, option := range options {
+		option(c)
+	}
 	// check disallow
 	robot := robots.NewRobots(c.Url, c.Crawler.UserAgent)
 	robot.Run()
@@ -71,9 +79,11 @@ func (c *Colly) Run() error {
 		return err
 	}
 	if c.Pip != nil {
-		if err = c.Pip(); err != nil {
-			c.Counter.Inc(c.Task, c.Url, piplineFail)
-			return err
+		for _, pip := range c.Pip {
+			if err = pip(); err != nil {
+				c.Counter.Inc(c.Task, c.Url, piplineFail)
+				return err
+			}
 		}
 	}
 	c.Counter.Inc(c.Task, c.Url, Success)

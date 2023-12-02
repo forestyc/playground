@@ -17,8 +17,7 @@ type SymmetricCrypto interface {
 
 // AsymmetricCrypto 非对称加密接口
 type AsymmetricCrypto interface {
-	GenerateKey(pub string, priv string) error                           // 生成密钥对，输入公钥、私钥文件路径
-	GeneratePublicKey(priv []byte) (string, error)                       // 生成公钥
+	GenerateKey() ([]byte, []byte, error)                                // 生成密钥对，返回私钥、公钥、错误
 	Encrypt(data []byte, key []byte) ([]byte, error)                     // 加密(公钥)
 	Decrypt(data []byte, key []byte) ([]byte, error)                     // 解密(私钥)
 	EncryptWithBase64(data []byte, key []byte) (string, error)           // 加密(公钥)，使用base64

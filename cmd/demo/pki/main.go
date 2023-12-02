@@ -1,14 +1,13 @@
 package main
 
 import (
-	"crypto/x509"
+	ca2 "github.com/forestyc/playground/cmd/demo/pki/ca"
 	"os"
-
-	"github.com/forestyc/playground/pkg/security/pki"
+	"time"
 )
 
 func main() {
-	ca, err := pki.NewCA([]string{
+	CA, err := ca2.NewCA([]string{
 		"81.70.188.168:12379",
 		"140.143.163.171:12379",
 		"101.42.23.168:12379",
@@ -16,16 +15,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	Root(ca)
-	//middleCert := Middle(ca, rootCert)
-	//Terminal(ca, middleCert)
+	Root(CA)
+	Middle(CA)
+	Server(CA)
 }
 
-func Root(ca *pki.CA) []byte {
-	cert, priv, err := ca.CreateRootCertificate(
+func Root(CA *ca2.CA) []byte {
+	cert, priv, err := CA.CreateCaCertificate(
 		2048,
-		"forestyc CA",
+		"forestyc root",
+		true,
+		ca2.WithNotAfter(time.Now().AddDate(10, 0, 0)),
 	)
 	if err != nil {
 		panic(err)
@@ -45,11 +45,12 @@ func Root(ca *pki.CA) []byte {
 	return cert
 }
 
-func Middle(ca *pki.CA, parent *x509.Certificate) []byte {
-	cert, priv, err := ca.CreateMiddleCertificate(
-		parent,
+func Middle(CA *ca2.CA) []byte {
+	cert, priv, err := CA.CreateCaCertificate(
 		2048,
-		"forestyc CA",
+		"forestyc intermediate",
+		false,
+		ca2.WithNotAfter(time.Now().AddDate(5, 0, 0)),
 	)
 	if err != nil {
 		panic(err)
@@ -69,11 +70,10 @@ func Middle(ca *pki.CA, parent *x509.Certificate) []byte {
 	return cert
 }
 
-func Terminal(ca *pki.CA, parent *x509.Certificate) []byte {
-	cert, priv, err := ca.CreateTerminalCertificate(
-		parent,
+func Server(CA *ca2.CA) []byte {
+	cert, priv, err := CA.CreateServerCertificate(
 		2048,
-		"forestyc application",
+		"forestyc server",
 	)
 	if err != nil {
 		panic(err)

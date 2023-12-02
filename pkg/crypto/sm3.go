@@ -2,7 +2,7 @@ package crypto
 
 import (
 	"encoding/hex"
-	"errors"
+	"github.com/pkg/errors"
 	"github.com/tjfoc/gmsm/sm3"
 )
 

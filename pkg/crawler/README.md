@@ -7,15 +7,20 @@
 crawler = crawler.NewColly(
            task,
            url,
-           // db pipeline回调函数
+           // db pipeline回调函数(可选)
            crawler.WithPipeline(pipeline),
-           // 爬虫回调函数
+           // 爬虫回调函数(可选)
            crawler.WithCrawlCallback(callback),
            // ...
         )
 
 // 执行爬虫
-crawler.Run()
+crawler.Run(
+    // db pipeline回调函数(可选)
+    crawler.WithPipeline(pipeline),
+    // 爬虫回调函数(可选)
+    crawler.WithCrawlCallback(callback),
+)
 ```
 
 
