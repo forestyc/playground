@@ -26,8 +26,8 @@ type Colly struct {
 	Crawler  *colly.Collector
 }
 
-func NewColly(task, url string, options ...Option) Colly {
-	c := Colly{
+func NewColly(task, url string, options ...Option) *Colly {
+	c := &Colly{
 		Crawler: colly.NewCollector(),
 		Url:     url,
 		Task:    task,
@@ -37,7 +37,7 @@ func NewColly(task, url string, options ...Option) Colly {
 			"task", "url", "status"),
 	}
 	for _, option := range options {
-		option(&c)
+		option(c)
 	}
 	return c
 }
@@ -54,7 +54,7 @@ func WithCrawlCallback(cb Callback) Option {
 	}
 }
 
-func (c Colly) Run() error {
+func (c *Colly) Run() error {
 	// check disallow
 	robot := robots.NewRobots(c.Url, c.Crawler.UserAgent)
 	robot.Run()

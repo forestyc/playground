@@ -8,7 +8,7 @@ import (
 
 	"github.com/forestyc/playground/cmd/crawler/app/config"
 	"github.com/forestyc/playground/cmd/crawler/app/context"
-	"github.com/forestyc/playground/cmd/crawler/app/logic"
+	"github.com/forestyc/playground/cmd/crawler/app/crawler"
 	"github.com/forestyc/playground/pkg/version"
 )
 
@@ -36,14 +36,14 @@ func main() {
 	defer ctx.Cache.Close()
 	// 初始化爬虫
 	taskSlice := strings.Split(task, " ")
-	logic.Register(ctx)
+	crawler.Register(ctx)
 	// 执行爬虫任务
 	taskCount := len(taskSlice)
 	if taskCount == 1 && len(taskSlice[0]) == 0 {
 		log.Fatalln("请选择爬虫任务")
 	}
 	ctx.Wg.Add(taskCount)
-	logic.Run(taskSlice)
+	crawler.Run(taskSlice)
 	ctx.Wg.Wait()
 	log.Println("爬虫任务结束")
 }
