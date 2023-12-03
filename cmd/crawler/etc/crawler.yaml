@@ -1,6 +1,6 @@
 # 配置数据库连接
 database:
-  dsn: baal:Baal@123@tcp(82.156.37.89:1444)/infoservice?charset=utf8
+  dsn: baal:Baal@123@tcp(140.143.163.171:3306)/baal?charset=utf8
   max-open: 10
   idle-conns: 5
   idle-timeout: 300 # 5分钟
@@ -8,8 +8,8 @@ database:
 
 # Redis
 redis:
-  address: 82.156.37.89:1443
-  password: Redis@1234567
+  address: 140.143.163.171:6379
+  password: k8s-node1#12345
   max-open: 10
   idle-timeout: 300 # 5分钟
   idle-conns: 5

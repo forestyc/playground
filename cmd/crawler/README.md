@@ -2,11 +2,9 @@
 
 ## 爬虫列表
 
-| 交易所   | 内容     | 标签                  |
-|-------|--------|---------------------|
-| `广期所` | `本所要闻` | `gfex-news`         |
-| `广期所` | `通知公告` | `gfex-announcement` |
-| `广期所` | `媒体聚焦` | `gfex-focus`        |
+| 交易所    | 内容   | 标签     |
+|--------|------|--------|
+| `yage` | `雅歌` | `yage` |
 
 ## 执行爬虫
 
@@ -18,8 +16,9 @@
 
     ./crawler -task "gfex-news gfex-announcement gfex-focus"
 
-**注意：**  
-+ **-task后的参数必须在""内**  
+**注意：**
+
++ **-task后的参数必须在""内**
 
 ## 添加爬虫任务
 
@@ -34,7 +33,7 @@
 | `---context`    | context   | context   |
 | `---dao`        | dao       | dao       |
 | `---handler`    | dao       | dao       |
-| `---logic`      | logic     | logic     |
+| `---crawler`    | crawler   | crawler   |
 | `---util`       | util      | util      |
 | `-etc`          | 配置目录      | 配置目录      |
 | `-crawler.go`   | main      | main      |
@@ -51,7 +50,9 @@ type Crawler interface {
 ```
 
 ### 3、实现爬取逻辑
+
 + 在logic创建someexchange目录，并实现logic
+
 ```
 type Something struct {
     ctx     context.Context   // 必须包含context，ctx包含db及cache等公共中间件
@@ -74,8 +75,8 @@ func (cs *Something) Run() {
 	cs.ctx.Wg.Done()    // 必须调用，通知主协程任务完成
 }
 ```
-+ 在handler创建someexchange目录，并实现handler
 
++ 在handler创建someexchange目录，并实现handler
 
 ### 3、注册任务
 
