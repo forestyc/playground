@@ -15,7 +15,7 @@ type Context struct {
 	C      config.Config
 	Db     *db.Mysql
 	Cache  *redis.Redis
-	Logger zap.Zap
+	Logger *zap.Zap
 	Wg     *sync.WaitGroup
 }
 

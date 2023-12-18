@@ -1,4 +1,4 @@
-package logic
+package crawler
 
 import (
 	"github.com/forestyc/playground/cmd/crawler/app/context"

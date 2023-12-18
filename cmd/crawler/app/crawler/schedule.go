@@ -1,11 +1,10 @@
-package logic
+package crawler
 
 import (
+	"github.com/forestyc/playground/cmd/crawler/app/common"
+	"github.com/forestyc/playground/cmd/crawler/app/handler/yage"
 	"path"
 	"time"
-
-	"github.com/forestyc/playground/cmd/crawler/app/common"
-	"github.com/forestyc/playground/cmd/crawler/app/logic/gfex"
 
 	"github.com/forestyc/playground/cmd/crawler/app/context"
 )
@@ -19,9 +18,7 @@ var (
 func Register(c context.Context) {
 	ctx = c
 	crawler = map[string]Crawler{
-		common.GfexNews:         &gfex.News{},         // 广期所-本所要闻
-		common.GfexAnnouncement: &gfex.Announcement{}, // 广期所-通知公告
-		common.GfexFocus:        &gfex.Focus{},        // 广期所-媒体聚焦
+		common.Yage: &yage.BalanceOfLawAndGospel{},
 	}
 }
 

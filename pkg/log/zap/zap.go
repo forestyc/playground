@@ -24,7 +24,7 @@ type Zap struct {
 	*zap.Logger
 }
 
-func NewZap(z Config) Zap {
+func NewZap(z Config) *Zap {
 	if ok, _ := PathExists(z.Director); !ok { //判断是否指定文件夹
 		fmt.Printf("create %v dirctory\n", z.Director)
 		_ = os.Mkdir(z.Director, os.ModePerm)
@@ -57,7 +57,7 @@ func NewZap(z Config) Zap {
 	if z.ShowLine {
 		logger.Logger = logger.WithOptions(zap.AddCaller())
 	}
-	return logger
+	return &logger
 }
 
 // getEncoderConfig 获取 zapcore.EncoderConfig
