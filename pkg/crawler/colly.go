@@ -13,6 +13,14 @@ const (
 	piplineFail = "pipline fail"
 )
 
+type ReqType uint32
+
+const (
+	Get = iota
+	Post
+	PostRaw
+)
+
 type Callback func()
 type Pipeline func() error
 type Option func(c *Colly)
@@ -23,6 +31,9 @@ type Colly struct {
 	Callback []Callback
 	Pip      []Pipeline
 	Counter  *prometheus.Counter
+	reqType  ReqType
+	postForm map[string]string
+	postRaw  []byte
 	Crawler  *colly.Collector
 }
 
@@ -58,6 +69,24 @@ func WithCrawlCallback(cb Callback) Option {
 	}
 }
 
+func WithReqType(t ReqType) Option {
+	return func(c *Colly) {
+		c.reqType = t
+	}
+}
+
+func WithPostForm(form map[string]string) Option {
+	return func(c *Colly) {
+		c.postForm = form
+	}
+}
+
+func WithPostRaw(raw []byte) Option {
+	return func(c *Colly) {
+		c.postRaw = raw
+	}
+}
+
 func (c *Colly) Run(options ...Option) error {
 	// add option
 	for _, option := range options {
@@ -74,7 +103,15 @@ func (c *Colly) Run(options ...Option) error {
 		e()
 	}
 	var err error
-	if err = c.Crawler.Visit(c.Url); err != nil {
+	switch c.reqType {
+	case Get:
+		err = c.Crawler.Visit(c.Url)
+	case Post:
+		err = c.Crawler.Post(c.Url, c.postForm)
+	case PostRaw:
+		err = c.Crawler.PostRaw(c.Url, c.postRaw)
+	}
+	if err != nil {
 		c.Counter.Inc(c.Task, c.Url, crawFail)
 		return err
 	}

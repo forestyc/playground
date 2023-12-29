@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/forestyc/playground/cmd/demo/check-data2/crawler/gfex"
+	"github.com/forestyc/playground/cmd/demo/check-data2/model"
 	"github.com/forestyc/playground/pkg/http"
 	"time"
 )
@@ -12,14 +14,30 @@ var (
 )
 
 func main() {
-	exchanges := []string{"DCE", "CZCE", "CFFEX", "SHFE", "INE", "GFEX"}
+	//var date string
+	//var quoteType string
+	//flag.StringVar(&date, "date", "", "20231229")
+	//flag.StringVar(&quoteType, "quote-type", "", "future:1, option:2")
+	//flag.Parse()
+
+	dq := gfex.NewDayQuotes("20231229", "20060102", "1")
+	//dq := gfex.NewDayQuotes(date, "20060102", quoteType)
+	dq.Run()
+	return
+	//dq := dce.NewDayQuotes("20231227", "20060102", "2")
+	//dq.Run()
+	//dq.Print()
+
+	//return
+	//exchanges := []string{"DCE", "CZCE", "CFFEX", "SHFE", "INE", "GFEX"}
 	initHolidays([]string{"20230101", "20230102", "20230121", "20230122", "20230123", "20230124", "20230125", "20230126", "20230127", "20230405", "20230429", "20230430", "20230501", "20230502", "20230503", "20230622", "20230623", "20230624", "20230929", "20230930", "20231001", "20231002", "20231003", "20231004", "20231005", "20231006"})
-	dates := getTradeDates("20230101", "20231228")
-	for _, exchange := range exchanges {
-		fmt.Println("start check", exchange)
-		checkQuotes(exchange, dates)
-		fmt.Println("end check", exchange)
-	}
+	dates := getTradeDates("20230301", "20230331")
+	fmt.Println(dates)
+	//for _, exchange := range exchanges {
+	//	fmt.Println("start check", exchange)
+	//	checkQuotes(exchange, dates)
+	//	fmt.Println("end check", exchange)
+	//}
 }
 
 type ReqInfo struct {
@@ -34,25 +52,7 @@ type RspInfo struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 	Object  struct {
-		Quots []struct {
-			Exchange        string `json:"exchange"`
-			VarietyId       string `json:"varietyId"`
-			ContractId      string `json:"contractId"`
-			OpenPrice       string `json:"openPrice"`
-			ClosePrice      string `json:"closePrice"`
-			HighPrice       string `json:"highPrice"`
-			LowPrice        string `json:"lowPrice"`
-			SettlePrice     string `json:"settlePrice"`
-			LastSettlePrice string `json:"lastSettlePrice"`
-			TotalMatQty     int    `json:"totalMatQty"`
-			TotalPos        int    `json:"totalPos"`
-			Turnover        int    `json:"turnover"`
-			Delta           string `json:"delta"`
-			ImpVol          string `json:"impVol"`
-			QuotType        int    `json:"quotType"`
-			CpFlag          string `json:"cpFlag"`
-			Date            string `json:"date"`
-		} `json:"quots"`
+		Quots []model.DayQuotes `json:"quots"`
 	} `json:"object"`
 }
 
@@ -93,11 +93,11 @@ func checkQuotes(exchange string, dates []string) {
 
 func getTradeDates(start, end string) []string {
 	var dates []string
-	timeStart, err := time.ParseInLocation("20060102", "20230101", time.Local)
+	timeStart, err := time.ParseInLocation("20060102", start, time.Local)
 	if err != nil {
 		panic(err)
 	}
-	timeEnd, err := time.ParseInLocation("20060102", "20231228", time.Local)
+	timeEnd, err := time.ParseInLocation("20060102", end, time.Local)
 	if err != nil {
 		panic(err)
 	}
