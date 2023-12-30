@@ -48,7 +48,9 @@ func NewColly(task, url string, options ...Option) *Colly {
 			"task", "url", "status"),
 	}
 	for _, option := range options {
-		option(&c)
+		if option != nil {
+			option(&c)
+		}
 	}
 	return &c
 }
@@ -90,7 +92,9 @@ func WithPostRaw(raw []byte) Option {
 func (c *Colly) Run(options ...Option) error {
 	// add option
 	for _, option := range options {
-		option(c)
+		if option != nil {
+			option(c)
+		}
 	}
 	// check disallow
 	robot := robots.NewRobots(c.Url, c.Crawler.UserAgent)
