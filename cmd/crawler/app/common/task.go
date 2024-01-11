@@ -1,5 +1,7 @@
 package common
 
 const (
-	Yage = "yage"
+	Yage            = "yage"
+	DceNews         = "dce-news"
+	DceAnnouncement = "dce-announcement"
 )

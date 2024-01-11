@@ -13,7 +13,7 @@ require (
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/google/uuid v1.5.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
-	github.com/prometheus/client_golang v1.17.0
+	github.com/prometheus/client_golang v1.18.0
 	github.com/spf13/viper v1.18.2
 	github.com/tebeka/selenium v0.9.9
 	github.com/tjfoc/gmsm v1.4.1
@@ -29,7 +29,13 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/onsi/gomega v1.30.0 // indirect
+	github.com/richardlehane/mscfb v1.0.4 // indirect
+	github.com/richardlehane/msoleps v1.0.3 // indirect
+	github.com/xuri/efp v0.0.0-20230802181842-ad255f2331ca // indirect
+	github.com/xuri/excelize/v2 v2.8.0 // indirect
+	github.com/xuri/nfp v0.0.0-20230819163627-dc951e3ffe1a // indirect
 	go.uber.org/goleak v1.2.1 // indirect
 	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
@@ -83,8 +89,8 @@ require (
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_model v0.5.0 // indirect
-	github.com/prometheus/common v0.44.0 // indirect
-	github.com/prometheus/procfs v0.11.1 // indirect
+	github.com/prometheus/common v0.45.0 // indirect
+	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect

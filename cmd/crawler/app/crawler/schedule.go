@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"github.com/forestyc/playground/cmd/crawler/app/common"
+	"github.com/forestyc/playground/cmd/crawler/app/handler/dce"
 	"github.com/forestyc/playground/cmd/crawler/app/handler/yage"
 	"path"
 	"time"
@@ -18,7 +19,9 @@ var (
 func Register(c context.Context) {
 	ctx = c
 	crawler = map[string]Crawler{
-		common.Yage: &yage.BalanceOfLawAndGospel{},
+		common.Yage:            &yage.BalanceOfLawAndGospel{},
+		common.DceNews:         &dce.News{},
+		common.DceAnnouncement: &dce.Announcement{},
 	}
 }
 

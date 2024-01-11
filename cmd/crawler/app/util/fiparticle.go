@@ -1,6 +1,9 @@
 package util
 
-import "strings"
+import (
+	"github.com/gocolly/colly/v2"
+	"strings"
+)
 
 // ReplaceNBSPinHtml 将html中转义后的non-breaking space符号，替换为"&nbsp;"字符串保存（管理端插件kindeditor对转以后\u00a0的格式化有bug）
 func ReplaceNBSPinHtml(s string) string {
@@ -54,4 +57,15 @@ func AddHost(content, host string) string {
 		}
 	}
 	return result
+}
+
+func Host(element *colly.HTMLElement) string {
+	return element.Request.URL.Scheme + "://" + element.Request.URL.Host
+}
+
+func FormatArticle(content string, element *colly.HTMLElement) string {
+	content = strings.TrimSpace(content)
+	content = strings.ReplaceAll(content, "\n", "")
+	content = strings.ReplaceAll(content, "\r", "")
+	return AddHost(content, Host(element))
 }
