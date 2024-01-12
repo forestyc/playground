@@ -22,6 +22,7 @@ func Register(c context.Context) {
 		common.Yage:            &yage.BalanceOfLawAndGospel{},
 		common.DceNews:         &dce.News{},
 		common.DceAnnouncement: &dce.Announcement{},
+		common.DceVariety:      &dce.Variety{},
 	}
 }
 

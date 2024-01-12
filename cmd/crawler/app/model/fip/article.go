@@ -1,10 +1,5 @@
 package fip
 
-const (
-	sep  = ","
-	tail = "\n"
-)
-
 type Article struct {
 	Id      int    // 序号
 	Title   string // 标题名称
