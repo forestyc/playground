@@ -1,8 +1,9 @@
 package db
 
 import (
-	"context"
 	"database/sql"
+	"errors"
+	driver "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"time"
@@ -37,15 +38,19 @@ func NewMysql(config Config) *Mysql {
 	}
 }
 
-func (mysql Mysql) Session() (*gorm.DB, context.CancelFunc) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(mysql.config.OperationTimeout)*time.Second)
-	return mysql.db.Session(&gorm.Session{
-		PrepareStmt: true,
-		NewDB:       true,
-		Context:     ctx,
-	}), cancel
+func (mdb *Mysql) Close() error {
+	return mdb.sqlDb.Close()
 }
 
-func (mysql Mysql) Close() error {
-	return mysql.sqlDb.Close()
+func (mdb *Mysql) DBError(err error) (int, string) {
+	if err != nil {
+		var mysqlErr *driver.MySQLError
+		if ok := errors.As(err, &mysqlErr); ok {
+			return int(mysqlErr.Number), mysqlErr.Message
+		} else {
+			return 0, err.Error()
+		}
+	} else {
+		return 0, ""
+	}
 }

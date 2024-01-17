@@ -1,6 +1,6 @@
 # 配置数据库连接
 database:
-  dsn: baal:Baal@123@tcp(140.143.163.171:3306)/baal?charset=utf8
+  dsn: baal:Baal@123@tcp(140.143.163.171:3306)/baal?charset=utf8mb4&parseTime=true&loc=Local
   max-open: 10
   idle-conns: 5
   idle-timeout: 300 # 5分钟

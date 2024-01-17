@@ -16,7 +16,6 @@ database:
 ```
 import "github.com/Baal19905/playground/pkg/db"
 
-// 在配置中添加redis对象
 type Config struct {
     // ...
     Database db.Config  `mapstructure:"database"`
@@ -30,14 +29,12 @@ type Config struct {
 ```
 import "github.com/Baal19905/playground/pkg/db"
 
-// 初始化指标
 func (j *job) Init() {
     // ...
     j.db = db.NewMysql(config)
     // ...
 }
 
-// 记录指标
 func (j *job) Run() {
     // ...
     j.db.Create(rows)

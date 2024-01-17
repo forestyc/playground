@@ -1,0 +1,28 @@
+version: "0.1"
+database:
+  # consult[https://gorm.io/docs/connecting_to_the_database.html]"
+  dsn: "baal:Baal@123@tcp(140.143.163.171:3306)/baal?charset=utf8mb4&parseTime=true&loc=Local"
+  # input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]
+  db: "mysql"
+  # enter the required data table or leave it blank.You can input : orders,users,goods
+  # tables  :
+  #   - orders
+  #   - users
+  #   - goods
+  tables:
+  - day_quotes
+  - market_infos
+  # specify a directory for output
+  outPath: "../model"
+  # only generate models (without query file)
+  onlyModel: true
+  # generate with pointer when field is nullable
+  fieldNullable : false
+  # generate with pointer when field has default value
+  fieldCoverable : false
+  # generate field with gorm index tag
+  fieldWithIndexTag : false
+  # generate field with gorm column type tag
+  fieldWithTypeTag  : false
+  # detect integer field's unsigned type, adjust generated data type
+  fieldSignable  : false
