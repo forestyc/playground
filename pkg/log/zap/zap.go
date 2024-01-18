@@ -11,7 +11,6 @@ import (
 type Config struct {
 	Level         string `mapstructure:"level"`
 	Format        string `mapstructure:"format"`
-	Prefix        string `mapstructure:"prefix"`
 	Director      string `mapstructure:"director"`
 	LinkName      string `mapstructure:"link-name"`
 	ShowLine      bool   `mapstructure:"show-line"`
@@ -25,10 +24,7 @@ type Zap struct {
 }
 
 func NewZap(z Config) *Zap {
-	if ok, _ := PathExists(z.Director); !ok { //判断是否指定文件夹
-		fmt.Printf("create %v dirctory\n", z.Director)
-		_ = os.Mkdir(z.Director, os.ModePerm)
-	}
+	mkdir(z.Director)
 	var level zapcore.Level
 	switch z.Level {
 	case "debug":
@@ -50,9 +46,9 @@ func NewZap(z Config) *Zap {
 	}
 	var logger Zap
 	if level == zap.DebugLevel || level == zap.ErrorLevel {
-		logger.Logger = zap.New(getEncoderCore(z, level), zap.AddStacktrace(level))
+		logger.Logger = zap.New(newCore(z, level), zap.AddStacktrace(level))
 	} else {
-		logger.Logger = zap.New(getEncoderCore(z, level))
+		logger.Logger = zap.New(newCore(z, level))
 	}
 	if z.ShowLine {
 		logger.Logger = logger.WithOptions(zap.AddCaller())
@@ -60,8 +56,8 @@ func NewZap(z Config) *Zap {
 	return &logger
 }
 
-// getEncoderConfig 获取 zapcore.EncoderConfig
-func getEncoderConfig(z Config) (config zapcore.EncoderConfig) {
+// new zapcore.EncoderConfig
+func newEncoderConfig(z Config) (config zapcore.EncoderConfig) {
 	config = zapcore.EncoderConfig{
 		MessageKey:     "message",
 		LevelKey:       "level",
@@ -71,7 +67,7 @@ func getEncoderConfig(z Config) (config zapcore.EncoderConfig) {
 		StacktraceKey:  z.StacktraceKey,
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     CustomTimeEncoder(z.Prefix),
+		EncodeTime:     newTimeEncoder(),
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.FullCallerEncoder,
 	}
@@ -90,26 +86,30 @@ func getEncoderConfig(z Config) (config zapcore.EncoderConfig) {
 	return config
 }
 
-func getEncoderCore(z Config, level zapcore.Level) (core zapcore.Core) {
+// new zapcore.Core
+func newCore(z Config, level zapcore.Level) (core zapcore.Core) {
 	writer, err := GetWriteSyncer(z) //使用file-rotatelogs进行日志分割
 	if err != nil {
 		fmt.Printf("Get Write Syncer Failed err:%v", err)
 		return
 	}
-	return zapcore.NewCore(getEncoder(z), writer, level)
-}
-
-// getEncoder 获取zapcore.Encoder
-func getEncoder(z Config) zapcore.Encoder {
+	var encoder zapcore.Encoder
 	if z.Format == "json" {
-		return zapcore.NewJSONEncoder(getEncoderConfig(z))
+		encoder = zapcore.NewJSONEncoder(newEncoderConfig(z))
+	} else {
+		encoder = zapcore.NewConsoleEncoder(newEncoderConfig(z))
 	}
-	return zapcore.NewConsoleEncoder(getEncoderConfig(z))
+	return zapcore.NewCore(encoder, writer, level)
 }
 
-// CustomTimeEncoder 自定义日志输出时间格式
-func CustomTimeEncoder(prefix string) zapcore.TimeEncoder {
+// new zapcore.TimeEncoder
+func newTimeEncoder() zapcore.TimeEncoder {
 	return func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-		enc.AppendString(t.Format(prefix + "2006/01/02 - 15:04:05.000"))
+		enc.AppendString(t.Format("2006/01/02 - 15:04:05.000"))
 	}
+}
+
+// create log path
+func mkdir(path string) {
+	os.Mkdir(path, os.ModePerm)
 }

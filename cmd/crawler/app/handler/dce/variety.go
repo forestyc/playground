@@ -6,7 +6,6 @@ import (
 	"github.com/forestyc/playground/cmd/crawler/app/model/fip"
 	"github.com/forestyc/playground/cmd/crawler/app/util"
 	"github.com/forestyc/playground/pkg/crawler"
-	"github.com/forestyc/playground/pkg/log/zap"
 	"github.com/gocolly/colly/v2"
 	"github.com/xuri/excelize/v2"
 	rawZap "go.uber.org/zap"
@@ -54,11 +53,8 @@ type Variety struct {
 	id       int
 }
 
-func (n *Variety) Init(ctx context.Context, config zap.Config, task string) {
+func (n *Variety) Init(ctx context.Context, task string) {
 	n.ctx = ctx
-	n.ctx.C.Log = config
-	// 初始化日志
-	n.ctx.Logger = zap.NewZap(n.ctx.C.Log)
 	n.task = task
 	for _, prefix := range varietyUrlPrefix {
 		for i := 1; i <= varietyPageMax; i++ {

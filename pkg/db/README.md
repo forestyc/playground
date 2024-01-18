@@ -1,46 +1,31 @@
 # db
 
-## 1. 配置
+## 1. 使用
+
 ```
-// 添加配置
-database:
-  dsn: user:password@tcp(localhost:3306)/db?charset=utf8
-  max-open: 10
-  idle-conns: 5
-  idle-timeout: 300 # 5分钟
-  operation-timeout: 10 # 10秒
-```
+package main
 
-## 2. 代码
-### 1. 读取配置
-```
-import "github.com/Baal19905/playground/pkg/db"
+import (
+	"github.com/forestyc/playground/pkg/db"
+)
 
-type Config struct {
-    // ...
-    Database db.Config  `mapstructure:"database"`
-    // ...
-}
-
-// load config
-```
-
-### 2. 使用db
-```
-import "github.com/Baal19905/playground/pkg/db"
-
-func (j *job) Init() {
-    // ...
-    j.db = db.NewMysql(config)
-    // ...
-}
-
-func (j *job) Run() {
-    // ...
-    j.db.Create(rows)
-    // ...
+func main() {
+	mdb := db.NewMysql(db.Config{
+		Dsn:              "baal:Baal@123@tcp(140.143.163.171:3306)/baal?charset=utf8mb4&parseTime=true&loc=Local",
+		MaxOpen:          10,
+		IdleConns:        5,
+		MaxIdleTime:      300,
+		OperationTimeout: 10,
+	})
+	defer mdb.Close()
+	var user User
+	session := mdb.Session()
+	result := session.Model(&user).
+		//Where("date=? and exchange=? and contract_id=?", "20231212", "DCE", "a2312").
+		Take(&user)
+	if code, msg := mdb.DBError(result.Error); code > 0 {
+		fmt.Println(msg)
+	}
 }
 ```
-
-
 

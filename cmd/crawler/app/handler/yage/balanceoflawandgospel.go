@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/forestyc/playground/cmd/crawler/app/context"
 	"github.com/forestyc/playground/pkg/crawler"
-	"github.com/forestyc/playground/pkg/log/zap"
 	"github.com/gocolly/colly/v2"
 	rawZap "go.uber.org/zap"
 	"os"
@@ -54,11 +53,8 @@ type BalanceOfLawAndGospel struct {
 	crawlers  []*crawler.Colly
 }
 
-func (blg *BalanceOfLawAndGospel) Init(ctx context.Context, config zap.Config, task string) {
+func (blg *BalanceOfLawAndGospel) Init(ctx context.Context, task string) {
 	blg.ctx = ctx
-	blg.ctx.C.Log = config
-	// 初始化日志
-	blg.ctx.Logger = zap.NewZap(blg.ctx.C.Log)
 	blg.task = task
 	blg.audios = make(map[string]Element)
 	blg.targets = make(map[string]string)

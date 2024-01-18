@@ -6,7 +6,6 @@ import (
 	"github.com/forestyc/playground/cmd/crawler/app/model/fip"
 	"github.com/forestyc/playground/cmd/crawler/app/util"
 	"github.com/forestyc/playground/pkg/crawler"
-	"github.com/forestyc/playground/pkg/log/zap"
 	"github.com/gocolly/colly/v2"
 	"github.com/xuri/excelize/v2"
 	rawZap "go.uber.org/zap"
@@ -29,11 +28,8 @@ type Announcement struct {
 	id       int
 }
 
-func (an *Announcement) Init(ctx context.Context, config zap.Config, task string) {
+func (an *Announcement) Init(ctx context.Context, task string) {
 	an.ctx = ctx
-	an.ctx.C.Log = config
-	// 初始化日志
-	an.ctx.Logger = zap.NewZap(an.ctx.C.Log)
 	an.task = task
 	for _, prefix := range announcementUrlPrefix {
 		for i := 1; i <= announcementPageMax; i++ {

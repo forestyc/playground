@@ -19,8 +19,7 @@ func main() {
 	var dq model.DayQuote
 	session := mdb.Session()
 	tx := session.Begin()
-	result := tx.Table("day_quotes").
-		//Where("date=? and exchange=? and contract_id=?", "20231212", "DCE", "a2312").
+	result := tx.Model(&model.DayQuote{}).
 		Take(&dq)
 	if code, msg := mdb.DBError(result.Error); code > 0 {
 		tx.Rollback()
@@ -28,7 +27,7 @@ func main() {
 	}
 	dq2 := dq
 	dq2.Date = time.Now().AddDate(0, 0, 1)
-	result = tx.Table("day_quotes").
+	result = tx.Model(&model.DayQuote{}).
 		Select("date").
 		Where("date=? and exchange=? and contract_id=?", dq.Date, dq.Exchange, dq.ContractID).
 		Updates(&dq2)
@@ -37,7 +36,7 @@ func main() {
 		fmt.Println(msg)
 	}
 
-	result = tx.Table("market_infos").
+	result = tx.Model(&model.MarketInfo{}).
 		Create(&model.MarketInfo{
 			TradeDate: time.Now().AddDate(0, 0, 1).Format("20060102"),
 		})

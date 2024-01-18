@@ -42,8 +42,6 @@ func main() {
 	if taskCount == 1 && len(taskSlice[0]) == 0 {
 		log.Fatalln("请选择爬虫任务")
 	}
-	ctx.Wg.Add(taskCount)
 	crawler.Run(taskSlice)
-	ctx.Wg.Wait()
 	log.Println("爬虫任务结束")
 }
