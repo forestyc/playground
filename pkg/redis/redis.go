@@ -28,6 +28,7 @@ func NewRedis(config Config) (*Redis, error) {
 		PoolSize:     config.MaxOpen,
 		MinIdleConns: config.IdleConns,
 		PoolTimeout:  time.Duration(config.IdleTimout) * time.Second,
+		ReadTimeout:  time.Duration(config.OperationTimeout) * time.Second,
 	})
 	_, err := r.Client.Ping(context.Background()).Result()
 	if err != nil {
