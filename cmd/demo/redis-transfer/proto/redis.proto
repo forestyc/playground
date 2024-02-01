@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package redispb;
+
+option go_package = "redispb/";
+
+message String {
+  string key = 1;
+  bytes value = 2;
+  int32 ttl = 3;
+}
+
+message Hash {
+  string key = 1;
+  repeated Field fields = 2;
+  int32 ttl = 3;
+}
+
+message List {
+  string key = 1;
+  repeated bytes values = 2;
+  int32 ttl = 3;
+}
+
+message Set {
+  string key = 1;
+  repeated string members = 2;
+  int32 ttl = 3;
+}
+
+message ZSet {
+  string key = 1;
+  repeated ZMember members = 2;
+  int32 ttl = 3;
+}
+
+message Stream {
+  string key = 1;
+  repeated XMessage messages = 2;
+  int32 ttl = 3;
+}
+
+message Field {
+  string field = 1;
+  bytes value = 2;
+}
+
+message ZMember {
+  string member = 1;
+  double score = 2;
+}
+
+message XMessage {
+  string id = 1;
+  repeated string field = 2;
+  repeated bytes value = 3;
+}

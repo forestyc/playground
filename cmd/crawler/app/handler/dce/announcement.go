@@ -17,7 +17,7 @@ var (
 		"http://www.dce.com.cn/dalianshangpin/ywfw/jystz/ywtz/13305-",
 		"http://www.dce.com.cn/dalianshangpin/ywfw/jystz/hdtz/13303-",
 	}
-	announcementPageMax = 5
+	announcementPageMax = 15
 )
 
 type Announcement struct {

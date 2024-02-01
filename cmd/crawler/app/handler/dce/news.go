@@ -19,7 +19,7 @@ var (
 		"http://www.dce.com.cn/dalianshangpin/xwzx93/mtkdss/13365-",
 		"http://www.dce.com.cn/dalianshangpin/xwzx93/scyjjydf/446f0284-",
 	}
-	newsPageMax = 5
+	newsPageMax = 15
 )
 
 type News struct {

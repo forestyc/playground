@@ -42,7 +42,7 @@ var (
 		"http://www.dce.com.cn/dalianshangpin/sspz/487234/487246/13183-",
 		"http://www.dce.com.cn/dalianshangpin/sspz/487234/487248/13184-",
 	}
-	varietyPageMax = 1
+	varietyPageMax = 3
 )
 
 type Variety struct {

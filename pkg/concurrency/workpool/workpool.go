@@ -2,7 +2,6 @@ package workpool
 
 import (
 	"context"
-	"fmt"
 	"runtime"
 	"sync/atomic"
 	"time"
@@ -54,7 +53,6 @@ func (wp *WorkPool) Start() {
 		for {
 			select {
 			case job := <-wp.queue:
-				fmt.Println("get a job")
 				go wp.worker(job)
 			case <-wp.ctx.Done():
 				return
