@@ -38,7 +38,19 @@ func (e *Export) Run() {
 	e.wp.Start()
 	defer e.wp.Stop()
 	for _, key := range e.keys {
-		e.wp.AddJob(e.Callback(key))
+		if strings.Contains(key, "*") {
+			result := r.Keys(context.Background(), key)
+			if result.Err() != nil {
+				zlog.Error("Run failed", zap.Error(result.Err()), zap.String("function", "r.Keys"))
+				continue
+			}
+			for _, k := range result.Val() {
+				e.wp.AddJob(e.Callback(k))
+			}
+		} else {
+			e.wp.AddJob(e.Callback(key))
+		}
+
 	}
 }
 
@@ -170,7 +182,7 @@ func (e *Export) List(key string) {
 	}
 	// get value
 	var values [][]byte
-	if err = r.LRange(context.Background(), key, 0, -1).ScanSlice(values); err != nil {
+	if err = r.LRange(context.Background(), key, 0, -1).ScanSlice(&values); err != nil {
 		zlog.Error("List failed", zap.Error(err), zap.String("function", "r.LRange"),
 			zap.String("key", key))
 		return
