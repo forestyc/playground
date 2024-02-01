@@ -1,10 +1,8 @@
 package crawler
 
 import (
-	"github.com/forestyc/playground/pkg/crawler/robots"
 	"github.com/forestyc/playground/pkg/prometheus"
 	"github.com/gocolly/colly/v2"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -47,6 +45,7 @@ func NewColly(task, url string, options ...Option) *Colly {
 			"记录爬虫执行情况",
 			"task", "url", "status"),
 	}
+	c.Crawler.IgnoreRobotsTxt = false
 	for _, option := range options {
 		if option != nil {
 			option(&c)
@@ -95,12 +94,6 @@ func (c *Colly) Run(options ...Option) error {
 		if option != nil {
 			option(c)
 		}
-	}
-	// check disallow
-	robot := robots.NewRobots(c.Url, c.Crawler.UserAgent)
-	robot.Run()
-	if robot.Disallow(c.Url) {
-		return errors.New("DISALLOW!!!")
 	}
 	// crawl
 	for _, e := range c.Callback {
