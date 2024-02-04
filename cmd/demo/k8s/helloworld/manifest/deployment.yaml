@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworld
+  template:
+    metadata:
+      labels:
+        app: helloworld
+    spec:
+      containers:
+        - name: helloworld
+          image: ccr.ccs.tencentyun.com/daihouda/helloworld:v1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8080
+      imagePullSecrets:
+      - name: ccr.ccs.tencentyun.com
