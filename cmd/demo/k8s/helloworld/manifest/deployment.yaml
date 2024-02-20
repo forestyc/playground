@@ -15,9 +15,18 @@ spec:
     spec:
       containers:
         - name: helloworld
-          image: ccr.ccs.tencentyun.com/daihouda/helloworld:v1.0.0
+          image: ccr.ccs.tencentyun.com/daihouda/helloworld:v1.0.1
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              httpHeaders:
+                - name: Custom-Header
+                  value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
       imagePullSecrets:
       - name: ccr.ccs.tencentyun.com
