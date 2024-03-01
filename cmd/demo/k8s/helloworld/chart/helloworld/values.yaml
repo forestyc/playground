@@ -80,12 +80,10 @@ livenessProbe:
     httpHeaders:
       - name: Custom-Header
         value: Awesome
-    initialDelaySeconds: 3
-    periodSeconds: 3
+  initialDelaySeconds: 3
+  periodSeconds: 3
 readinessProbe:
-  httpGet:
-    path: /
-    port: http
+
 
 autoscaling:
   enabled: false
