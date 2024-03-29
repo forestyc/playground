@@ -15,9 +15,6 @@ func main() {
 	counter := prometheus.NewCounter("test_counter", "test counter", "label")
 	counter.Inc("inc")
 	counter.Add(3.0, "add")
-	counter1 := prometheus.NewCounter("test_counter", "test counter", "label")
-	counter1.Inc("inc")
-	counter1.Add(3.0, "add")
 	// gauge
 	gauge := prometheus.NewGauge("test_gauge", "test gauge", "label")
 	gauge.Inc("inc")
@@ -28,5 +25,9 @@ func main() {
 	// summary
 	summary := prometheus.NewSummary("test_summary", "test summary", "label")
 	summary.Observe(3.14, "observe")
-	time.Sleep(time.Hour)
+	time.Sleep(2 * time.Minute)
+	counter.Unregister()
+	gauge.Unregister()
+	histogram.Unregister()
+	summary.Unregister()
 }

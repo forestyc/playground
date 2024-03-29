@@ -6,11 +6,23 @@ import (
 )
 
 type Summary struct {
-	vec *prometheus.SummaryVec
+	vec  *prometheus.SummaryVec
+	once sync.Once
 }
 
+var s Summary
+
 func NewSummary(name, help string, label ...string) *Summary {
-	return poolSummary.Get(name, help, label...)
+	s.once.Do(func() {
+		s.vec = prometheus.NewSummaryVec(
+			prometheus.SummaryOpts{
+				Name: name,
+				Help: help,
+			}, label,
+		)
+		prometheus.MustRegister(s.vec)
+	})
+	return &s
 }
 
 func (s *Summary) Observe(val float64, labelValue ...string) {
@@ -25,36 +37,4 @@ func (s *Summary) Unregister() {
 		return
 	}
 	prometheus.Unregister(s.vec)
-}
-
-var (
-	poolSummary = &summaryPool{}
-)
-
-type summaryPool struct {
-	pool map[string]*Summary
-	lock sync.Mutex
-}
-
-func (sp *summaryPool) Get(name, help string, label ...string) *Summary {
-	sp.lock.Lock()
-	defer sp.lock.Unlock()
-	if sp.pool == nil {
-		sp.pool = make(map[string]*Summary)
-	}
-	c, has := sp.pool[name]
-	if has {
-		return c
-	} else {
-		c = &Summary{
-			vec: prometheus.NewSummaryVec(
-				prometheus.SummaryOpts{
-					Name: name,
-					Help: help,
-				}, label),
-		}
-		prometheus.MustRegister(c.vec)
-		sp.pool[name] = c
-		return c
-	}
 }

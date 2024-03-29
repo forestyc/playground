@@ -6,12 +6,23 @@ import (
 )
 
 type Gauge struct {
-	prometheus.GaugeOpts
-	vec *prometheus.GaugeVec
+	vec  *prometheus.GaugeVec
+	once sync.Once
 }
 
+var g Gauge
+
 func NewGauge(name, help string, label ...string) *Gauge {
-	return poolGauge.Get(name, help, label...)
+	g.once.Do(func() {
+		g.vec = prometheus.NewGaugeVec(
+			prometheus.GaugeOpts{
+				Name: name,
+				Help: help,
+			}, label,
+		)
+		prometheus.MustRegister(g.vec)
+	})
+	return &g
 }
 
 func (g *Gauge) Inc(labelValue ...string) {
@@ -47,36 +58,4 @@ func (g *Gauge) Unregister() {
 		return
 	}
 	prometheus.Unregister(g.vec)
-}
-
-var (
-	poolGauge = &gaugePool{}
-)
-
-type gaugePool struct {
-	pool map[string]*Gauge
-	lock sync.Mutex
-}
-
-func (gp *gaugePool) Get(name, help string, label ...string) *Gauge {
-	gp.lock.Lock()
-	defer gp.lock.Unlock()
-	if gp.pool == nil {
-		gp.pool = make(map[string]*Gauge)
-	}
-	c, has := gp.pool[name]
-	if has {
-		return c
-	} else {
-		c = &Gauge{
-			vec: prometheus.NewGaugeVec(
-				prometheus.GaugeOpts{
-					Name: name,
-					Help: help,
-				}, label),
-		}
-		prometheus.MustRegister(c.vec)
-		gp.pool[name] = c
-		return c
-	}
 }
