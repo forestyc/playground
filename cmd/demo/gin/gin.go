@@ -2,10 +2,18 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"time"
 )
 
 func main() {
 	r := gin.Default()
-	r.StaticFile("/.well-known/pki-validation/3DC8B7244EF16DBD8645BD97DEBB3555.txt", "3DC8B7244EF16DBD8645BD97DEBB3555.txt")
-	r.Run(":80") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	go Run(r)
+	time.Sleep(time.Second * 3)
+	r.GET("/hello", func(c *gin.Context) { c.JSON(http.StatusOK, "world") })
+	time.Sleep(time.Hour)
+}
+
+func Run(e *gin.Engine) {
+	e.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

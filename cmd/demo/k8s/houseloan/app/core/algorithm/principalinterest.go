@@ -1,11 +1,5 @@
 package repayment
 
-import (
-	"github.com/forestyc/playground/cmd/demo/house/global"
-	"github.com/forestyc/playground/pkg/utils"
-	"github.com/pkg/errors"
-)
-
 type PrincipalInterest struct {
 	principal           float64
 	interestRate        float64
@@ -14,19 +8,14 @@ type PrincipalInterest struct {
 	principalByMonth    float64
 }
 
-func NewPrincipalInterest(principal, interestRate float64, periods int) (PrincipalInterest, error) {
+func NewPrincipalInterest(principal, interestRate float64, periods int) PrincipalInterest {
 	var pi PrincipalInterest
-	if periods == 0 ||
-		utils.EqualFloat(principal, 0, global.EPSILON) ||
-		utils.EqualFloat(interestRate, 0, global.EPSILON) {
-		return pi, errors.New("invalid param")
-	}
 	pi.principal = principal
 	pi.interestRate = interestRate
 	pi.periods = periods
-	pi.interestRateByMonth = pi.interestRate / global.MONTH
+	pi.interestRateByMonth = pi.interestRate / MONTH
 	pi.principalByMonth = pi.principal / float64(periods)
-	return pi, nil
+	return pi
 }
 
 func (pi PrincipalInterest) Repayment(period int) float64 {

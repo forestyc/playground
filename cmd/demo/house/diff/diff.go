@@ -29,10 +29,14 @@ func FundMonthly(fundAmount float64, fundInterestRate []float64, periods int) {
 }
 
 func FundInterest(fundAmount float64, fundInterestRate []float64, periods int) {
-	var fAc []repayment.AverageCapital
-	for i := 0; i < len(fundInterestRate); i++ {
-		f, _ := repayment.NewAverageCapital(fundAmount, fundInterestRate[i], periods)
-		fAc = append(fAc, f)
-	}
-	fmt.Printf("Interest1: %.2f\tInterest2: %.2f\tdiff: %.2f\n", fAc[0].TotalInterest(), fAc[1].TotalInterest(), math.Abs(fAc[0].TotalInterest()-fAc[1].TotalInterest()))
+	//var fAc []repayment.AverageCapital
+	//for i := 0; i < len(fundInterestRate); i++ {
+	//	f, _ := repayment.NewAverageCapital(fundAmount, fundInterestRate[i], periods)
+	//	fAc = append(fAc, f)
+	//}
+	//fmt.Printf("Interest1: %.2f\tInterest2: %.2f\tdiff: %.2f\n", fAc[0].TotalInterest(), fAc[1].TotalInterest(), math.Abs(fAc[0].TotalInterest()-fAc[1].TotalInterest()))
+	pi, _ := repayment.NewPrincipalInterest(800000, 0.03575, 360)
+	fmt.Println(pi.Repayment(1))
+	fmt.Println(pi.Repayment(2))
+	fmt.Println(pi.Repayment(3))
 }
