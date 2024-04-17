@@ -1,4 +1,4 @@
-package repayment
+package service
 
 const (
 	EPSILON float64 = 0.01

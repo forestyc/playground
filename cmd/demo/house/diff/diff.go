@@ -35,8 +35,8 @@ func FundInterest(fundAmount float64, fundInterestRate []float64, periods int) {
 	//	fAc = append(fAc, f)
 	//}
 	//fmt.Printf("Interest1: %.2f\tInterest2: %.2f\tdiff: %.2f\n", fAc[0].TotalInterest(), fAc[1].TotalInterest(), math.Abs(fAc[0].TotalInterest()-fAc[1].TotalInterest()))
-	pi, _ := repayment.NewPrincipalInterest(800000, 0.03575, 360)
-	fmt.Println(pi.Repayment(1))
-	fmt.Println(pi.Repayment(2))
-	fmt.Println(pi.Repayment(3))
+	pi, _ := repayment.NewPrincipalInterest(600000, 0.04, 360)
+	fmt.Println(pi.Repayment(4))
+	fmt.Println(pi.Repayment(5))
+	fmt.Println(pi.Repayment(6))
 }

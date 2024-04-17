@@ -25,11 +25,11 @@ func NewPrincipalInterest(principal, interestRate float64, periods int) (Princip
 	pi.interestRate = interestRate
 	pi.periods = periods
 	pi.interestRateByMonth = pi.interestRate / global.MONTH
-	pi.principalByMonth = pi.principal / float64(periods)
+	pi.principalByMonth = utils.Round(pi.principal/float64(periods), 2)
 	return pi, nil
 }
 
 func (pi PrincipalInterest) Repayment(period int) float64 {
-	interest := (pi.principal - float64(period-1)*pi.principalByMonth) * pi.interestRateByMonth
-	return pi.principalByMonth + interest
+	interest := utils.Round((pi.principal-float64(period-1)*pi.principalByMonth)*pi.interestRateByMonth, 2)
+	return utils.Round(pi.principalByMonth+interest, 2)
 }
