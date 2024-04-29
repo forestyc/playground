@@ -30,8 +30,10 @@ func NewMysql(config Config) *Mysql {
 	}
 }
 
-func (mdb *Mysql) Close() error {
-	return mdb.sqlDb.Close()
+func (mdb *Mysql) Close() {
+	if err := mdb.sqlDb.Close(); err != nil {
+		panic(err)
+	}
 }
 
 func (mdb *Mysql) DBError(err error) (int, string) {

@@ -3,28 +3,29 @@ package context
 import (
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/model/config"
 	"github.com/forestyc/playground/pkg/db"
-	"github.com/forestyc/playground/pkg/redis"
-	"github.com/gin-gonic/gin"
-
+	"github.com/forestyc/playground/pkg/http"
 	"github.com/forestyc/playground/pkg/log/zap"
+	"github.com/forestyc/playground/pkg/redis"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 // Context 全局context
 type Context struct {
-	C          config.Config
-	Db         *db.Mysql
-	Cache      *redis.Redis
-	Logger     *zap.Zap
-	HttpServer *gin.Engine
+	C      config.Config
+	Db     *db.Mysql
+	Cache  *redis.Redis
+	Logger *zap.Zap
+	Server *http.Server
 }
 
 func NewContext(c config.Config) (Context, error) {
-	// 注意: logger不在此处初始化，各爬虫内初始化
 	ctx := Context{
-		C:          c,
-		Db:         db.NewMysql(c.Database),
-		Logger:     zap.NewZap(c.Log),
-		HttpServer: gin.Default(),
+		C:      c,
+		Db:     db.NewMysql(c.Database),
+		Logger: zap.NewZap(c.Log),
+		Server: http.NewServer(c.Server.Addr),
 	}
 	r, err := redis.NewRedis(c.Redis)
 	if err != nil {
@@ -35,8 +36,7 @@ func NewContext(c config.Config) (Context, error) {
 }
 
 func (c *Context) Run() {
-	err := c.HttpServer.Run(c.C.Server.Addr)
-	if err != nil {
-		panic(err)
-	}
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
 }

@@ -1,8 +1,8 @@
 # http
 
-http客户端封装，可选择长连接或短连接客户端
+http server and client
 
-## 1. 使用
+## 1. Client
 ```
 import (
     "fmt"
@@ -23,6 +23,25 @@ func main() {
         panic(err)
     }
     fmt.Println(string(resp))
+}
+```
+
+## 2. Server
+```
+import (
+	"github.com/forestyc/playground/pkg/http"
+	"github.com/gin-gonic/gin"
+	netHttp "net/http"
+)
+
+func main() {
+	// ...
+	server := http.NewServer(":8080")
+	server.Serve()
+	server.Router.GET("/", func(c *gin.Context) {
+		c.String(netHttp.StatusOK, "Hello World")
+	})
+	// ...
 }
 ```
 
