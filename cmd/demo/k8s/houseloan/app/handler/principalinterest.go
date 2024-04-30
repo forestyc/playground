@@ -1,8 +1,9 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/context"
+)
 
-func NewPrincipalInterestRouters(prefix string, engine *gin.Engine) {
-	group := engine.Group(prefix)
-	group.GET("/")
+func RegisterPrincipalInterestRouters(ctx context.Context) {
+	//ctx.HttpServer.Router.GET()
 }

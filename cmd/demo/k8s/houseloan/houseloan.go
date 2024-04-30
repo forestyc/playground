@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/context"
+	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/handler"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/model/config"
+	"github.com/forestyc/playground/pkg/component"
 )
 
 func main() {
@@ -18,5 +20,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	ctx.Run()
+
+	handler.RegisterPrincipalInterestRouters(ctx)
+
+	component.Register(ctx.HttpServer)
+	component.Serve()
+	component.Close()
 }

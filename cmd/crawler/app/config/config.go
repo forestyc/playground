@@ -22,11 +22,11 @@ type CrawlerConfig struct {
 
 // Config 配置信息
 type Config struct {
-	Database   db.Config             `mapstructure:"database"`
-	Log        zap.Config            `mapstructure:"log"`
-	Redis      redis.Config          `mapstructure:"redis"`
-	Crawler    CrawlerConfig         `mapstructure:"crawler"`
-	Prometheus prometheus.Prometheus `mapstructure:"prometheus"`
+	Database   db.Config         `mapstructure:"database"`
+	Log        zap.Config        `mapstructure:"log"`
+	Redis      redis.Config      `mapstructure:"redis"`
+	Crawler    CrawlerConfig     `mapstructure:"crawler"`
+	Prometheus prometheus.Config `mapstructure:"prometheus"`
 }
 
 // Load 加载配置
@@ -46,7 +46,9 @@ func Load(file string, c *Config) error {
 	}
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		Unmarshal(c)
+		if err := Unmarshal(c); err != nil {
+			panic(err)
+		}
 	})
 	return Unmarshal(c)
 }

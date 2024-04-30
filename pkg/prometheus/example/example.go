@@ -1,20 +1,22 @@
 package main
 
 import (
+	"github.com/forestyc/playground/pkg/http"
 	"github.com/forestyc/playground/pkg/prometheus"
 	"time"
 )
 
 func main() {
-	p := prometheus.Prometheus{
-		Addr: ":12112",
-		Path: "/metrics",
-	}
-	p.Start()
+	httpServer := http.NewServer(":12112", http.WithPrometheus("/metrics"))
+	httpServer.Serve()
 	// counter
 	counter := prometheus.NewCounter("test_counter", "test counter", "label")
 	counter.Inc("inc")
 	counter.Add(3.0, "add")
+
+	counter2 := prometheus.NewCounter("test_counter2", "test counter", "label")
+	counter2.Inc("inc")
+	counter2.Add(3.0, "add")
 	// gauge
 	gauge := prometheus.NewGauge("test_gauge", "test gauge", "label")
 	gauge.Inc("inc")
@@ -25,9 +27,11 @@ func main() {
 	// summary
 	summary := prometheus.NewSummary("test_summary", "test summary", "label")
 	summary.Observe(3.14, "observe")
-	time.Sleep(2 * time.Minute)
+	time.Sleep(1 * time.Minute)
 	counter.Unregister()
+	counter2.Unregister()
 	gauge.Unregister()
 	histogram.Unregister()
 	summary.Unregister()
+	httpServer.Close()
 }

@@ -14,11 +14,11 @@ import (
 
 // Config 配置信息
 type Config struct {
-	Server     Server                `mapstructure:"server"`
-	Database   db.Config             `mapstructure:"database"`
-	Log        zap.Config            `mapstructure:"log"`
-	Redis      redis.Config          `mapstructure:"redis"`
-	Prometheus prometheus.Prometheus `mapstructure:"prometheus"`
+	Server     Server            `mapstructure:"server"`
+	Database   db.Config         `mapstructure:"database"`
+	Log        zap.Config        `mapstructure:"log"`
+	Redis      redis.Config      `mapstructure:"redis"`
+	Prometheus prometheus.Config `mapstructure:"prometheus"`
 }
 
 // Load 加载配置
@@ -38,7 +38,7 @@ func Load(file string, c *Config) error {
 	}
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		err := Unmarshal(c)
+		err = Unmarshal(c)
 		if err != nil {
 			panic(err)
 		}
