@@ -21,9 +21,15 @@ func main() {
 		panic(err)
 	}
 
-	handler.RegisterPrincipalInterestRouters(ctx)
-
-	component.Register(ctx.HttpServer)
+	component.Register(
+		ctx.HttpServer.WithHandler(
+			handler.NewPrincipalInterest(
+				"2024-01-15", 360,
+				600000.00, 0.04,
+				800000.00, 0.03575,
+			),
+		),
+	)
 	component.Serve()
 	component.Close()
 }

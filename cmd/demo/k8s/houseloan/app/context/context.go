@@ -24,6 +24,7 @@ func NewContext(c config.Config) (Context, error) {
 		Logger:     zap.NewZap(c.Log),
 		HttpServer: http.NewServer(c.Server.Addr),
 	}
+	// redis
 	r, err := redis.NewRedis(c.Redis)
 	if err != nil {
 		return ctx, err

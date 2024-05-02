@@ -12,14 +12,14 @@ type PrincipalInterest struct {
 	principalByMonth    float64
 }
 
-func NewPrincipalInterest(principal, interestRate float64, periods int) PrincipalInterest {
+func NewPrincipalInterest(principal, interestRate float64, periods int) *PrincipalInterest {
 	var pi PrincipalInterest
 	pi.principal = principal
 	pi.interestRate = interestRate
 	pi.periods = periods
 	pi.interestRateByMonth = pi.interestRate / MONTH
 	pi.principalByMonth = utils.Round(pi.principal/float64(periods), 2)
-	return pi
+	return &pi
 }
 
 func (pi PrincipalInterest) Repayment(period int) float64 {
