@@ -1,10 +1,10 @@
 package test
 
 import (
+	"github.com/forestyc/playground/pkg/security/crypto"
 	"testing"
 	"time"
 
-	"github.com/forestyc/playground/pkg/crypto"
 	"github.com/forestyc/playground/pkg/security/wssecurity"
 	"github.com/forestyc/playground/pkg/utils"
 	"github.com/go-playground/assert/v2"

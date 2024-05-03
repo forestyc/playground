@@ -1,7 +1,7 @@
 package test
 
 import (
-	"github.com/forestyc/playground/pkg/crypto"
+	crypto2 "github.com/forestyc/playground/pkg/security/crypto"
 	"github.com/go-playground/assert/v2"
 	"testing"
 )
@@ -78,7 +78,7 @@ Xi3xbfAwgwqRRbGups0lrzLaVxtHXCWdcXc9Q4G+qCF1bNE5jy2dBByQZQ==
 
 // [正常系]AES测试
 func TestAesNormal(t *testing.T) {
-	c := crypto.Crypto{Symmetric: crypto.AES{}}
+	c := crypto2.Crypto{Symmetric: crypto2.AES{}}
 	data := "abcd哈哈a123"
 	key := "310c4dbc712ce3bc"
 	// 加密
@@ -93,7 +93,7 @@ func TestAesNormal(t *testing.T) {
 
 // [异常系]AES测试
 func TestAesAbnormal(t *testing.T) {
-	c := crypto.Crypto{Symmetric: crypto.AES{}}
+	c := crypto2.Crypto{Symmetric: crypto2.AES{}}
 	data := ""
 	key := ""
 	// 加密
@@ -108,7 +108,7 @@ func TestAesAbnormal(t *testing.T) {
 
 // [正常系]AES+base64测试
 func TestAesWithBase64Normal(t *testing.T) {
-	c := crypto.Crypto{Symmetric: crypto.AES{}}
+	c := crypto2.Crypto{Symmetric: crypto2.AES{}}
 	data := "abcd哈哈a123"
 	key := "310c4dbc712ce3bc"
 	// 加密
@@ -123,7 +123,7 @@ func TestAesWithBase64Normal(t *testing.T) {
 
 // [异常系]AES+base64测试
 func TestAesWithBase64Abnormal(t *testing.T) {
-	c := crypto.Crypto{Symmetric: crypto.AES{}}
+	c := crypto2.Crypto{Symmetric: crypto2.AES{}}
 	data := ""
 	key := ""
 	// 加密
@@ -138,7 +138,7 @@ func TestAesWithBase64Abnormal(t *testing.T) {
 
 // [正常系]SM4测试
 func TestSM4Normal(t *testing.T) {
-	c := crypto.Crypto{Symmetric: crypto.SM4{}}
+	c := crypto2.Crypto{Symmetric: crypto2.SM4{}}
 	data := "abcd哈哈a123"
 	key := "310c4dbc712ce3bc"
 	crypto, want := c.Symmetric.Encrypt([]byte(data), []byte(key))
@@ -151,7 +151,7 @@ func TestSM4Normal(t *testing.T) {
 
 // [异常系]SM4测试
 func TestSM4Abnormal(t *testing.T) {
-	c := crypto.Crypto{Symmetric: crypto.SM4{}}
+	c := crypto2.Crypto{Symmetric: crypto2.SM4{}}
 	data := ""
 	key := ""
 	crypto, want := c.Symmetric.Encrypt([]byte(data), []byte(key))
@@ -164,7 +164,7 @@ func TestSM4Abnormal(t *testing.T) {
 
 // [正常系]SM4+base64测试
 func TestSM4WithBase64Normal(t *testing.T) {
-	c := crypto.Crypto{Symmetric: crypto.SM4{}}
+	c := crypto2.Crypto{Symmetric: crypto2.SM4{}}
 	data := "abcd哈哈a123"
 	key := "310c4dbc712ce3bc"
 	base64Code, want := c.Symmetric.EncryptWithBase64([]byte(data), []byte(key))
@@ -177,7 +177,7 @@ func TestSM4WithBase64Normal(t *testing.T) {
 
 // [异常系]SM4+base64测试
 func TestSM4WithBase64Abnormal(t *testing.T) {
-	c := crypto.Crypto{Symmetric: crypto.SM4{}}
+	c := crypto2.Crypto{Symmetric: crypto2.SM4{}}
 	data := ""
 	key := ""
 	base64Code, want := c.Symmetric.EncryptWithBase64([]byte(data), []byte(key))
@@ -190,7 +190,7 @@ func TestSM4WithBase64Abnormal(t *testing.T) {
 
 // [正常系]SM3测试
 func TestSM3(t *testing.T) {
-	c := crypto.Crypto{Digest: crypto.SM3{}}
+	c := crypto2.Crypto{Digest: crypto2.SM3{}}
 	data := "abcd哈哈a123"
 	crypto, want := c.Digest.Sum([]byte(data))
 	assert.Equal(t, want, nil)
@@ -199,7 +199,7 @@ func TestSM3(t *testing.T) {
 
 // [正常系]SM2加密测试
 func TestSM2CryptoNormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	data := "abcd哈哈a123"
 	crypto, want := c.Asymmetric.Encrypt([]byte(data), []byte(public))
 	assert.Equal(t, want, nil)
@@ -211,7 +211,7 @@ func TestSM2CryptoNormal(t *testing.T) {
 
 // [异常系]SM2加密测试
 func TestSM2CryptoAbnormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	data := ""
 	private := ``
 	public := ``
@@ -225,7 +225,7 @@ func TestSM2CryptoAbnormal(t *testing.T) {
 
 // [正常系]SM2+base64加密测试
 func TestSM2WithBase64CryptoNormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	data := "abcd哈哈a123"
 	base64Code, want := c.Asymmetric.EncryptWithBase64([]byte(data), []byte(public))
 	assert.Equal(t, want, nil)
@@ -237,7 +237,7 @@ func TestSM2WithBase64CryptoNormal(t *testing.T) {
 
 // [异常系]SM2+base64加密测试
 func TestSM2WithBase64CryptoAbnormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	data := ""
 	private := ``
 	public := ``
@@ -251,7 +251,7 @@ func TestSM2WithBase64CryptoAbnormal(t *testing.T) {
 
 // [正常系]SM2签名测试
 func TestSM2SignNormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	data := "abcd哈哈a123"
 	sign, want := c.Asymmetric.Sign([]byte(data), []byte(private))
 	assert.Equal(t, want, nil)
@@ -263,7 +263,7 @@ func TestSM2SignNormal(t *testing.T) {
 
 // [异常系]SM2签名测试
 func TestSM2SignAbnormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	data := ""
 	private := ``
 	public := ``
@@ -277,7 +277,7 @@ func TestSM2SignAbnormal(t *testing.T) {
 
 // [正常系]SM2+base64签名测试
 func TestSM2SignWithBase64Normal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	data := "abcd哈哈a123"
 	signBase64, want := c.Asymmetric.SignWithBase64([]byte(data), []byte(private))
 	assert.Equal(t, want, nil)
@@ -289,7 +289,7 @@ func TestSM2SignWithBase64Normal(t *testing.T) {
 
 // [异常系]SM2+base64签名测试
 func TestSM2SignWithBase64Abnormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	data := ""
 	private := ``
 	public := ``
@@ -303,7 +303,7 @@ func TestSM2SignWithBase64Abnormal(t *testing.T) {
 
 // [正常系]生成sm2秘钥
 func TestSM2GenerateKeyNormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.SM2{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.SM2{}}
 	privkeyPem, pubkeyPem, want := c.Asymmetric.GenerateKey()
 	assert.Equal(t, want, nil)
 	data := "abcd哈哈哈1234"
@@ -317,14 +317,14 @@ func TestSM2GenerateKeyNormal(t *testing.T) {
 
 // [正常系]生成rsa秘钥
 func TestRSAGenerateKeyNormal(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.RSA{}}
 	_, _, want := c.Asymmetric.GenerateKey()
 	assert.Equal(t, want, nil)
 }
 
 // [正常系]生成rsa加解密
 func TestRSA(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.RSA{}}
 	ciphertext, err := c.Asymmetric.Encrypt([]byte("abcd哈哈a123"), []byte(rsaPub))
 	assert.Equal(t, err, nil)
 	plaintext, err := c.Asymmetric.Decrypt(ciphertext, []byte(rsaPriv))
@@ -334,7 +334,7 @@ func TestRSA(t *testing.T) {
 
 // [正常系]生成rsa加解密base64
 func TestRSABase64(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.RSA{}}
 	ciphertext, err := c.Asymmetric.EncryptWithBase64([]byte("abcd哈哈a123"), []byte(rsaPub))
 	assert.Equal(t, err, nil)
 	plaintext, err := c.Asymmetric.DecryptWithBase64(ciphertext, []byte(rsaPriv))
@@ -344,7 +344,7 @@ func TestRSABase64(t *testing.T) {
 
 // [正常系]RSA签名测试
 func TestRSASign(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.RSA{}}
 	data := "abcd哈哈a123"
 	sign, want := c.Asymmetric.Sign([]byte(data), []byte(rsaPriv))
 	assert.Equal(t, want, nil)
@@ -356,7 +356,7 @@ func TestRSASign(t *testing.T) {
 
 // [正常系]RSA签名测试base64
 func TestRSASignBase64(t *testing.T) {
-	c := crypto.Crypto{Asymmetric: crypto.RSA{}}
+	c := crypto2.Crypto{Asymmetric: crypto2.RSA{}}
 	data := "abcd哈哈a123"
 	sign, want := c.Asymmetric.SignWithBase64([]byte(data), []byte(rsaPriv))
 	assert.Equal(t, want, nil)

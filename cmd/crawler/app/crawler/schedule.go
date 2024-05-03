@@ -5,7 +5,7 @@ import (
 	"github.com/forestyc/playground/cmd/crawler/app/context"
 	"github.com/forestyc/playground/cmd/crawler/app/handler/dce"
 	"github.com/forestyc/playground/cmd/crawler/app/handler/yage"
-	"github.com/forestyc/playground/pkg/log/zap"
+	"github.com/forestyc/playground/pkg/core/log/zap"
 	"path"
 )
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/forestyc/playground/pkg/http"
+	"github.com/forestyc/playground/pkg/core/http"
 	"github.com/gin-gonic/gin"
 	netHttp "net/http"
 )

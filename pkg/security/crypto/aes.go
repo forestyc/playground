@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"github.com/forestyc/playground/pkg/encoding"
+	"github.com/forestyc/playground/pkg/security/encoding"
 	"github.com/pkg/errors"
 )
 

@@ -2,7 +2,7 @@ package redis
 
 import (
 	"context"
-	"github.com/forestyc/playground/pkg/redis"
+	"github.com/forestyc/playground/pkg/core/redis"
 	"time"
 )
 

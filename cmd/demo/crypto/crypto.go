@@ -4,7 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"github.com/forestyc/playground/pkg/crypto"
+	"github.com/forestyc/playground/pkg/security/crypto"
 )
 
 func main() {

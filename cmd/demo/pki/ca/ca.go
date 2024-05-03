@@ -5,7 +5,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/json"
-	"github.com/forestyc/playground/pkg/encoding"
+	"github.com/forestyc/playground/pkg/security/encoding"
 	"github.com/pkg/errors"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	randM "math/rand"

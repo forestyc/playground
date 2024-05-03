@@ -4,8 +4,10 @@ import (
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/context"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/model/vo"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/service"
+	"github.com/forestyc/playground/pkg/core/message"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 type PrincipalInterest struct {
@@ -29,20 +31,30 @@ func NewPrincipalInterest(
 
 func (pi *PrincipalInterest) Register(engine *gin.Engine) {
 	engine.GET("/repayment", pi.repayment())
+	engine.GET("/probe-liveness", pi.probeLiveness())
 }
 
 func (pi *PrincipalInterest) repayment() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		date := c.Query("date")
-		period := pi.periodsService.GetPeriod(date)
+		period := pi.periodsService.GetPeriod(
+			c.DefaultQuery("date", time.Now().Format("2006-01-02")),
+		)
 		if period == 0 {
-			c.JSON(http.StatusBadRequest, nil)
+			c.JSON(http.StatusOK, message.Failed())
 			return
 		}
 		response := vo.Repayment{
 			Business:      pi.businessPrincipalInterestService.Repayment(period),
 			ProvidentFund: pi.providentFundPrincipalInterestService.Repayment(period),
 		}
-		c.JSON(http.StatusOK, response)
+		response.Total = response.ProvidentFund + response.Business
+		c.JSON(http.StatusOK, message.SuccessWithObject(response))
+	}
+}
+
+func (pi *PrincipalInterest) probeLiveness() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		context.Writer.Header().Set("Custom-Header", "Awesome")
+		context.JSON(http.StatusOK, "health")
 	}
 }

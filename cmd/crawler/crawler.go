@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/forestyc/playground/pkg/core/version"
 	"log"
 	"strings"
 
 	"github.com/forestyc/playground/cmd/crawler/app/config"
 	"github.com/forestyc/playground/cmd/crawler/app/context"
 	"github.com/forestyc/playground/cmd/crawler/app/crawler"
-	"github.com/forestyc/playground/pkg/version"
 )
 
 func main() {

@@ -1,11 +1,11 @@
 package utils
 
 import (
+	"github.com/forestyc/playground/pkg/security/crypto"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/forestyc/playground/pkg/crypto"
 	"github.com/google/uuid"
 )
 

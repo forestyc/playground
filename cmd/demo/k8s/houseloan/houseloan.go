@@ -5,7 +5,7 @@ import (
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/context"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/handler"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/model/config"
-	"github.com/forestyc/playground/pkg/component"
+	"github.com/forestyc/playground/pkg/core/component"
 )
 
 func main() {
@@ -16,10 +16,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	ctx, err := context.NewContext(c)
-	if err != nil {
-		panic(err)
-	}
+
+	ctx := context.NewContext(c)
 
 	component.Register(
 		ctx.HttpServer.WithHandler(

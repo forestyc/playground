@@ -2,12 +2,11 @@ package wssecurity
 
 import (
 	"fmt"
+	"github.com/forestyc/playground/pkg/security/crypto"
 	"github.com/forestyc/playground/pkg/utils"
 	"github.com/pkg/errors"
 	"strings"
 	"time"
-
-	"github.com/forestyc/playground/pkg/crypto"
 )
 
 type ApiCheck func(appKey string) (appSecret string, err error)

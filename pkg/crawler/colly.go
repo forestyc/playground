@@ -1,7 +1,7 @@
 package crawler
 
 import (
-	"github.com/forestyc/playground/pkg/prometheus"
+	"github.com/forestyc/playground/pkg/core/prometheus"
 	"github.com/gocolly/colly/v2"
 )
 

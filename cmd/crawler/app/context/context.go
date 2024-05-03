@@ -1,13 +1,12 @@
 package context
 
 import (
+	"github.com/forestyc/playground/pkg/core/log/zap"
+	"github.com/forestyc/playground/pkg/core/redis"
 	"sync"
 
-	"github.com/forestyc/playground/pkg/db"
-	"github.com/forestyc/playground/pkg/redis"
-
 	"github.com/forestyc/playground/cmd/crawler/app/config"
-	"github.com/forestyc/playground/pkg/log/zap"
+	"github.com/forestyc/playground/pkg/core/db"
 )
 
 // Context 全局context

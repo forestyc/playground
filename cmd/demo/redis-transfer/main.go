@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/forestyc/playground/pkg/log/zap"
-	"github.com/forestyc/playground/pkg/redis"
+	"github.com/forestyc/playground/pkg/core/log/zap"
+	"github.com/forestyc/playground/pkg/core/redis"
 )
 
 var (

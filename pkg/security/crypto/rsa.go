@@ -6,7 +6,7 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
-	"github.com/forestyc/playground/pkg/encoding"
+	"github.com/forestyc/playground/pkg/security/encoding"
 	"github.com/pkg/errors"
 )
 
