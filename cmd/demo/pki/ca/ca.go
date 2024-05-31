@@ -5,7 +5,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/json"
-	"github.com/forestyc/playground/pkg/security/encoding"
+	"github.com/forestyc/playground/pkg/encoding/pem"
 	"github.com/pkg/errors"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	randM "math/rand"
@@ -14,6 +14,7 @@ import (
 
 type CA struct {
 	storage *Storage
+	pem     pem.Pem
 }
 
 type KeyPair struct {
@@ -104,11 +105,11 @@ func (ca *CA) createCertificate(parentCert *x509.Certificate, parentKey *rsa.Pri
 	}
 
 	// pem encode
-	privPem, err := encoding.PemEncode("RSA PRIVATE KEY", x509.MarshalPKCS1PrivateKey(priv))
+	privPem, err := ca.pem.Encode("RSA PRIVATE KEY", x509.MarshalPKCS1PrivateKey(priv))
 	if err != nil {
 		return nil, nil, err
 	}
-	certPem, err := encoding.PemEncode("CERTIFICATE", cert)
+	certPem, err := ca.pem.Encode("CERTIFICATE", cert)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -157,11 +158,11 @@ func (ca *CA) getCertAndKey(prefix string) (*x509.Certificate, *rsa.PrivateKey, 
 
 // parseCertAndKey parse certificate and private key formatted by PEM
 func (ca *CA) parseCertAndKey(certPem, keyPem []byte) (*x509.Certificate, *rsa.PrivateKey, error) {
-	cert, err := x509.ParseCertificate(encoding.PemDecode(certPem))
+	cert, err := x509.ParseCertificate(ca.pem.Decode(certPem))
 	if err != nil {
 		return nil, nil, err
 	}
-	priv, err := x509.ParsePKCS1PrivateKey(encoding.PemDecode(keyPem))
+	priv, err := x509.ParsePKCS1PrivateKey(ca.pem.Decode(keyPem))
 	if err != nil {
 		return nil, nil, err
 	}

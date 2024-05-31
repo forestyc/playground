@@ -3,7 +3,7 @@ package crypto
 import (
 	"bytes"
 	"crypto/rand"
-	"github.com/forestyc/playground/pkg/security/encoding"
+	"github.com/forestyc/playground/pkg/encoding/base64"
 	"github.com/pkg/errors"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
@@ -11,12 +11,13 @@ import (
 )
 
 type SM2 struct {
+	b64 base64.Base64
 }
 
 // Encrypt 加密(公钥)
 func (s SM2) Encrypt(data []byte, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
 	pub, err := x509.ReadPublicKeyFromHex(string(key))
 	if err != nil {
@@ -32,7 +33,7 @@ func (s SM2) Encrypt(data []byte, key []byte) ([]byte, error) {
 // Decrypt 解密(私钥)
 func (s SM2) Decrypt(data []byte, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
 	private, err := x509.ReadPrivateKeyFromHex(string(key))
 	if err != nil {
@@ -44,21 +45,21 @@ func (s SM2) Decrypt(data []byte, key []byte) ([]byte, error) {
 // EncryptWithBase64 加密(公钥)，使用base64
 func (s SM2) EncryptWithBase64(data []byte, key []byte) (string, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return "", errors.New("invalid params")
+		return "", errors.New(InvalidParameters)
 	}
 	crypto, err := s.Encrypt(data, key)
 	if err != nil {
 		return "", err
 	}
-	return encoding.Base64Encode(crypto), nil
+	return s.b64.Encode(crypto), nil
 }
 
 // DecryptWithBase64 解密(私钥)，使用base64
 func (s SM2) DecryptWithBase64(data string, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
-	raw, err := encoding.Base64Decode(data)
+	raw, err := s.b64.Decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +69,7 @@ func (s SM2) DecryptWithBase64(data string, key []byte) ([]byte, error) {
 // Sign 签名（私钥）
 func (s SM2) Sign(data []byte, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
 	private, err := x509.ReadPrivateKeyFromHex(string(key))
 	if err != nil {
@@ -84,7 +85,7 @@ func (s SM2) Sign(data []byte, key []byte) ([]byte, error) {
 // Verify 校验（公钥）
 func (s SM2) Verify(data []byte, key []byte, sign []byte) (bool, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return false, errors.New("invalid params")
+		return false, errors.New(InvalidParameters)
 	}
 	pub, err := x509.ReadPublicKeyFromHex(string(key))
 	if err != nil {
@@ -100,21 +101,21 @@ func (s SM2) Verify(data []byte, key []byte, sign []byte) (bool, error) {
 // SignWithBase64 签名（私钥），使用base64
 func (s SM2) SignWithBase64(data []byte, key []byte) (string, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return "", errors.New("invalid params")
+		return "", errors.New(InvalidParameters)
 	}
 	sign, err := s.Sign(data, key)
 	if err != nil {
 		return "", err
 	}
-	return encoding.Base64Encode(sign), nil
+	return s.b64.Encode(sign), nil
 }
 
 // VerifyWithBase64 校验（公钥），使用base64
 func (s SM2) VerifyWithBase64(data []byte, key []byte, sign string) (bool, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return false, errors.New("invalid params")
+		return false, errors.New(InvalidParameters)
 	}
-	signRaw, err := encoding.Base64Decode(sign)
+	signRaw, err := s.b64.Decode(sign)
 	if err != nil {
 		return false, err
 	}
@@ -127,14 +128,7 @@ func (s SM2) GenerateKey() ([]byte, []byte, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	public := priv.Public().(*sm2.PublicKey)
-	pubkeyHex := x509.WritePublicKeyToHex(public)
-	if err != nil {
-		return nil, nil, err
-	}
-	privkeyHex := x509.WritePrivateKeyToHex(priv)
-	if err != nil {
-		return nil, nil, err
-	}
-	return []byte(privkeyHex), []byte(pubkeyHex), nil
+	return []byte(x509.WritePrivateKeyToHex(priv)),
+		[]byte(x509.WritePublicKeyToHex(priv.Public().(*sm2.PublicKey))),
+		nil
 }

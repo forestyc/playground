@@ -1,5 +1,5 @@
 # 打包
-FROM golang:latest as builder
+FROM golang:latest AS builder
 
 # 启用go module
 ENV GO111MODULE=on \

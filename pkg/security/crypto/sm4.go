@@ -1,18 +1,19 @@
 package crypto
 
 import (
-	"github.com/forestyc/playground/pkg/security/encoding"
+	"github.com/forestyc/playground/pkg/encoding/base64"
 	"github.com/pkg/errors"
 	"github.com/tjfoc/gmsm/sm4"
 )
 
 type SM4 struct {
+	b64 base64.Base64
 }
 
 // Encrypt 加密
 func (s SM4) Encrypt(data []byte, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
 	return sm4.Sm4Ecb(key, data, true)
 }
@@ -20,7 +21,7 @@ func (s SM4) Encrypt(data []byte, key []byte) ([]byte, error) {
 // Decrypt 解密
 func (s SM4) Decrypt(data []byte, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
 	return sm4.Sm4Ecb(key, data, false)
 }
@@ -28,21 +29,21 @@ func (s SM4) Decrypt(data []byte, key []byte) ([]byte, error) {
 // EncryptWithBase64 加密，使用base64
 func (s SM4) EncryptWithBase64(data []byte, key []byte) (string, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return "", errors.New("invalid params")
+		return "", errors.New(InvalidParameters)
 	}
 	crypto, err := s.Encrypt(data, key)
 	if err != nil {
 		return "", err
 	}
-	return encoding.Base64Encode(crypto), nil
+	return s.b64.Encode(crypto), nil
 }
 
 // DecryptWithBase64 解密，使用base64
 func (s SM4) DecryptWithBase64(data string, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
-	crypto, err := encoding.Base64Decode(data)
+	crypto, err := s.b64.Decode(data)
 	if err != nil {
 		return nil, err
 	}

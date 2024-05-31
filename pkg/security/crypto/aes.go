@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"github.com/forestyc/playground/pkg/security/encoding"
+	"github.com/forestyc/playground/pkg/encoding/base64"
 	"github.com/pkg/errors"
 )
 
@@ -17,6 +17,7 @@ import (
 //16,24,32位字符串的话，分别对应AES-128，AES-192，AES-256 加密方法
 
 type AES struct {
+	b64 base64.Base64
 }
 
 // pkcs7Padding 填充
@@ -42,7 +43,7 @@ func pkcs7UnPadding(data []byte) ([]byte, error) {
 // Encrypt 加密
 func (a AES) Encrypt(data []byte, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
 	//创建加密实例
 	block, err := aes.NewCipher(key)
@@ -65,7 +66,7 @@ func (a AES) Encrypt(data []byte, key []byte) ([]byte, error) {
 // Decrypt 解密
 func (a AES) Decrypt(data []byte, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
 	//创建实例
 	block, err := aes.NewCipher(key)
@@ -91,21 +92,21 @@ func (a AES) Decrypt(data []byte, key []byte) ([]byte, error) {
 // EncryptWithBase64 Aes加密 后 base64
 func (a AES) EncryptWithBase64(data []byte, key []byte) (string, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return "", errors.New("invalid params")
+		return "", errors.New(InvalidParameters)
 	}
 	res, err := a.Encrypt(data, key)
 	if err != nil {
 		return "", err
 	}
-	return encoding.Base64Encode(res), nil
+	return a.b64.Encode(res), nil
 }
 
 // DecryptWithBase64 base64解码后 Aes 解密
 func (a AES) DecryptWithBase64(data string, key []byte) ([]byte, error) {
 	if len(data) == 0 || len(key) == 0 {
-		return nil, errors.New("invalid params")
+		return nil, errors.New(InvalidParameters)
 	}
-	dataByte, err := encoding.Base64Decode(data)
+	dataByte, err := a.b64.Decode(data)
 	if err != nil {
 		return nil, err
 	}

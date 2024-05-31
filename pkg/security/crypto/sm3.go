@@ -12,7 +12,7 @@ type SM3 struct {
 // Sum 摘要
 func (s SM3) Sum(data []byte) (string, error) {
 	if len(data) == 0 {
-		return "", errors.New("invalid params")
+		return "", errors.New(InvalidParameters)
 	}
 	h := sm3.New()
 	h.Write([]byte(data))
