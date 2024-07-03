@@ -1,10 +1,10 @@
 package config
 
 import (
+	"github.com/forestyc/playground/pkg/core/db"
 	"github.com/forestyc/playground/pkg/core/log/zap"
 	"github.com/forestyc/playground/pkg/core/prometheus"
 	"github.com/forestyc/playground/pkg/core/redis"
-	"github.com/forestyc/playground/pkg/db"
 	"github.com/fsnotify/fsnotify"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"

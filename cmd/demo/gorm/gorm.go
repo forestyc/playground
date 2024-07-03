@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/forestyc/playground/cmd/demo/gorm/model"
-	"github.com/forestyc/playground/pkg/db"
+	"github.com/forestyc/playground/pkg/core/db"
 	"time"
 )
 

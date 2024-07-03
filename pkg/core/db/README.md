@@ -6,7 +6,7 @@
 package main
 
 import (
-	"github.com/forestyc/playground/pkg/db"
+	"github.com/forestyc/playground/pkg/core/db"
 )
 
 func main() {

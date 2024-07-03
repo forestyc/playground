@@ -2,9 +2,9 @@ package context
 
 import (
 	"github.com/forestyc/playground/cmd/demo/k8s/workinghours/app/model/config"
+	"github.com/forestyc/playground/pkg/core/db"
 	"github.com/forestyc/playground/pkg/core/log/zap"
 	"github.com/forestyc/playground/pkg/core/redis"
-	"github.com/forestyc/playground/pkg/db"
 	"github.com/gin-gonic/gin"
 )
 
