@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/context"
-	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/model/vo"
+	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/model"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/service"
 	"github.com/forestyc/playground/pkg/core/message"
 	"github.com/gin-gonic/gin"
@@ -43,7 +43,7 @@ func (pi *PrincipalInterest) repayment() gin.HandlerFunc {
 			c.JSON(http.StatusOK, message.Failed())
 			return
 		}
-		response := vo.Repayment{
+		response := model.RepaymentResp{
 			Business:      pi.businessPrincipalInterestService.Repayment(period),
 			ProvidentFund: pi.providentFundPrincipalInterestService.Repayment(period),
 		}

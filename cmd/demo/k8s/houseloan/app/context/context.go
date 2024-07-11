@@ -1,7 +1,8 @@
 package context
 
 import (
-	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/model/config"
+	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/entity/config"
+	"github.com/forestyc/playground/pkg/core/db"
 	"github.com/forestyc/playground/pkg/core/http"
 )
 
@@ -9,12 +10,14 @@ import (
 type Context struct {
 	C          config.Config
 	HttpServer *http.Server
+	Db         *db.Mysql
 }
 
 func NewContext(c config.Config) Context {
 	ctx := Context{
 		C:          c,
-		HttpServer: http.NewServer(c.Server.Addr),
+		HttpServer: http.NewServer(c.Server.Addr, http.WithProbeLiveness()),
+		Db:         db.NewMysql(c.Database),
 	}
 	return ctx
 }

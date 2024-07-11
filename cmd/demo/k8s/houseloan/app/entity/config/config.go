@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/forestyc/playground/pkg/core/db"
 	"github.com/fsnotify/fsnotify"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
@@ -10,7 +11,8 @@ import (
 
 // Config 配置信息
 type Config struct {
-	Server Server `mapstructure:"server"`
+	Server   Server    `mapstructure:"server"`
+	Database db.Config `mapstructure:"database"`
 }
 
 // Load 加载配置

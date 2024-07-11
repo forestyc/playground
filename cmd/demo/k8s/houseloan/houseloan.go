@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/context"
+	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/entity/config"
 	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/handler"
-	"github.com/forestyc/playground/cmd/demo/k8s/houseloan/app/model/config"
 	"github.com/forestyc/playground/pkg/core/component"
 )
 

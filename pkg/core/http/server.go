@@ -66,8 +66,8 @@ func WithPrometheus(uri string) Option {
 	}
 }
 
-func WithHandler(handlers ...Handler) Option {
+func WithProbeLiveness() Option {
 	return func(server *Server) {
-		server.WithHandler(handlers...)
+		server.router.GET("/probe-liveness", probeLiveness())
 	}
 }
