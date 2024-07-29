@@ -1,4 +1,4 @@
-package service
+package loan
 
 const (
 	EPSILON float64 = 0.01

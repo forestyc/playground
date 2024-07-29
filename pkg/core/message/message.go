@@ -28,10 +28,16 @@ func Failed() Message {
 	}
 }
 
-func FailedWithObject(object interface{}) Message {
+func FailedWithMessage(msg string) Message {
 	return Message{
 		Code:    -1,
-		Message: "failed",
-		Object:  object,
+		Message: msg,
+	}
+}
+
+func FailedWithCodeAndObject(code int, msg string) Message {
+	return Message{
+		Code:    code,
+		Message: msg,
 	}
 }
