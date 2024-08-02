@@ -21,9 +21,19 @@ func NewLoan(ctx *context.Context) *Loan {
 	}
 }
 
-func (l *Loan) Create(req model.CreateInfoReq) error {
+func (l *Loan) Take(id int64) (db.LoanBasicInfo, error) {
+	loanBasicInfo := db.LoanBasicInfo{}
+	session := l.ctx.Db.Session()
+	if err := session.Where("id=?", id).Take(&loanBasicInfo).Error; err != nil {
+		return db.LoanBasicInfo{}, err
+	}
+	return loanBasicInfo, nil
+}
+
+func (l *Loan) Create(req model.CreateBasicInfoReq) error {
 	loanBasicInfo := db.LoanBasicInfo{
 		Id:           l.snowflake.Gen(),
+		LoanId:       req.LoanId,
 		Principal:    req.Principal,
 		LoanType:     req.LoanType,
 		InterestRate: req.InterestRate,
@@ -49,6 +59,39 @@ func (l *Loan) Create(req model.CreateInfoReq) error {
 	})
 }
 
+func (l *Loan) Modify(req model.ModifyBasicInfoReq) error {
+	loanBasicInfo := db.LoanBasicInfo{
+		Id:           req.Id,
+		LoanId:       req.LoanId,
+		Principal:    req.Principal,
+		LoanType:     req.LoanType,
+		InterestRate: req.InterestRate,
+		Periods:      req.Periods,
+		StartDate:    req.StartDate,
+	}
+	repayments, err := l.createRepaymentList(loanBasicInfo)
+	if err != nil {
+		return err
+	}
+	session := l.ctx.Db.Session()
+
+	return session.Transaction(func(tx *gorm.DB) error {
+		// save loan basic info
+		if err = tx.Updates(&loanBasicInfo).Error; err != nil {
+			return err
+		}
+		// remove repayment
+		if err = tx.Where("loan_basic_info_id=?", loanBasicInfo.Id).Delete(&db.Repayment{}).Error; err != nil {
+			return err
+		}
+		// save repayment
+		if err = tx.Create(&repayments).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
 func (l *Loan) createRepaymentList(loanBasicInfo db.LoanBasicInfo) ([]db.Repayment, error) {
 	loanAlgorithm, err := loan.NewLoan(loanBasicInfo.LoanType, loan.BasicInfo{
 		Principal:    loanBasicInfo.Principal,
@@ -64,11 +107,11 @@ func (l *Loan) createRepaymentList(loanBasicInfo db.LoanBasicInfo) ([]db.Repayme
 		amount, date := loanAlgorithm.Repayment(i)
 		period := i + 1
 		repayments = append(repayments, db.Repayment{
-			Id:            l.snowflake.Gen(),
-			LoanId:        loanBasicInfo.Id,
-			Period:        period,
-			Amount:        amount,
-			RepaymentDate: date,
+			Id:              l.snowflake.Gen(),
+			LoanBasicInfoId: loanBasicInfo.Id,
+			Period:          period,
+			Amount:          amount,
+			RepaymentDate:   date,
 		})
 	}
 	return repayments, nil

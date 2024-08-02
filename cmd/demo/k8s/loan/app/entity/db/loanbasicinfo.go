@@ -1,11 +1,10 @@
 package db
 
-import (
-	"time"
-)
+import "time"
 
 type LoanBasicInfo struct {
 	Id           int64 `gorm:"primary_key;AUTO_INCREMENT"`
+	LoanId       int64
 	LoanType     int
 	Principal    float64
 	InterestRate float64

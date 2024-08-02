@@ -7,6 +7,7 @@ import (
 	"github.com/forestyc/playground/pkg/core/message"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type LoanBasicInfo struct {
@@ -20,17 +21,48 @@ func NewLoanBasicInfo(ctx *context.Context) *LoanBasicInfo {
 }
 
 func (lbi *LoanBasicInfo) Register(engine *gin.Engine) {
-	engine.POST("/basic-info", lbi.createBasicInfo())
+	uriBasicInfo := "/basic-info"
+	engine.GET(uriBasicInfo, lbi.getBasicInfo())
+	engine.POST(uriBasicInfo, lbi.createBasicInfo())
+	engine.PUT(uriBasicInfo, lbi.modifyBasicInfo())
+}
+
+func (lbi *LoanBasicInfo) getBasicInfo() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		query := c.DefaultQuery("id", "0")
+		id, _ := strconv.ParseInt(query, 10, 64)
+		if basicInfo, err := lbi.loanService.Take(id); err != nil {
+			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
+			return
+		} else {
+			c.JSON(http.StatusOK, message.SuccessWithObject(basicInfo))
+		}
+	}
 }
 
 func (lbi *LoanBasicInfo) createBasicInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var req model.CreateInfoReq
+		var req model.CreateBasicInfoReq
 		if err := c.ShouldBind(&req); err != nil {
 			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
 			return
 		}
 		if err := lbi.loanService.Create(req); err != nil {
+			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
+			return
+		}
+		c.JSON(http.StatusOK, message.Success())
+	}
+}
+
+func (lbi *LoanBasicInfo) modifyBasicInfo() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req model.ModifyBasicInfoReq
+		if err := c.ShouldBind(&req); err != nil {
+			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
+			return
+		}
+		if err := lbi.loanService.Modify(req); err != nil {
 			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
 			return
 		}
