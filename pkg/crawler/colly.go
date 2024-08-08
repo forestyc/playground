@@ -45,7 +45,6 @@ func NewColly(task, url string, options ...Option) *Colly {
 			"记录爬虫执行情况",
 			"task", "url", "status"),
 	}
-	c.Crawler.IgnoreRobotsTxt = false
 	for _, option := range options {
 		if option != nil {
 			option(&c)
@@ -85,6 +84,12 @@ func WithPostForm(form map[string]string) Option {
 func WithPostRaw(raw []byte) Option {
 	return func(c *Colly) {
 		c.postRaw = raw
+	}
+}
+
+func WithRobotsTxt(flag bool) Option {
+	return func(c *Colly) {
+		c.Crawler.IgnoreRobotsTxt = !flag
 	}
 }
 
