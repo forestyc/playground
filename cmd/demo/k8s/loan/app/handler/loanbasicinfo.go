@@ -11,7 +11,7 @@ import (
 )
 
 type LoanBasicInfo struct {
-	loanService *service.Loan
+	loanService *service.LoanBasicInfo
 }
 
 func NewLoanBasicInfo(ctx *context.Context) *LoanBasicInfo {
@@ -25,6 +25,7 @@ func (lbi *LoanBasicInfo) Register(engine *gin.Engine) {
 	engine.GET(uriBasicInfo, lbi.getBasicInfo())
 	engine.POST(uriBasicInfo, lbi.createBasicInfo())
 	engine.PUT(uriBasicInfo, lbi.modifyBasicInfo())
+	engine.DELETE(uriBasicInfo, lbi.deleteBasicInfo())
 }
 
 func (lbi *LoanBasicInfo) getBasicInfo() gin.HandlerFunc {
@@ -36,6 +37,19 @@ func (lbi *LoanBasicInfo) getBasicInfo() gin.HandlerFunc {
 			return
 		} else {
 			c.JSON(http.StatusOK, message.SuccessWithObject(basicInfo))
+		}
+	}
+}
+
+func (lbi *LoanBasicInfo) deleteBasicInfo() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		query := c.DefaultQuery("id", "0")
+		id, _ := strconv.ParseInt(query, 10, 64)
+		if err := lbi.loanService.Delete(id); err != nil {
+			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
+			return
+		} else {
+			c.JSON(http.StatusOK, message.Success())
 		}
 	}
 }

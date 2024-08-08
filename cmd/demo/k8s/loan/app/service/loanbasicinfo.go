@@ -9,19 +9,19 @@ import (
 	"gorm.io/gorm"
 )
 
-type Loan struct {
+type LoanBasicInfo struct {
 	ctx       *context.Context
 	snowflake *snowflake.Snowflake
 }
 
-func NewLoan(ctx *context.Context) *Loan {
-	return &Loan{
+func NewLoan(ctx *context.Context) *LoanBasicInfo {
+	return &LoanBasicInfo{
 		ctx:       ctx,
 		snowflake: snowflake.New(ctx.C.Server.Id),
 	}
 }
 
-func (l *Loan) Take(id int64) (db.LoanBasicInfo, error) {
+func (l *LoanBasicInfo) Take(id int64) (db.LoanBasicInfo, error) {
 	loanBasicInfo := db.LoanBasicInfo{}
 	session := l.ctx.Db.Session()
 	if err := session.Where("id=?", id).Take(&loanBasicInfo).Error; err != nil {
@@ -30,7 +30,21 @@ func (l *Loan) Take(id int64) (db.LoanBasicInfo, error) {
 	return loanBasicInfo, nil
 }
 
-func (l *Loan) Create(req model.CreateBasicInfoReq) error {
+func (l *LoanBasicInfo) Delete(id int64) error {
+	session := l.ctx.Db.Session()
+	return session.Transaction(func(tx *gorm.DB) error {
+		var err error
+		if err = session.Where("id=?", id).Delete(&db.LoanBasicInfo{}).Error; err != nil {
+			return err
+		}
+		if err = session.Where("loan_basic_info_id=?", id).Delete(&db.Repayment{}).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
+func (l *LoanBasicInfo) Create(req model.CreateBasicInfoReq) error {
 	loanBasicInfo := db.LoanBasicInfo{
 		Id:           l.snowflake.Gen(),
 		LoanId:       req.LoanId,
@@ -59,7 +73,7 @@ func (l *Loan) Create(req model.CreateBasicInfoReq) error {
 	})
 }
 
-func (l *Loan) Modify(req model.ModifyBasicInfoReq) error {
+func (l *LoanBasicInfo) Modify(req model.ModifyBasicInfoReq) error {
 	loanBasicInfo := db.LoanBasicInfo{
 		Id:           req.Id,
 		LoanId:       req.LoanId,
@@ -92,7 +106,7 @@ func (l *Loan) Modify(req model.ModifyBasicInfoReq) error {
 	})
 }
 
-func (l *Loan) createRepaymentList(loanBasicInfo db.LoanBasicInfo) ([]db.Repayment, error) {
+func (l *LoanBasicInfo) createRepaymentList(loanBasicInfo db.LoanBasicInfo) ([]db.Repayment, error) {
 	loanAlgorithm, err := loan.NewLoan(loanBasicInfo.LoanType, loan.BasicInfo{
 		Principal:    loanBasicInfo.Principal,
 		InterestRate: loanBasicInfo.InterestRate,
