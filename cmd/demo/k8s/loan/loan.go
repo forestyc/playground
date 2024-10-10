@@ -22,6 +22,7 @@ func main() {
 	component.Register(
 		ctx.HttpServer.WithHandler(
 			handler.NewLoanBasicInfo(ctx),
+			handler.NewLoan(ctx),
 		),
 	)
 	component.Serve()

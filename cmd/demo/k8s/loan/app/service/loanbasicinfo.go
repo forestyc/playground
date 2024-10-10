@@ -14,14 +14,23 @@ type LoanBasicInfo struct {
 	snowflake *snowflake.Snowflake
 }
 
-func NewLoan(ctx *context.Context) *LoanBasicInfo {
+func NewLoanBasicInfo(ctx *context.Context) *LoanBasicInfo {
 	return &LoanBasicInfo{
 		ctx:       ctx,
 		snowflake: snowflake.New(ctx.C.Server.Id),
 	}
 }
 
-func (l *LoanBasicInfo) Take(id int64) (db.LoanBasicInfo, error) {
+func (l *LoanBasicInfo) GetByLoanId(loanId int64) ([]db.LoanBasicInfo, error) {
+	var loanBasicInfo []db.LoanBasicInfo
+	session := l.ctx.Db.Session()
+	if err := session.Where("loan_id=?", loanId).Find(&loanBasicInfo).Error; err != nil {
+		return nil, err
+	}
+	return loanBasicInfo, nil
+}
+
+func (l *LoanBasicInfo) GetById(id int64) (db.LoanBasicInfo, error) {
 	loanBasicInfo := db.LoanBasicInfo{}
 	session := l.ctx.Db.Session()
 	if err := session.Where("id=?", id).Take(&loanBasicInfo).Error; err != nil {
@@ -47,6 +56,7 @@ func (l *LoanBasicInfo) Delete(id int64) error {
 func (l *LoanBasicInfo) Create(req model.CreateBasicInfoReq) error {
 	loanBasicInfo := db.LoanBasicInfo{
 		Id:           l.snowflake.Gen(),
+		Name:         req.Name,
 		LoanId:       req.LoanId,
 		Principal:    req.Principal,
 		LoanType:     req.LoanType,
@@ -76,6 +86,7 @@ func (l *LoanBasicInfo) Create(req model.CreateBasicInfoReq) error {
 func (l *LoanBasicInfo) Modify(req model.ModifyBasicInfoReq) error {
 	loanBasicInfo := db.LoanBasicInfo{
 		Id:           req.Id,
+		Name:         req.Name,
 		LoanId:       req.LoanId,
 		Principal:    req.Principal,
 		LoanType:     req.LoanType,

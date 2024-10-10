@@ -1,9 +1,10 @@
 package loan
 
 import (
+	"time"
+
 	"github.com/forestyc/playground/pkg/utils"
 	"github.com/pkg/errors"
-	"time"
 )
 
 type PrincipalInterest struct {

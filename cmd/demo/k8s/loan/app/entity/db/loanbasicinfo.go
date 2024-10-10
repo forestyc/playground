@@ -4,6 +4,7 @@ import "time"
 
 type LoanBasicInfo struct {
 	Id           int64 `gorm:"primary_key;AUTO_INCREMENT"`
+	Name         string
 	LoanId       int64
 	LoanType     int
 	Principal    float64
