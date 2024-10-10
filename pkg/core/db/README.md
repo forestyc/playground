@@ -1,7 +1,5 @@
 # db
 
-## 1. 使用
-
 ```
 package main
 

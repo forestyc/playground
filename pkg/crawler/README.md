@@ -3,7 +3,7 @@
 ## example
 
 ```
-// 初始化爬虫
+// init
 crawler = crawler.NewColly(
            task,
            url,
@@ -14,7 +14,7 @@ crawler = crawler.NewColly(
            // ...
         )
 
-// 执行爬虫
+// run
 crawler.Run(
     // db pipeline回调函数(可选)
     crawler.WithPipeline(pipeline),
