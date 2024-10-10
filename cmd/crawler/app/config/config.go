@@ -1,13 +1,13 @@
 package config
 
 import (
-	"github.com/forestyc/playground/pkg/core/db"
-	"github.com/forestyc/playground/pkg/core/log/zap"
-	"github.com/forestyc/playground/pkg/core/prometheus"
-	"github.com/forestyc/playground/pkg/core/redis"
-	"github.com/pkg/errors"
 	"path/filepath"
 	"strings"
+
+	"github.com/forestyc/playground/pkg/core/db"
+	"github.com/forestyc/playground/pkg/core/log/zap"
+	"github.com/forestyc/playground/pkg/core/redis"
+	"github.com/pkg/errors"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -21,11 +21,10 @@ type CrawlerConfig struct {
 
 // Config 配置信息
 type Config struct {
-	Database   db.Config         `mapstructure:"database"`
-	Log        zap.Config        `mapstructure:"log"`
-	Redis      redis.Config      `mapstructure:"redis"`
-	Crawler    CrawlerConfig     `mapstructure:"crawler"`
-	Prometheus prometheus.Config `mapstructure:"prometheus"`
+	Database db.Config     `mapstructure:"database"`
+	Log      zap.Config    `mapstructure:"log"`
+	Redis    redis.Config  `mapstructure:"redis"`
+	Crawler  CrawlerConfig `mapstructure:"crawler"`
 }
 
 // Load 加载配置

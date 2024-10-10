@@ -1,12 +1,13 @@
 package crawler
 
 import (
+	"path"
+
 	"github.com/forestyc/playground/cmd/crawler/app/common"
 	"github.com/forestyc/playground/cmd/crawler/app/context"
 	"github.com/forestyc/playground/cmd/crawler/app/handler/dce"
 	"github.com/forestyc/playground/cmd/crawler/app/handler/yage"
 	"github.com/forestyc/playground/pkg/core/log/zap"
-	"path"
 )
 
 var (
@@ -27,9 +28,6 @@ func Register(c context.Context) {
 
 // Run 执行爬虫任务
 func Run(labels []string) {
-	if ctx.C.Prometheus.HasPrometheus() {
-		ctx.C.Prometheus.Start()
-	}
 	for _, label := range labels {
 		job, ok := crawler[label]
 		if ok {

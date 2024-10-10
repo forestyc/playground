@@ -1,24 +1,23 @@
 package config
 
 import (
+	"path/filepath"
+	"strings"
+
 	"github.com/forestyc/playground/pkg/core/db"
 	"github.com/forestyc/playground/pkg/core/log/zap"
-	"github.com/forestyc/playground/pkg/core/prometheus"
 	"github.com/forestyc/playground/pkg/core/redis"
 	"github.com/fsnotify/fsnotify"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	"path/filepath"
-	"strings"
 )
 
 // Config 配置信息
 type Config struct {
-	Server     Server            `mapstructure:"server"`
-	Database   db.Config         `mapstructure:"database"`
-	Log        zap.Config        `mapstructure:"log"`
-	Redis      redis.Config      `mapstructure:"redis"`
-	Prometheus prometheus.Config `mapstructure:"prometheus"`
+	Server   Server       `mapstructure:"server"`
+	Database db.Config    `mapstructure:"database"`
+	Log      zap.Config   `mapstructure:"log"`
+	Redis    redis.Config `mapstructure:"redis"`
 }
 
 // Load 加载配置
