@@ -136,8 +136,9 @@ func (l *LoanBasicInfo) createRepaymentList(loanBasicInfo db.LoanBasicInfo) ([]d
 	}
 	var repayments []db.Repayment
 	for i := 0; i < loanBasicInfo.Periods; i++ {
-		amount, date := loanAlgorithm.Repayment(i)
 		period := i + 1
+		amount, date := loanAlgorithm.Repayment(period)
+
 		repayments = append(repayments, db.Repayment{
 			Id:              l.snowflake.Gen(),
 			LoanBasicInfoId: loanBasicInfo.Id,
