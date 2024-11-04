@@ -31,3 +31,9 @@ type ModifyLoanReq struct {
 	Id   int64  `form:"id" binding:"required"`
 	Name string `form:"name" binding:"required"`
 }
+
+type CutInterestRateReq struct {
+	Id            int64     `form:"id" binding:"required"`
+	EffectiveDate time.Time `form:"effective_date" time_format:"2006-01-02"  binding:"required"`
+	Rate          float64   `form:"rate" binding:"required"`
+}

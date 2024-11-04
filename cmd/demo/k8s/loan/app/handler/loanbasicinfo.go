@@ -28,6 +28,7 @@ func (lbi *LoanBasicInfo) Register(engine *gin.Engine) {
 	engine.POST(uriBasicInfo, lbi.createBasicInfo())
 	engine.PUT(uriBasicInfo, lbi.modifyBasicInfo())
 	engine.DELETE(uriBasicInfo, lbi.deleteBasicInfo())
+	engine.PUT(uriBasicInfo+"/modify-interest-rate", lbi.cutInterestRate())
 }
 
 func (lbi *LoanBasicInfo) getBasicInfo() gin.HandlerFunc {
@@ -89,6 +90,21 @@ func (lbi *LoanBasicInfo) modifyBasicInfo() gin.HandlerFunc {
 			return
 		}
 		if err := lbi.loanBasicInfoService.Modify(req); err != nil {
+			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
+			return
+		}
+		c.JSON(http.StatusOK, message.Success())
+	}
+}
+
+func (lbi *LoanBasicInfo) cutInterestRate() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req model.CutInterestRateReq
+		if err := c.ShouldBind(&req); err != nil {
+			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
+			return
+		}
+		if err := lbi.loanBasicInfoService.CutInterestRate(req); err != nil {
 			c.JSON(http.StatusOK, message.FailedWithMessage(err.Error()))
 			return
 		}

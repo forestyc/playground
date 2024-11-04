@@ -32,7 +32,8 @@ func NewPrincipalInterest(info BasicInfo) (*PrincipalInterest, error) {
 	return &pi, nil
 }
 
+// Repayment period start with 0
 func (pi *PrincipalInterest) Repayment(period int) (float64, time.Time) {
-	interest := utils.Round((pi.principal-float64(period-1)*pi.principalByMonth)*pi.interestRateByMonth, 2)
-	return utils.Round(pi.principalByMonth+interest, 2), pi.startDate.AddDate(0, period-1, 0)
+	interest := utils.Round((pi.principal-float64(period)*pi.principalByMonth)*pi.interestRateByMonth, 2)
+	return utils.Round(pi.principalByMonth+interest, 2), pi.startDate.AddDate(0, period, 0)
 }

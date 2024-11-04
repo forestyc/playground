@@ -32,8 +32,9 @@ func NewAverageCapital(info BasicInfo) (*AverageCapital, error) {
 	return &ac, nil
 }
 
+// Repayment period start with 0
 func (ac *AverageCapital) Repayment(period int) (float64, time.Time) {
-	return ac.principalByMonth + (ac.principal-ac.principalByMonth*float64(period-1))*ac.interestRateByMonth,
+	return ac.principalByMonth + (ac.principal-ac.principalByMonth*float64(period))*ac.interestRateByMonth,
 		ac.startDate.AddDate(0, period, 0)
 }
 
