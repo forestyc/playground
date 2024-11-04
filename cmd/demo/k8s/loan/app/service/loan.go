@@ -5,6 +5,7 @@ import (
 	"github.com/forestyc/playground/cmd/demo/k8s/loan/app/entity/db"
 	"github.com/forestyc/playground/cmd/demo/k8s/loan/app/model"
 	"github.com/forestyc/playground/pkg/distributed/snowflake"
+	"time"
 )
 
 type Loan struct {
@@ -28,13 +29,23 @@ func (l *Loan) GetList() ([]db.Loan, error) {
 	return list, nil
 }
 
-func (l *Loan) GetById(id int64) (db.Loan, error) {
-	var list db.Loan
+func (l *Loan) GetById(id int64) (model.GetLoanInfoResp, error) {
+	var resp model.GetLoanInfoResp
 	session := l.ctx.Db.Session()
-	if result := session.Where("id=?", id).Take(&list); result.Error != nil {
-		return list, result.Error
+	if result := session.Where("id=?", id).Take(&resp.LoanInfo); result.Error != nil {
+		return resp, result.Error
 	}
-	return list, nil
+	now := time.Now()
+	firstDateOfMonth := now.AddDate(0, 0, -now.Day()+1)
+	if result := session.Table("repayment r").
+		Joins("inner join loan_basic_info l on l.id=r.loan_basic_info_id").
+		Select("name", "amount", "repayment_date").
+		Where("repayment_date>? and repayment_date<?",
+			firstDateOfMonth.AddDate(0, 0, -1), firstDateOfMonth.AddDate(0, 1, 0)).
+		Find(&resp.RepaymentList); result.Error != nil {
+		return resp, result.Error
+	}
+	return resp, nil
 }
 
 func (l *Loan) Create(req model.CreateLoanReq) error {
