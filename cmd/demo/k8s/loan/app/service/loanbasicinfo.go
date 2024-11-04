@@ -9,6 +9,10 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	condLoanBasicInfoId = "loan_basic_info_id=?"
+)
+
 type LoanBasicInfo struct {
 	ctx       *context.Context
 	snowflake *snowflake.Snowflake
@@ -30,13 +34,16 @@ func (l *LoanBasicInfo) GetByLoanId(loanId int64) ([]db.LoanBasicInfo, error) {
 	return loanBasicInfo, nil
 }
 
-func (l *LoanBasicInfo) GetById(id int64) (db.LoanBasicInfo, error) {
-	loanBasicInfo := db.LoanBasicInfo{}
+func (l *LoanBasicInfo) GetById(id int64) (model.GetBasicInfoResp, error) {
+	var resp model.GetBasicInfoResp
 	session := l.ctx.Db.Session()
-	if err := session.Where("id=?", id).Take(&loanBasicInfo).Error; err != nil {
-		return db.LoanBasicInfo{}, err
+	if err := session.Where("id=?", id).Take(&resp.BasicInfo).Error; err != nil {
+		return resp, err
 	}
-	return loanBasicInfo, nil
+	if err := session.Where(condLoanBasicInfoId, id).Find(&resp.RepaymentList).Error; err != nil {
+		return resp, err
+	}
+	return resp, nil
 }
 
 func (l *LoanBasicInfo) Delete(id int64) error {
@@ -46,7 +53,7 @@ func (l *LoanBasicInfo) Delete(id int64) error {
 		if err = session.Where("id=?", id).Delete(&db.LoanBasicInfo{}).Error; err != nil {
 			return err
 		}
-		if err = session.Where("loan_basic_info_id=?", id).Delete(&db.Repayment{}).Error; err != nil {
+		if err = session.Where(condLoanBasicInfoId, id).Delete(&db.Repayment{}).Error; err != nil {
 			return err
 		}
 		return nil
@@ -106,7 +113,7 @@ func (l *LoanBasicInfo) Modify(req model.ModifyBasicInfoReq) error {
 			return err
 		}
 		// remove repayment
-		if err = tx.Where("loan_basic_info_id=?", loanBasicInfo.Id).Delete(&db.Repayment{}).Error; err != nil {
+		if err = tx.Where(condLoanBasicInfoId, loanBasicInfo.Id).Delete(&db.Repayment{}).Error; err != nil {
 			return err
 		}
 		// save repayment

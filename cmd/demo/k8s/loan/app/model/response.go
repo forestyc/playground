@@ -1,19 +1,10 @@
 package model
 
-import "time"
+import (
+	"github.com/forestyc/playground/cmd/demo/k8s/loan/app/entity/db"
+)
 
-type RepaymentResp struct {
-	Business      float64
-	ProvidentFund float64
-	Total         float64
-}
-
-type GetInfoResp struct {
-	BusinessPrincipal         float64
-	BusinessInterestRate      float64
-	BusinessPeriods           int
-	ProvidentFundPrincipal    float64
-	ProvidentFundInterestRate float64
-	ProvidentPeriods          int
-	StartDate                 *time.Time
+type GetBasicInfoResp struct {
+	BasicInfo     db.LoanBasicInfo
+	RepaymentList []db.Repayment
 }
