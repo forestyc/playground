@@ -1,11 +1,11 @@
-FROM alpine
+FROM m.daocloud.io/docker.io/alpine:3.20.3
 
-WORKDIR /app/houseloan
+WORKDIR /app/loan
 RUN mkdir etc
 
-COPY houseloan .
-COPY etc/houseloan.yaml ./etc
+COPY loan .
+COPY etc/loan.yaml ./etc
 
 EXPOSE 8080
 
-ENTRYPOINT ["./houseloan"]
+ENTRYPOINT ["./loan"]
