@@ -5,8 +5,8 @@ import (
 )
 
 type GetBasicInfoResp struct {
-	BasicInfo     db.LoanBasicInfo
-	RepaymentList []db.Repayment
+	BasicInfo     db.LoanBasicInfo `json:"basic_info"`
+	RepaymentList []db.Repayment   `json:"repayment_list"`
 }
 
 type repayment struct {
@@ -16,6 +16,6 @@ type repayment struct {
 }
 
 type GetLoanInfoResp struct {
-	LoanInfo      db.Loan
-	RepaymentList []repayment
+	LoanInfo      db.Loan     `json:"loan_info"`
+	RepaymentList []repayment `json:"repayment_list"`
 }
