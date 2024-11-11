@@ -23,7 +23,7 @@ function GetList() {
 
     return (
         <>
-            <Divider orientation="left">Default Size</Divider>
+            <Divider orientation="left">贷款</Divider>
             <List
                 itemLayout="horizontal"
                 dataSource={rsp}
@@ -31,7 +31,7 @@ function GetList() {
                 renderItem={(item) =>
                     <List.Item>
                         <List.Item.Meta
-                            title={<a href={"/loan/cards?id=" + item.id}>{item.name}</a>}
+                            title={<a href={"/loan/detail?id=" + item.id}>{item.name}</a>}
                             // description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                             // style={}
                         />
