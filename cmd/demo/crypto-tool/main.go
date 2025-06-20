@@ -7,9 +7,10 @@ import (
 )
 
 func main() {
-	var text, method, cipher, plain string
+	var text, method, cipher, plain, key string
 	var err error
-	key := []byte("f9718298fcae5859")
+
+	flag.StringVar(&key, "key", "", "key")
 	flag.StringVar(&text, "text", "", "Cipher text/Plain text")
 	flag.StringVar(&method, "method", "", "encrypt/decrypt")
 	flag.Parse()
@@ -19,17 +20,21 @@ func main() {
 		return
 	}
 
+	if len(key) == 0 {
+		key = "f9718298fcae5859"
+	}
+
 	sm4 := crypto.SM4{}
 	switch method {
 	case "encrypt":
 		plain = text
-		if cipher, err = sm4.EncryptWithBase64([]byte(plain), key); err != nil {
+		if cipher, err = sm4.EncryptWithBase64([]byte(plain), []byte(key)); err != nil {
 			panic(err)
 		}
 	case "decrypt":
 		cipher = text
 		var plainByte []byte
-		if plainByte, err = sm4.DecryptWithBase64(cipher, key); err != nil {
+		if plainByte, err = sm4.DecryptWithBase64(cipher, []byte(key)); err != nil {
 			panic(err)
 		}
 		plain = string(plainByte)
