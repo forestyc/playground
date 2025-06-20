@@ -13,6 +13,12 @@ func main() {
 	flag.StringVar(&text, "text", "", "Cipher text/Plain text")
 	flag.StringVar(&method, "method", "", "encrypt/decrypt")
 	flag.Parse()
+
+	if len(text) == 0 || len(method) == 0 {
+		flag.Usage()
+		return
+	}
+
 	sm4 := crypto.SM4{}
 	switch method {
 	case "encrypt":
